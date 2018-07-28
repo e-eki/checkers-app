@@ -1,0 +1,49 @@
+{
+  "name": "checkers-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build-css": "lessc ./src/less/template.less ./public/template.css",
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production",
+    "server": "webpack-dev-server --mode development --hot",
+    "size": "size-limit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://ViktoriaDremina@bitbucket.org/ViktoriaDremina/checkers.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/ViktoriaDremina/checkers#readme",
+  "dependencies": {
+    "normalize.css": "^8.0.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-scroll-to-component": "^1.0.2"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.11",
+    "file-loader": "^1.1.11",
+    "image-webpack-loader": "^4.3.1",
+    "less": "^2.7.3",
+    "less-loader": "^4.1.0",
+    "mini-css-extract-plugin": "^0.4.1",
+    "path": "^0.12.7",
+    "size-limit": "^0.18.5",
+    "style-loader": "^0.21.0",
+    "uglifyjs-webpack-plugin": "^1.2.7",
+    "webpack": "^4.12.2",
+    "webpack-cli": "^3.0.8",
+    "webpack-command": "^0.3.0",
+    "webpack-dev-server": "^3.1.4",
+    "yargs": "^12.0.1"
+  }
+}
