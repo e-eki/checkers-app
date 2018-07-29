@@ -10,7 +10,7 @@ const isProduction = !isDevelopment;
 
 module.exports = {
     //mode: 'development',
-    entry: './public/app.js',
+    entry: './src/js/index.js',
     output: {
         path: path.resolve(__dirname, './public'), 
         filename: 'bundle.js'
@@ -26,7 +26,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.less$/, 
+                test: /\.css$/, 
                 exclude: /node_modules/,
                 //loader: 'style-loader!css-loader!less-loader'
                 use: [

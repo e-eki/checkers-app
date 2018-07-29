@@ -1,5 +1,5 @@
 
-import React, { Component } from '../../../../../Users/Magic_mushroom/AppData/Local/Microsoft/TypeScript/2.9/node_modules/@types/react';
+import React, { Component } from 'react';
 
 export default class Main extends Component {
 
