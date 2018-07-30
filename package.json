@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"build-css": "lessc ./src/less/template.less ./public/template.css",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "lessc ./src/less/template.less ./public/template.css",
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
     "server": "webpack-dev-server --mode development --hot",
@@ -22,6 +22,7 @@
     "normalize.css": "^8.0.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-rangeslider": "^2.2.0",
     "react-scroll-to-component": "^1.0.2"
   },
   "devDependencies": {

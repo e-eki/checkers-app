@@ -1,7 +1,23 @@
 
 import React, { Component } from 'react';
+import Slider from 'react-rangeslider';
 
 export default class Toolbar extends Component {
+
+	constructor(props){
+		super(props);
+		
+		this.state = {
+			defaultBoardSize: 8
+		};
+                 
+        this.changeBoardSize = this.changeBoardSize.bind(this);
+	}
+	
+	changeBoardSize(event) {
+
+		this.setState({defaultBoardSize: this.boardSizeTool.value});
+	}
 
     render() {
 
@@ -17,7 +33,11 @@ export default class Toolbar extends Component {
 					</div>
 					<div>
 						Выберите размер доски: 
-						<input name="boardSize" type="number" min="2" max="14" step="2"/>
+						<span ref={elem => this.boardSize = elem}>
+							{this.state.defaultBoardSize}
+						</span>
+						<input ref = {elem => this.boardSizeTool = elem} type = "range" min = "2" max = "14" step = "2" value = {this.state.defaultBoardSize} onChange = {this.changeBoardSize}/>
+						
 					</div>
 					<div>
 						Выберите уровень сложности: 
