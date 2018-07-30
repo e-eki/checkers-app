@@ -12,7 +12,7 @@ export default class Display extends Component {
         return (
             <div className = 'wrap'>
                 <Header/>
-								<div className = 'inner-wrap'>
+				<div className = 'inner-wrap'>
                     <Toolbar/>
                     <Main/>
                     <Infobar/>
