@@ -1,12 +1,12 @@
 
 import React, { Component } from 'react';
 
-export default class Quotes extends Component {
+export default class Quotebar extends Component {
 
 	constructor(props) {
 		super(props);
 
-		var quotesFile = JSON.stringify([
+		const quotesFile = JSON.stringify([
 			{"quote": "Искреннее сердце — это драгоценность, которую никогда никуда не спрячешь.", "author": "Ходзе Сигэтоки (1198–1261) — монах, писатель"},
 			{"quote": "Глубоко постигни этот мир снов, который проходит в мгновение ока.", "author": "Ходзе Сигэтоки (1198–1261) — монах, писатель"},
 			{"quote": "Если ты раздумываешь, делать это или не делать, то, как правило, бывает лучше этого не делать.", "author": "Кэнко Хоси (Урабэ Канэеси) (1283–1350) — писатель"},
@@ -94,12 +94,38 @@ export default class Quotes extends Component {
 			{"quote": "Зеркало разума тоже тускнеет.", "author": "японская пословица"},
 			{"quote": "Лунная ночь и вареный рис всегда бывают кстати.", "author": "японская пословица"},
 		]);
-		
+
 		this.quotes = JSON.parse(quotesFile);
+
+		this.state = {
+			currentQuote: this.quotes[Math.floor(Math.random() * this.quotes.length)]
+		}
+	}
+
+	componentDidMount() {
+
+		var updateQuote = function() {
+			let newQuote = this.quotes[Math.floor(Math.random() * this.quotes.length)];
+	
+			this.setState({
+				currentQuote: newQuote
+			});
+		}.bind(this);
+
+		setInterval(updateQuote, 60000);
 	}
 
     render() {
+		console.log('render quotebar');
 
-        return this.quotes;
+		let quoteText = '"' + this.state.currentQuote.quote + '"';
+		let quoteAuthor = this.state.currentQuote.author;
+
+        return (
+			<div class="quotebar">
+				<p class="quoteText">{quoteText}</p>
+				<p class="authorText">{quoteAuthor}</p>
+			</div>
+        )
     }
 }

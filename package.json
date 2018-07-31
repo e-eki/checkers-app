@@ -22,7 +22,6 @@
     "normalize.css": "^8.0.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "react-rangeslider": "^2.2.0",
     "react-scroll-to-component": "^1.0.2"
   },
   "devDependencies": {
