@@ -4,6 +4,7 @@ import Header from './header';
 import Toolbar from './toolbar';
 import Board from './board';
 import Infobar from './infobar';
+import Tablo from './tablo';
 
 export default class Display extends Component {
 
@@ -16,6 +17,7 @@ export default class Display extends Component {
             level: 'easy',
             mode: 'classic',
             currentActionDefinition: 'Game start' + '\n' + '\n',
+            endOfGame: false,
         }
 
         this.state = {
@@ -24,9 +26,16 @@ export default class Display extends Component {
             level: this.defaultSettings.level,
             mode: this.defaultSettings.mode,
             currentActionDefinition: this.defaultSettings.currentActionDefinition,
+            endOfGame: this.defaultSettings.endOfGame,
         };
 
         this.updateData = this.updateData.bind(this);
+        this.drawGameOver = this.drawGameOver.bind(this);
+        this.resetDisplay = this.resetDisplay.bind(this);
+    }
+
+    componentDidMount() {
+        this.drawGameOver();
     }
 
     updateData(data, value) {
@@ -35,31 +44,52 @@ export default class Display extends Component {
         this.setState({});
     }
 
+    drawGameOver() {
+        this.setState({
+            endOfGame: true,
+        });
+
+        addEventListener('click', this.resetDisplay);
+        addEventListener('keydown', this.resetDisplay);
+    }
+
     resetDisplay() {
+
+        removeEventListener('click', this.resetDisplay);
+        removeEventListener('keydown', this.resetDisplay);
+
         this.setState({
             userColor: this.defaultSettings.userColor,
             boardSize: this.defaultSettings.boardSize,
             level: this.defaultSettings.level,
             mode: this.defaultSettings.mode,
+            currentActionDefinition: this.defaultSettings.currentActionDefinition,
+            endOfGame: this.defaultSettings.endOfGame,
         })
     }
 
     render() {
         console.log('render display');
+        const gameOverClass = this.state.endOfGame ? 'game-over' : '';
+        const tabloClass = this.state.endOfGame ? 'tablo_shown' : 'tablo_hidden';
 
         return (
             <div className = 'wrap'>
-                <Header/>
-				<div className = 'inner-wrap'>
+                <div className = {gameOverClass}>
+                    <Header/>
+                    <div className = 'inner-wrap'>
 
                     <Toolbar updateData={this.updateData} userColor = {this.state.userColor} boardSize = {this.state.boardSize} level = {this.state.level} mode = {this.state.mode}/>
-                    
+
                     <div className = 'main'>
-		  		        <Board boardSize = {this.state.boardSize} mode = {this.state.mode}/>			
-			        </div>
+                        <Board boardSize = {this.state.boardSize} mode = {this.state.mode}/>			
+                    </div>
 
                     <Infobar currentActionDefinition = {this.state.currentActionDefinition}/>
+                    </div>
                 </div>
+               
+                <Tablo className = {tabloClass}/>
             </div>
         )
     }

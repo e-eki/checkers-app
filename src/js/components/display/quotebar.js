@@ -116,7 +116,7 @@ export default class Quotebar extends Component {
 	}
 
     render() {
-		console.log('render quotebar');
+		//console.log('render quotebar');
 
 		let quoteText = '"' + this.state.currentQuote.quote + '"';
 		let quoteAuthor = this.state.currentQuote.author;

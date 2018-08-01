@@ -48,7 +48,7 @@ export default class Infobar extends Component {
 	}
 
     render() {
-		console.log('render infobar');
+		//console.log('render infobar');
 
 		let currentTime = this.state.currentHours + ' ч ' + this.state.currentMinutes + ' мин ';
 
