@@ -52,6 +52,7 @@ export default class Toolbar extends Component {
 								<option value="dam">играть только дамками</option>
 							</select>
 						</div>
+						<button type="submit">Настройки по умолчанию</button>
 						<button type="submit">Начать игру</button>
 					</form>
 				</div>

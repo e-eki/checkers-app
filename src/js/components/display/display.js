@@ -34,10 +34,6 @@ export default class Display extends Component {
         this.resetDisplay = this.resetDisplay.bind(this);
     }
 
-    componentDidMount() {
-        this.drawGameOver();
-    }
-
     updateData(data, value) {
 
         this.state[`${data}`] = value;
@@ -82,7 +78,7 @@ export default class Display extends Component {
                     <Toolbar updateData={this.updateData} userColor = {this.state.userColor} boardSize = {this.state.boardSize} level = {this.state.level} mode = {this.state.mode}/>
 
                     <div className = 'main'>
-                        <Board boardSize = {this.state.boardSize} mode = {this.state.mode}/>			
+                        <Board boardSize = {this.state.boardSize} userColor = {this.state.userColor} mode = {this.state.mode}/>			
                     </div>
 
                     <Infobar currentActionDefinition = {this.state.currentActionDefinition}/>
