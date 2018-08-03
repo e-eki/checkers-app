@@ -153,8 +153,8 @@ export default class Board extends Component {
 
 					if (actorColor) {
 
-						let actorType = this.props.mode == 'classic' ? 'сhecker' : 'dam';
-						let actorClass = actorColor + ' ' + actorType;
+						//let actorType = this.props.mode == 'classic' ? 'сhecker' : 'dam';
+						let actorClass = actorColor + ' ' + this.state.mode;
 						actor = <Actor key={actorKey} className = {actorClass} positionX = {x} positionY = {y} drawSelectedCells = {this.drawSelectedCells} userColor = {this.props.userColor}/>;
 						
 						actorKey++;
@@ -205,13 +205,17 @@ export default class Board extends Component {
 	}
 
 	componentWillUpdate(nextProps) {
-		//console.log(nextProps);
+		console.log('componentWillUpdate');
 
 		if (nextProps.boardSize !== this.props.boardSize) {
 			this.fillGridData(nextProps.boardSize);
 		}	
 
-		//else if (nexr)
+		else if (nextProps.mode !== this.props.mode) {
+
+			const newMode = nextProps.mode == 'classic' ? 'сhecker' : 'dam';
+			
+		}
 	}
 
     render() {
