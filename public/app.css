@@ -171,10 +171,12 @@ table {
 
 .highlight-cell {
     background: orange;
+    cursor: pointer;
 }
 
 .highlight-actor {
     border-color: orange;
+    cursor: pointer;
 }
 
 .dam {
