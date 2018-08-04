@@ -8,14 +8,20 @@ class Cell extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        //console.log('cell shouldComponentUpdate');
-		return (nextProps.className !== this.props.className || nextProps.actor !== this.props.actor);
+		//console.log('cell shouldComponentUpdate');
+		let getNewActor = false;
+
+		if (nextProps.actor && this.props.actor) {
+			
+			getNewActor = nextProps.actor.props.className !== this.props.actor.props.className;
+		}
+		return (nextProps.className !== this.props.className || getNewActor);
 
 		//return (nextProps.className !== this.props.className);
     }
     
     render() {
-		//console.log('render cell');
+		console.log('render cell');
 		const cellClass = 'cell ' + (this.props.className ? this.props.className : '');
         
 		return (
@@ -37,10 +43,10 @@ class Actor extends Component {
 			className: '',
 		}
 
-		//this.addUserFunctionality = this.addUserFunctionality.bind(this);
+		this.addUserFunctionality = this.addUserFunctionality.bind(this);
 	}
 	
-	/*addUserFunctionality() {
+	addUserFunctionality() {
 
 		var select = function(event) {
 			console.log('select');
@@ -59,24 +65,30 @@ class Actor extends Component {
 			this.ref.addEventListener("mouseout", deselect); 
 
 		}
-	}*/
+	}
 
     shouldComponentUpdate(nextProps, nextState) {
 		//console.log('actor shouldComponentUpdate');
-		//return (nextProps.className !== this.props.className || nextState.className !== this.state.className);
-		return true;
+		return (nextProps.className !== this.props.className || nextState.className !== this.state.className);
+		//return true;
 	}
 
 	componentWillMount() {
 		this.defaultClassName = this.state.className = this.props.className;
 	}
+
+	componentWillUpdate(nextProps) {
+		if (nextProps.className !== this.props.className)
+			this.defaultClassName = this.state.className = nextProps.className;
+	}
 	
 	componentDidMount() {
-		//this.addUserFunctionality();
+		if (this.props.isUserColor)
+			this.addUserFunctionality();
 	}
     
     render() {
-		//console.log('render actor');
+		console.log('render actor');
 		const actorClass = 'actor ' + (this.state.className ? this.state.className : '');
         
         return <div ref={elem => this.ref = elem} className={actorClass}></div>;
@@ -100,10 +112,11 @@ export default class Board extends Component {
 
 	fillGridData(boardSize = this.props.boardSize, mode = this.props.mode, userColor = this.props.userColor) {
 
-		console.log('fillGridData', mode);
+		console.log('fillGridData', boardSize, mode, userColor);
+		//debugger;
 
 		const firstRowWhite = boardSize/2 + 1;
-		const lastRowWhite = boardSize;
+		const lastRowWhite = boardSize - 1;
 		const firstRowBlack = 0;
 		const lastRowBlack = boardSize/2 - 2;
 
@@ -120,7 +133,7 @@ export default class Board extends Component {
 				let cellClass = (x + y) % 2 == 0 ? 'white' : 'black';			
 				this.state.cellsDataContainer[x].push({positionX: x, positionY: y, className: cellClass});
 
-				let actor = null;
+				//let actor = null;
 
 				if (cellClass == 'black') {
 
@@ -140,16 +153,16 @@ export default class Board extends Component {
 						this.state.actorsDataContainer[x].push(null);
 					}
 				}
+				else {
+					this.state.actorsDataContainer[x].push(null);
+				}
 			}
 		}
-
-		//console.log(this.state.cellsDataContainer, this.state.actorsDataContainer);
 	}
 
 	fillGrid() {
 		console.log('fillGrid');
-		console.log('---');
-		console.log(this.state.cellsDataContainer, this.state.actorsDataContainer);
+		//console.log(this.state.cellsDataContainer, this.state.actorsDataContainer);
 
 		const grid = [];
 
@@ -188,14 +201,21 @@ export default class Board extends Component {
 
 		var addSelectedClassname = function(x, y) {
 
-			const prevClassName = this.state.cellsDataContainer[x][y].className;
-			this.state.cellsDataContainer[x][y].className = prevClassName + ' highlight-cell';
+			if (this.state.cellsDataContainer[x] && this.state.cellsDataContainer[x][y]) {
+				const prevClassName = this.state.cellsDataContainer[x][y].className;
+				this.state.cellsDataContainer[x][y].className = prevClassName + ' highlight-cell';
+			}	
 		}.bind(this);
 
-		console.log(positionX, positionY);
-		addSelectedClassname(positionX, positionY);
-		addSelectedClassname(positionX, positionY);
-		addSelectedClassname(positionX, positionY);
+		//!!! TODO - заглушка
+		if (this.props.userColor == 'black') {
+			addSelectedClassname(positionX - 1, positionY + 1);
+			addSelectedClassname(positionX + 1, positionY + 1);
+		}
+		else if (this.props.userColor == 'white') {
+			addSelectedClassname(positionX - 1, positionY - 1);
+			addSelectedClassname(positionX + 1, positionY - 1);
+		}
 		
 		this.setState({});
 	}
@@ -217,7 +237,7 @@ export default class Board extends Component {
 	}
 
 	componentWillUpdate(nextProps) {
-		console.log('componentWillUpdate');
+		//console.log('componentWillUpdate');
 
 		if (nextProps.boardSize !== this.props.boardSize || nextProps.mode !== this.props.mode || nextProps.userColor !== this.props.userColor) {
 			this.fillGridData(nextProps.boardSize, nextProps.mode, nextProps.userColor);
