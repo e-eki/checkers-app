@@ -16,7 +16,6 @@ class Cell extends Component {
 			getNewActor = nextProps.actor.props.className !== this.props.actor.props.className;
 		}
 		return (nextProps.className !== this.props.className || getNewActor);
-
 		//return (nextProps.className !== this.props.className);
     }
     
@@ -36,8 +35,6 @@ class Actor extends Component {
 
     constructor(props) {
 		super(props);
-
-		this.defaultClassName = '';
 		
 		this.state = {
 			className: '',
@@ -50,20 +47,20 @@ class Actor extends Component {
 
 		var select = function(event) {
 			console.log('select');
-			let newClassName = this.state.className + ' highlight-actor';
 			this.props.drawSelectedCells(this.props.positionX, this.props.positionY);
+			let newClassName = this.props.defaultClassName + ' highlight-actor';
 			this.setState({className: newClassName});
 		}.bind(this);
 
 		var deselect = function(event) {
 			console.log('deselect');
-			this.setState({className: this.defaultClassName});
+			this.props.drawDeselectedCells(this.props.positionX, this.props.positionY);
+			this.setState({className: this.props.defaultClassName});
 		}.bind(this);
 
 		if (this.ref) {
 			this.ref.addEventListener('mouseover', select);
 			this.ref.addEventListener("mouseout", deselect); 
-
 		}
 	}
 
@@ -74,12 +71,12 @@ class Actor extends Component {
 	}
 
 	componentWillMount() {
-		this.defaultClassName = this.state.className = this.props.className;
+		this.state.className = this.props.className;
 	}
 
 	componentWillUpdate(nextProps) {
 		if (nextProps.className !== this.props.className)
-			this.defaultClassName = this.state.className = nextProps.className;
+			this.state.className = nextProps.className;
 	}
 	
 	componentDidMount() {
@@ -106,8 +103,9 @@ export default class Board extends Component {
 		};
 
 		this.fillGrid = this.fillGrid.bind(this);
-		this.drawSelectedCells = this.drawSelectedCells.bind(this);
 		this.fillGridData = this.fillGridData.bind(this);
+		this.drawSelectedCells = this.drawSelectedCells.bind(this);
+		this.drawDeselectedCells = this.drawDeselectedCells.bind(this);
 	}
 
 	fillGridData(boardSize = this.props.boardSize, mode = this.props.mode, userColor = this.props.userColor) {
@@ -131,7 +129,11 @@ export default class Board extends Component {
             for (let y = 0; y < boardSize; y++) {
 
 				let cellClass = (x + y) % 2 == 0 ? 'white' : 'black';			
-				this.state.cellsDataContainer[x].push({positionX: x, positionY: y, className: cellClass});
+				this.state.cellsDataContainer[x].push({
+					positionX: x, 
+					positionY: y, 
+					defaultClassName: cellClass, 
+					className: cellClass});
 
 				//let actor = null;
 
@@ -147,7 +149,13 @@ export default class Board extends Component {
 						let actorType = (mode == 'classic') ? 'сhecker' : 'dam';
 						let actorClass = actorColor + ' ' + actorType;
 						let isUserColor = (userColor == actorColor);
-						this.state.actorsDataContainer[x].push({positionX: x, positionY: y, className: actorClass, isUserColor: isUserColor});
+						this.state.actorsDataContainer[x].push({
+							positionX: x, 
+							positionY: y, 
+							defaultClassName: actorClass, 
+							className: actorClass, 
+							isUserColor: isUserColor
+						});
 					}
 					else {
 						this.state.actorsDataContainer[x].push(null);
@@ -180,15 +188,28 @@ export default class Board extends Component {
 				let actor = null;
 
 				if (this.state.actorsDataContainer[x][y]) {
-					actor = <Actor key={actorKey} className = {this.state.actorsDataContainer[x][y].className} isUserColor = {this.state.actorsDataContainer[x][y].isUserColor} positionX = {x} positionY = {y} drawSelectedCells = {this.drawSelectedCells}/>;
-					actorKey++;
+					actor = <Actor 
+								key={actorKey} 
+								className = {this.state.actorsDataContainer[x][y].className} 
+								defaultClassName = {this.state.actorsDataContainer[x][y].defaultClassName} 
+								isUserColor = {this.state.actorsDataContainer[x][y].isUserColor} 
+								positionX = {x} 
+								positionY = {y} 
+								drawSelectedCells = {this.drawSelectedCells}
+								drawDeselectedCells = {this.drawDeselectedCells}
+							/>;
+					actorKey++
 				}
 
-				let cell = <Cell key={cellKey} className = {this.state.cellsDataContainer[x][y].className} actor = {actor}/>; 
+				let cell = <Cell 
+								key={cellKey} 
+								className = {this.state.cellsDataContainer[x][y].className} 
+								defaultClassName = {this.state.cellsDataContainer[x][y].defaultClassName} 
+								actor = {actor}
+							/>; 
 				cells.push(cell);
 				cellKey++;
-			}
-			
+			}			
 			const row = <tr>{cells}</tr>;
             grid.push(row);
 		}
@@ -199,22 +220,44 @@ export default class Board extends Component {
 	drawSelectedCells(positionX, positionY) {
 		console.log('drawSelectedCells');
 
-		var addSelectedClassname = function(x, y) {
+		var assignSelectedClassname = function(x, y) {
 
 			if (this.state.cellsDataContainer[x] && this.state.cellsDataContainer[x][y]) {
-				const prevClassName = this.state.cellsDataContainer[x][y].className;
-				this.state.cellsDataContainer[x][y].className = prevClassName + ' highlight-cell';
+				this.state.cellsDataContainer[x][y].className = this.state.cellsDataContainer[x][y].defaultClassName + ' highlight-cell';
 			}	
 		}.bind(this);
 
 		//!!! TODO - заглушка
 		if (this.props.userColor == 'black') {
-			addSelectedClassname(positionX - 1, positionY + 1);
-			addSelectedClassname(positionX + 1, positionY + 1);
+			assignSelectedClassname(positionX - 1, positionY + 1);
+			assignSelectedClassname(positionX + 1, positionY + 1);
 		}
 		else if (this.props.userColor == 'white') {
-			addSelectedClassname(positionX - 1, positionY - 1);
-			addSelectedClassname(positionX + 1, positionY - 1);
+			assignSelectedClassname(positionX - 1, positionY - 1);
+			assignSelectedClassname(positionX + 1, positionY - 1);
+		}
+		
+		this.setState({});
+	}
+
+	drawDeselectedCells(positionX, positionY) {
+		console.log('drawDeselectedCells');
+
+		var assignDeselectedClassname = function(x, y) {
+
+			if (this.state.cellsDataContainer[x] && this.state.cellsDataContainer[x][y]) {
+				this.state.cellsDataContainer[x][y].className = this.state.cellsDataContainer[x][y].defaultClassName
+			}	
+		}.bind(this);
+
+		//!!! TODO - заглушка
+		if (this.props.userColor == 'black') {
+			assignDeselectedClassname(positionX - 1, positionY + 1);
+			assignDeselectedClassname(positionX + 1, positionY + 1);
+		}
+		else if (this.props.userColor == 'white') {
+			assignDeselectedClassname(positionX - 1, positionY - 1);
+			assignDeselectedClassname(positionX + 1, positionY - 1);
 		}
 		
 		this.setState({});
@@ -226,7 +269,7 @@ export default class Board extends Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
 
-		//???????????
+		//TODO???????????
 		if (nextProps.boardSize !== this.props.boardSize || nextProps.mode !== this.props.mode
 			|| nextProps.userColor !== this.props.userColor
 			|| nextState.cellsDataContainer !== this.state.cellsDataContainer) {
@@ -241,7 +284,6 @@ export default class Board extends Component {
 
 		if (nextProps.boardSize !== this.props.boardSize || nextProps.mode !== this.props.mode || nextProps.userColor !== this.props.userColor) {
 			this.fillGridData(nextProps.boardSize, nextProps.mode, nextProps.userColor);
-			//this.setState({});
 		}	
 	}
 
