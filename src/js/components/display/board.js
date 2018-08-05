@@ -12,19 +12,25 @@ class Cell extends Component {
 		let getNewActor = false;
 
 		if (nextProps.actor && this.props.actor) {
-			
 			getNewActor = nextProps.actor.props.className !== this.props.actor.props.className;
 		}
-		return (nextProps.className !== this.props.className || getNewActor);
+		return (nextProps.className !== this.props.className || getNewActor 
+				|| nextProps.chooseCellToMoveActor);
 		//return (nextProps.className !== this.props.className);
-    }
+	}
+	
+	componentDidMount() {
+		if (this.ref && this.props.chooseCellToMoveActor) {
+			this.ref.addEventListener('mouseup', this.props.chooseCellToMoveActor(this.props.positionX, this.props.positionY));
+		}
+	}
     
     render() {
 		console.log('render cell');
 		const cellClass = 'cell ' + (this.props.className ? this.props.className : '');
         
 		return (
-			<td className={cellClass}>
+			<td ref={elem => this.ref = elem} className={cellClass}>
 				{this.props.actor ? this.props.actor : ''}
 			</td>
 		)
@@ -58,9 +64,14 @@ class Actor extends Component {
 			this.setState({className: this.props.defaultClassName});
 		}.bind(this);
 
+		var chooseActorToMove = function(event) {
+			this.props.chooseActorToMove(this.props.positionX, this.props.positionY);
+		}.bind(this);
+
 		if (this.ref) {
 			this.ref.addEventListener('mouseover', select);
 			this.ref.addEventListener("mouseout", deselect); 
+			this.ref.addEventListener('mousedown', chooseActorToMove);
 		}
 	}
 
@@ -106,6 +117,8 @@ export default class Board extends Component {
 		this.fillGridData = this.fillGridData.bind(this);
 		this.drawSelectedCells = this.drawSelectedCells.bind(this);
 		this.drawDeselectedCells = this.drawDeselectedCells.bind(this);
+		this.chooseActorToMove = this.chooseActorToMove.bind(this);
+		this.chooseCellToMoveActor = this.chooseCellToMoveActor.bind(this);
 	}
 
 	fillGridData(boardSize = this.props.boardSize, mode = this.props.mode, userColor = this.props.userColor) {
@@ -133,9 +146,9 @@ export default class Board extends Component {
 					positionX: x, 
 					positionY: y, 
 					defaultClassName: cellClass, 
-					className: cellClass});
-
-				//let actor = null;
+					className: cellClass,
+					chooseCellToMoveActor: null,
+				});
 
 				if (cellClass == 'black') {
 
@@ -197,8 +210,11 @@ export default class Board extends Component {
 								positionY = {y} 
 								drawSelectedCells = {this.drawSelectedCells}
 								drawDeselectedCells = {this.drawDeselectedCells}
+								chooseActorToMove = {this.chooseActorToMove}
 							/>;
-					actorKey++
+					actorKey++;
+
+					this.state.cellsDataContainer[x][y].actor = {isUserColor: this.state.actorsDataContainer[x][y].isUserColor};
 				}
 
 				let cell = <Cell 
@@ -206,6 +222,7 @@ export default class Board extends Component {
 								className = {this.state.cellsDataContainer[x][y].className} 
 								defaultClassName = {this.state.cellsDataContainer[x][y].defaultClassName} 
 								actor = {actor}
+								chooseCellToMoveActor = {this.state.cellsDataContainer[x][y].chooseCellToMoveActor}
 							/>; 
 				cells.push(cell);
 				cellKey++;
@@ -222,8 +239,11 @@ export default class Board extends Component {
 
 		var assignSelectedClassname = function(x, y) {
 
-			if (this.state.cellsDataContainer[x] && this.state.cellsDataContainer[x][y]) {
-				this.state.cellsDataContainer[x][y].className = this.state.cellsDataContainer[x][y].defaultClassName + ' highlight-cell';
+			if (this.state.cellsDataContainer[x] && this.state.cellsDataContainer[x][y]
+				&& (!this.state.cellsDataContainer[x][y].actor 
+					|| (this.state.cellsDataContainer[x][y].actor && !this.state.cellsDataContainer[x][y].actor.isUserColor))) {
+					
+						this.state.cellsDataContainer[x][y].className = this.state.cellsDataContainer[x][y].defaultClassName + ' highlight-cell';
 			}	
 		}.bind(this);
 
@@ -263,6 +283,37 @@ export default class Board extends Component {
 		this.setState({});
 	}
 
+	chooseActorToMove(positionX, positionY) {
+		console.log('chooseActorToMove');
+
+		var assignCellMethod = function(x, y) {
+
+			if (this.state.cellsDataContainer[x] && this.state.cellsDataContainer[x][y]
+				&& this.state.cellsDataContainer[x][y].className !== this.state.cellsDataContainer[x][y].defaultClassName) {
+	
+					this.state.cellsDataContainer[x][y].chooseCellToMoveActor = this.chooseCellToMoveActor;	
+			}
+		}.bind(this);
+
+		//!!! TODO - заглушка
+		if (this.props.userColor == 'black') {
+			assignCellMethod(positionX - 1, positionY + 1);
+			assignCellMethod(positionX + 1, positionY + 1);
+		}
+		else if (this.props.userColor == 'white') {
+			assignCellMethod(positionX - 1, positionY - 1);
+			assignCellMethod(positionX + 1, positionY - 1);
+		}
+		
+		this.setState({});
+	}
+
+	chooseCellToMoveActor(positionX, positionY) {
+
+		console.log('chooseCellToMoveActor');
+
+	}
+
 	componentWillMount() {
 		this.fillGridData();
 	}
@@ -288,10 +339,10 @@ export default class Board extends Component {
 	}
 
     render() {
-		console.log('render board');
+		console.log('------------------render board--------------------');
 
 		const grid = this.fillGrid();
-		console.log('grid', grid);
+		//console.log('grid', grid);
 
         return (
 	

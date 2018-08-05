@@ -43,6 +43,7 @@ export default class Toolbar extends Component {
 								<option value="easy">легкий</option>
 								<option value="medium">средний</option>
 								<option value="hard">сложный</option>
+								<option value="hard">randomize</option>
 							</select>
 						</div>
 						<div>
