@@ -18,7 +18,9 @@ export default class Display extends Component {
             mode: 'classic',
             currentActionDefinition: 'Game start' + '\n' + '\n',
             endOfGame: false,
-            currentTurn: null,
+            currentUserTurn: null,
+            isUserTurn: true,
+            currentAITurn: null,
         }
 
         this.state = {
@@ -28,8 +30,9 @@ export default class Display extends Component {
             mode: this.defaultSettings.mode,
             currentActionDefinition: this.defaultSettings.currentActionDefinition,
             endOfGame: this.defaultSettings.endOfGame,
-            currentTurn: this.defaultSettings.currentTurn,
-            
+            isUserTurn: this.defaultSettings.isUserTurn,
+            currentUserTurn: this.defaultSettings.currentUserTurn,
+            currentAITurn: this.defaultSettings.currentAITurn,
         };
 
         this.updateData = this.updateData.bind(this);
@@ -41,19 +44,26 @@ export default class Display extends Component {
     updateData(data, value) {
 
         this.state[`${data}`] = value;
+
+        if (data == 'userColor') {
+            this.state.isUserTurn = (this.state.userColor == 'white') ? true : false;
+        };
+
         this.setState({});
     }
 
-    userTurn(currentPosition, newPosition, movedActor, eatenActor) {
+    getUserTurn(currentPosition, newPosition, movedActor, eatenActor) {
 
         console.log('display userTurn');
         
-        this.state.currentTurn = {
+        this.state.currentUserTurn = {
             currentPosition: currentPosition,
             newPosition: newPosition,
             movedActor: movedActor,
             eatenActor: eatenActor
         };
+
+        //this.state.is
 
         this.setState({});
 
@@ -81,8 +91,9 @@ export default class Display extends Component {
             mode: this.defaultSettings.mode,
             currentActionDefinition: this.defaultSettings.currentActionDefinition,
             endOfGame: this.defaultSettings.endOfGame,
-            currentTurn: this.defaultSettings.currentTurn,
-        })
+            currentUserTurn: this.defaultSettings.currentUserTurn,
+            currentAITurn: this.defaultSettings.currentAITurn,
+        });
     }
 
     render() {
@@ -96,10 +107,22 @@ export default class Display extends Component {
                     <Header/>
                     <div className = 'inner-wrap'>
 
-                    <Toolbar updateData = {this.updateData} userColor = {this.state.userColor} boardSize = {this.state.boardSize} level = {this.state.level} mode = {this.state.mode}/>
+                    <Toolbar 
+                        updateData = {this.updateData} 
+                        userColor = {this.state.userColor} 
+                        boardSize = {this.state.boardSize} 
+                        level = {this.state.level} 
+                        mode = {this.state.mode}
+                    />
 
                     <div className = 'main'>
-                        <Board userTurn = {this.userTurn} boardSize = {this.state.boardSize} userColor = {this.state.userColor} mode = {this.state.mode}/>			
+                        <Board 
+                            isUserTurn = {this.state.isUserTurn} 
+                            userTurn = {this.userTurn} 
+                            boardSize = {this.state.boardSize} 
+                            userColor = {this.state.userColor} 
+                            mode = {this.state.mode}
+                        />			
                     </div>
 
                     <Infobar currentActionDefinition = {this.state.currentActionDefinition}/>
