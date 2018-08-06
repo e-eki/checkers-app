@@ -380,8 +380,12 @@ export default class Board extends Component {
 		let movedActor = this.state.activeActorPosition; //TODO
 		let eatenActor = this.state.actorsDataContainer[positionX][positionY];
 		
-		
+		this.state.actorsDataContainer[positionX][positionY] = this.state.actorsDataContainer[movedActor.positionX][movedActor.positionY];
+		this.state.actorsDataContainer[movedActor.positionX][movedActor.positionY] = null;
+		this.state.activeActorPosition = null;
 
+		//TODO - отрисовка
+		//this.setState({});
 
 		this.turnIsDone(currentPosition, newPosition, movedActor, eatenActor);
 	}
