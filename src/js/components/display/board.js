@@ -4,29 +4,48 @@ import React, { Component } from 'react';
 class Cell extends Component {
 
     constructor(props) {
-        super(props);
-    }
+		super(props);
+		
+		this.addUserFunctionality = this.addUserFunctionality.bind(this);
+	}
+	
+	addUserFunctionality() {
+		console.log('cell addUserFunctionality', this.ref);
+
+		var chooseCellToMoveActor = function(event) {
+			console.log('!!!chooseCellToMoveActor', this.props.positionX, this.props.positionY, this.ref);
+			this.props.chooseCellToMoveActor(this.props.positionX, this.props.positionY);
+		}.bind(this);
+
+		if (this.ref) {
+			this.ref.addEventListener('mouseup', chooseCellToMoveActor);
+		}	
+	}
 
     shouldComponentUpdate(nextProps, nextState) {
 		//console.log('cell shouldComponentUpdate');
 		let getNewActor = false;
 
 		if (nextProps.actor && this.props.actor) {
-			getNewActor = nextProps.actor.props.className !== this.props.actor.props.className;
+
+			if (nextProps.actor.props.className !== this.props.actor.props.className)
+				getNewActor = true;
+			else if (nextProps.actor.props.isUserColor && nextProps.actor.props.passive !== this.props.actor.props.passive)
+				getNewActor = true;
 		}
 		return (nextProps.className !== this.props.className || getNewActor 
 				|| nextProps.chooseCellToMoveActor);
 		//return (nextProps.className !== this.props.className);
 	}
 	
-	componentDidMount() {
+	componentDidUpdate() {
 		if (this.ref && this.props.chooseCellToMoveActor) {
-			this.ref.addEventListener('mouseup', this.props.chooseCellToMoveActor(this.props.positionX, this.props.positionY));
+			this.addUserFunctionality();
 		}
 	}
-    
+
     render() {
-		console.log('render cell');
+		console.log('render cell', this.props.positionX, this.props.positionY, this.ref);
 		const cellClass = 'cell ' + (this.props.className ? this.props.className : '');
         
 		return (
@@ -46,39 +65,44 @@ class Actor extends Component {
 			className: '',
 		}
 
+		this.select = this.select.bind(this);
+		this.deselect = this.deselect.bind(this);
+		this.chooseActorToMove = this.chooseActorToMove.bind(this);
 		this.addUserFunctionality = this.addUserFunctionality.bind(this);
+	}
+
+	select(event) {
+		console.log('select');
+		this.props.drawSelectedCells(this.props.positionX, this.props.positionY);
+		let newClassName = this.props.defaultClassName + ' highlight-actor';
+		this.setState({className: newClassName});
+	}
+
+	deselect(event) {
+		console.log('deselect');
+		this.props.drawDeselectedCells(this.props.positionX, this.props.positionY);
+		this.setState({className: this.props.defaultClassName});
+	}
+
+	chooseActorToMove(event) {
+		//this.ref.removeEventListener('mouseover', this.select);
+		//this.ref.removeEventListener("mouseout", this.deselect); 
+		this.props.chooseActorToMove(this.props.positionX, this.props.positionY);
 	}
 	
 	addUserFunctionality() {
 
-		var select = function(event) {
-			console.log('select');
-			this.props.drawSelectedCells(this.props.positionX, this.props.positionY);
-			let newClassName = this.props.defaultClassName + ' highlight-actor';
-			this.setState({className: newClassName});
-		}.bind(this);
-
-		var deselect = function(event) {
-			console.log('deselect');
-			this.props.drawDeselectedCells(this.props.positionX, this.props.positionY);
-			this.setState({className: this.props.defaultClassName});
-		}.bind(this);
-
-		var chooseActorToMove = function(event) {
-			this.props.chooseActorToMove(this.props.positionX, this.props.positionY);
-		}.bind(this);
-
 		if (this.ref) {
-			this.ref.addEventListener('mouseover', select);
-			this.ref.addEventListener("mouseout", deselect); 
-			this.ref.addEventListener('mousedown', chooseActorToMove);
+			this.ref.addEventListener('mouseover', this.select);
+			this.ref.addEventListener("mouseout", this.deselect); 
+			this.ref.addEventListener('mousedown', this.chooseActorToMove);
 		}
 	}
 
     shouldComponentUpdate(nextProps, nextState) {
 		//console.log('actor shouldComponentUpdate');
-		return (nextProps.className !== this.props.className || nextState.className !== this.state.className);
-		//return true;
+		return (nextProps.className !== this.props.className || nextState.className !== this.state.className
+				|| (this.props.isUserColor && nextProps.passive !== this.props.passive));		
 	}
 
 	componentWillMount() {
@@ -89,6 +113,19 @@ class Actor extends Component {
 		if (nextProps.className !== this.props.className)
 			this.state.className = nextProps.className;
 	}
+
+	componentDidUpdate(prevProps) {
+		if (!prevProps.passive && this.props.passive) {
+			this.ref.removeEventListener('mouseover', this.select);
+			this.ref.removeEventListener("mouseout", this.deselect); 
+			this.ref.removeEventListener('mousedown', this.chooseActorToMove);
+		}
+		else if (prevProps.passive && !this.props.passive) {
+			this.ref.addEventListener('mouseover', this.select);
+			this.ref.addEventListener("mouseout", this.deselect); 
+			this.ref.addEventListener('mousedown', this.chooseActorToMove);
+		}
+	}
 	
 	componentDidMount() {
 		if (this.props.isUserColor)
@@ -96,7 +133,7 @@ class Actor extends Component {
 	}
     
     render() {
-		console.log('render actor');
+		console.log('render actor', this.props.positionX, this.props.positionY, this.ref);
 		const actorClass = 'actor ' + (this.state.className ? this.state.className : '');
         
         return <div ref={elem => this.ref = elem} className={actorClass}></div>;
@@ -111,6 +148,7 @@ export default class Board extends Component {
 		this.state = {
 			cellsDataContainer: [],
 			actorsDataContainer: [],
+			activeActorPosition: null,
 		};
 
 		this.fillGrid = this.fillGrid.bind(this);
@@ -119,6 +157,7 @@ export default class Board extends Component {
 		this.drawDeselectedCells = this.drawDeselectedCells.bind(this);
 		this.chooseActorToMove = this.chooseActorToMove.bind(this);
 		this.chooseCellToMoveActor = this.chooseCellToMoveActor.bind(this);
+		this.turnIsDone = this.turnIsDone.bind(this);
 	}
 
 	fillGridData(boardSize = this.props.boardSize, mode = this.props.mode, userColor = this.props.userColor) {
@@ -143,8 +182,8 @@ export default class Board extends Component {
 
 				let cellClass = (x + y) % 2 == 0 ? 'white' : 'black';			
 				this.state.cellsDataContainer[x].push({
-					positionX: x, 
-					positionY: y, 
+					//positionX: x, 
+					//positionY: y, 
 					defaultClassName: cellClass, 
 					className: cellClass,
 					chooseCellToMoveActor: null,
@@ -163,11 +202,12 @@ export default class Board extends Component {
 						let actorClass = actorColor + ' ' + actorType;
 						let isUserColor = (userColor == actorColor);
 						this.state.actorsDataContainer[x].push({
-							positionX: x, 
-							positionY: y, 
+							//positionX: x, 
+							//positionY: y, 
 							defaultClassName: actorClass, 
 							className: actorClass, 
-							isUserColor: isUserColor
+							isUserColor: isUserColor,
+							passive: false,
 						});
 					}
 					else {
@@ -211,6 +251,7 @@ export default class Board extends Component {
 								drawSelectedCells = {this.drawSelectedCells}
 								drawDeselectedCells = {this.drawDeselectedCells}
 								chooseActorToMove = {this.chooseActorToMove}
+								passive = {this.state.actorsDataContainer[x][y].passive}
 							/>;
 					actorKey++;
 
@@ -221,6 +262,8 @@ export default class Board extends Component {
 								key={cellKey} 
 								className = {this.state.cellsDataContainer[x][y].className} 
 								defaultClassName = {this.state.cellsDataContainer[x][y].defaultClassName} 
+								positionX = {x} 
+								positionY = {y} 
 								actor = {actor}
 								chooseCellToMoveActor = {this.state.cellsDataContainer[x][y].chooseCellToMoveActor}
 							/>; 
@@ -304,7 +347,19 @@ export default class Board extends Component {
 			assignCellMethod(positionX - 1, positionY - 1);
 			assignCellMethod(positionX + 1, positionY - 1);
 		}
-		
+
+		for (let y = 0; y < this.props.boardSize; y++) {
+			for (let x = 0; x < this.props.boardSize; x++) {
+				if (this.state.actorsDataContainer[x][y])
+					this.state.actorsDataContainer[x][y].passive = true;
+			}
+		}
+
+		this.state.activeActorPosition = {
+			x: positionX,
+			y: positionY
+		};
+
 		this.setState({});
 	}
 
@@ -312,6 +367,28 @@ export default class Board extends Component {
 
 		console.log('chooseCellToMoveActor');
 
+		let newPosition = {
+			x: positionX,
+			y: positionY
+		};
+
+		let currentPosition = {
+			x: this.state.activeActorPosition.positionX,
+			y: this.state.activeActorPosition.positionY
+		};
+
+		let movedActor = this.state.activeActorPosition; //TODO
+		let eatenActor = this.state.actorsDataContainer[positionX][positionY];
+		
+		
+
+
+		this.turnIsDone(currentPosition, newPosition, movedActor, eatenActor);
+	}
+
+	turnIsDone(currentPosition, newPosition, movedActor, eatenActor) {
+		console.log('turnIsDone');
+		this.props.userTurn(currentPosition, newPosition, movedActor, eatenActor);		
 	}
 
 	componentWillMount() {
@@ -336,6 +413,12 @@ export default class Board extends Component {
 		if (nextProps.boardSize !== this.props.boardSize || nextProps.mode !== this.props.mode || nextProps.userColor !== this.props.userColor) {
 			this.fillGridData(nextProps.boardSize, nextProps.mode, nextProps.userColor);
 		}	
+	}
+
+	componentDidMount(){
+		//addEventListener('click', function(event) {this.console.log('click', event, event.target)});
+		//addEventListener('mouseup', function(event) {this.console.log('mouseup', event, event.target)});
+		//addEventListener('mousedown', function(event) {this.console.log('mousedown', event, event.target)});
 	}
 
     render() {

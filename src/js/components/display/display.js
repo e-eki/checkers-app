@@ -18,6 +18,7 @@ export default class Display extends Component {
             mode: 'classic',
             currentActionDefinition: 'Game start' + '\n' + '\n',
             endOfGame: false,
+            currentTurn: null,
         }
 
         this.state = {
@@ -27,16 +28,33 @@ export default class Display extends Component {
             mode: this.defaultSettings.mode,
             currentActionDefinition: this.defaultSettings.currentActionDefinition,
             endOfGame: this.defaultSettings.endOfGame,
+            currentTurn: this.defaultSettings.currentTurn,
+            
         };
 
         this.updateData = this.updateData.bind(this);
         this.drawGameOver = this.drawGameOver.bind(this);
         this.resetDisplay = this.resetDisplay.bind(this);
+        this.userTurn = this.userTurn.bind(this);
     }
 
     updateData(data, value) {
 
         this.state[`${data}`] = value;
+        this.setState({});
+    }
+
+    userTurn(currentPosition, newPosition, movedActor, eatenActor) {
+
+        console.log('display userTurn');
+        
+        this.state.currentTurn = {
+            currentPosition: currentPosition,
+            newPosition: newPosition,
+            movedActor: movedActor,
+            eatenActor: eatenActor
+        };
+
         this.setState({});
     }
 
@@ -61,6 +79,7 @@ export default class Display extends Component {
             mode: this.defaultSettings.mode,
             currentActionDefinition: this.defaultSettings.currentActionDefinition,
             endOfGame: this.defaultSettings.endOfGame,
+            currentTurn: this.defaultSettings.currentTurn,
         })
     }
 
@@ -75,10 +94,10 @@ export default class Display extends Component {
                     <Header/>
                     <div className = 'inner-wrap'>
 
-                    <Toolbar updateData={this.updateData} userColor = {this.state.userColor} boardSize = {this.state.boardSize} level = {this.state.level} mode = {this.state.mode}/>
+                    <Toolbar updateData = {this.updateData} userColor = {this.state.userColor} boardSize = {this.state.boardSize} level = {this.state.level} mode = {this.state.mode}/>
 
                     <div className = 'main'>
-                        <Board boardSize = {this.state.boardSize} userColor = {this.state.userColor} mode = {this.state.mode}/>			
+                        <Board userTurn = {this.userTurn} boardSize = {this.state.boardSize} userColor = {this.state.userColor} mode = {this.state.mode}/>			
                     </div>
 
                     <Infobar currentActionDefinition = {this.state.currentActionDefinition}/>
