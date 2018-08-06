@@ -13,7 +13,7 @@ class Cell extends Component {
 		console.log('cell addUserFunctionality', this.ref);
 
 		var chooseCellToMoveActor = function(event) {
-			console.log('!!!chooseCellToMoveActor', this.props.positionX, this.props.positionY, this.ref);
+			console.log('chooseCellToMoveActor', this.props.positionX, this.props.positionY, this.ref);
 			this.props.chooseCellToMoveActor(this.props.positionX, this.props.positionY);
 		}.bind(this);
 
@@ -371,17 +371,23 @@ export default class Board extends Component {
 		console.log('chooseCellToMoveActor');
 
 		let newPosition = {
-			x: positionX,
-			y: positionY
+			positionX: positionX,
+			positionY: positionY
 		};
 
 		let currentPosition = {
-			x: this.state.activeActorPosition.positionX,
-			y: this.state.activeActorPosition.positionY
+			positionX: this.state.activeActorPosition.positionX,
+			positionX: this.state.activeActorPosition.positionY
 		};
 
 		let movedActor = this.state.activeActorPosition; //TODO
 		let eatenActor = this.state.actorsDataContainer[positionX][positionY];
+
+		this.turnIsDone(currentPosition, newPosition, movedActor, eatenActor);
+	}
+
+	turnIsDone(currentPosition, newPosition, movedActor, eatenActor) {
+		console.log('turnIsDone');
 
 		for (let y = 0; y < this.props.boardSize; y++) {
 			for (let x = 0; x < this.props.boardSize; x++) {
@@ -390,23 +396,22 @@ export default class Board extends Component {
 
 				if (this.state.actorsDataContainer[x][y]) {	
 					this.state.actorsDataContainer[x][y].className = this.state.actorsDataContainer[x][y].defaultClassName;
-					this.state.actorsDataContainer[x][y].passive = true;
+					//this.state.actorsDataContainer[x][y].passive = true;  //??
 				}
 			}
 		}
 
-		this.state.actorsDataContainer[positionX][positionY] = this.state.actorsDataContainer[movedActor.positionX][movedActor.positionY];
+		this.state.actorsDataContainer[newPosition.positionX][newPosition.positionY].passive = false;  //??
+		this.state.actorsDataContainer[newPosition.positionX][newPosition.positionY] = this.state.actorsDataContainer[movedActor.positionX][movedActor.positionY];
 		this.state.actorsDataContainer[movedActor.positionX][movedActor.positionY] = null;
 		this.state.activeActorPosition = null;
 
-		//this.setState({});  //из дисплея
+		this.setState({});  //из дисплея??
 
-		this.turnIsDone(currentPosition, newPosition, movedActor, eatenActor);
-	}
-
-	turnIsDone(currentPosition, newPosition, movedActor, eatenActor) {
-		console.log('turnIsDone');
-		this.props.userTurn(currentPosition, newPosition, movedActor, eatenActor);		
+		this.props.analyzeUserTurn(currentPosition, newPosition, movedActor, eatenActor);	
+		
+		console.log(this.state.actorsDataContainer[newPosition.positionX][newPosition.positionY]);
+		console.log(this.state.actorsDataContainer[movedActor.positionX][movedActor.positionY]);
 	}
 
 	componentWillMount() {

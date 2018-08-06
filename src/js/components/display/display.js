@@ -38,7 +38,7 @@ export default class Display extends Component {
         this.updateData = this.updateData.bind(this);
         this.drawGameOver = this.drawGameOver.bind(this);
         this.resetDisplay = this.resetDisplay.bind(this);
-        this.userTurn = this.userTurn.bind(this);
+        this.analyzeUserTurn = this.analyzeUserTurn.bind(this);
     }
 
     updateData(data, value) {
@@ -52,7 +52,7 @@ export default class Display extends Component {
         this.setState({});
     }
 
-    getUserTurn(currentPosition, newPosition, movedActor, eatenActor) {
+    analyzeUserTurn(currentPosition, newPosition, movedActor, eatenActor) {
 
         console.log('display userTurn');
         
@@ -63,11 +63,11 @@ export default class Display extends Component {
             eatenActor: eatenActor
         };
 
-        //this.state.is
+        this.state.isUserTurn = false;
 
-        this.setState({});
+        //this.setState({});
 
-        console.log(this.state.currentTurn);
+        console.log('currentUserTurn', this.state.currentUserTurn);
     }
 
     drawGameOver() {
@@ -118,7 +118,7 @@ export default class Display extends Component {
                     <div className = 'main'>
                         <Board 
                             isUserTurn = {this.state.isUserTurn} 
-                            userTurn = {this.userTurn} 
+                            analyzeUserTurn = {this.analyzeUserTurn} 
                             boardSize = {this.state.boardSize} 
                             userColor = {this.state.userColor} 
                             mode = {this.state.mode}
