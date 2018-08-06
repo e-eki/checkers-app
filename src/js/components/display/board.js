@@ -26,6 +26,9 @@ class Cell extends Component {
 		//console.log('cell shouldComponentUpdate');
 		let getNewActor = false;
 
+		//TODO
+		if (!nextProps.actor && this.props.actor) getNewActor = true;
+
 		if (nextProps.actor && this.props.actor) {
 
 			if (nextProps.actor.props.className !== this.props.actor.props.className)
@@ -356,8 +359,8 @@ export default class Board extends Component {
 		}
 
 		this.state.activeActorPosition = {
-			x: positionX,
-			y: positionY
+			positionX: positionX,
+			positionY: positionY
 		};
 
 		this.setState({});
@@ -379,13 +382,24 @@ export default class Board extends Component {
 
 		let movedActor = this.state.activeActorPosition; //TODO
 		let eatenActor = this.state.actorsDataContainer[positionX][positionY];
-		
+
+		for (let y = 0; y < this.props.boardSize; y++) {
+			for (let x = 0; x < this.props.boardSize; x++) {
+				this.state.cellsDataContainer[x][y].className = this.state.cellsDataContainer[x][y].defaultClassName;
+				this.state.cellsDataContainer[x][y].chooseCellToMoveActor = null;
+
+				if (this.state.actorsDataContainer[x][y]) {	
+					this.state.actorsDataContainer[x][y].className = this.state.actorsDataContainer[x][y].defaultClassName;
+					this.state.actorsDataContainer[x][y].passive = true;
+				}
+			}
+		}
+
 		this.state.actorsDataContainer[positionX][positionY] = this.state.actorsDataContainer[movedActor.positionX][movedActor.positionY];
 		this.state.actorsDataContainer[movedActor.positionX][movedActor.positionY] = null;
 		this.state.activeActorPosition = null;
 
-		//TODO - отрисовка
-		//this.setState({});
+		//this.setState({});  //из дисплея
 
 		this.turnIsDone(currentPosition, newPosition, movedActor, eatenActor);
 	}
