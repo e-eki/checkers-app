@@ -56,6 +56,8 @@ export default class Display extends Component {
         };
 
         this.setState({});
+
+        console.log(this.state.currentTurn);
     }
 
     drawGameOver() {
