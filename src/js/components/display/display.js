@@ -6,6 +6,7 @@ import Board from './board';
 import Infobar from './infobar';
 import Tablo from './tablo';
 
+// визуальное представление приложения
 export default class Display extends Component {
 
     constructor(props) {
@@ -18,9 +19,9 @@ export default class Display extends Component {
             mode: 'classic',
             currentActionDefinition: 'Game start' + '\n' + '\n',
             endOfGame: false,
-            currentUserTurn: null,
-            isUserTurn: true,
-            currentAITurn: null,
+            isUserTurn: true,   // флаг, что сейчас ход пользователя
+            currentUserTurn: null,  // данные о текущем ходе пользователя
+            currentAITurn: null,   // данные о текущем ходе ИИ
         }
 
         this.state = {
@@ -41,6 +42,7 @@ export default class Display extends Component {
         this.analyzeUserTurn = this.analyzeUserTurn.bind(this);
     }
 
+    // обновление настроек по событиям из тулбара
     updateData(data, value) {
 
         this.state[`${data}`] = value;
@@ -54,7 +56,7 @@ export default class Display extends Component {
 
     analyzeUserTurn(currentPosition, newPosition, movedActor, eatenActor) {
 
-        console.log('display userTurn');
+        console.log('display analyzeUserTurn');
         
         this.state.currentUserTurn = {
             currentPosition: currentPosition,
@@ -65,11 +67,12 @@ export default class Display extends Component {
 
         this.state.isUserTurn = false;
 
-        //this.setState({});
-
-        console.log('currentUserTurn', this.state.currentUserTurn);
+        this.setState({});
+        //console.log('currentUserTurn', this.state.currentUserTurn);
     }
 
+    // при завершении игры показывается табло с результатами,
+    // по клику или нажатию любой клавиши происходит reset
     drawGameOver() {
         this.setState({
             endOfGame: true,
@@ -118,6 +121,7 @@ export default class Display extends Component {
                     <div className = 'main'>
                         <Board 
                             isUserTurn = {this.state.isUserTurn} 
+                            currentAITurn = {this.state.currentAITurn}
                             analyzeUserTurn = {this.analyzeUserTurn} 
                             boardSize = {this.state.boardSize} 
                             userColor = {this.state.userColor} 

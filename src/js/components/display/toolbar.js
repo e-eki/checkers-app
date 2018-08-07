@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 
+// панель настроек
 export default class Toolbar extends Component {
 
 	constructor(props){
@@ -10,11 +11,14 @@ export default class Toolbar extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
+		// перерисовка тулбара нужна только когда изменяется размер доски (чтобы менялось value в инпуте)
         return (nextProps.boardSize !== this.props.boardSize);
     }
 	
+	// событие изменения настроек
 	changeData(event) {
 		console.log(event.target.name, event.target.value);
+		// вызывает событие в родителе - дисплее
 		this.props.updateData(event.target.name, event.target.value);		
 	}
 

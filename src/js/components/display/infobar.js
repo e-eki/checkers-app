@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 
+// панель с инфой
 export default class Infobar extends Component {
 
 	constructor(props) {
@@ -16,6 +17,8 @@ export default class Infobar extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
+		// TODO ??
+		// перерисовывается каждую минуту для отображения текущего времени и при каждом ходе
 		return (nextState.currentHours!== this.state.currentHours || nextState.currentMinutes!== this.state.currentMinutes ||
 				 nextProps.currentActionDefinition !== this.state.currentActionDefinition);
 	}

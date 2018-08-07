@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 
+// панель с цитатами
 export default class Quotebar extends Component {
 
 	constructor(props) {
@@ -105,7 +106,9 @@ export default class Quotebar extends Component {
 
 	componentDidMount() {
 
+		// обновление цитаты
 		var updateQuote = function() {
+			// рандомная цитата из массива
 			let newQuote = this.quotes[Math.floor(Math.random() * this.quotes.length)];
 	
 			this.setState({
