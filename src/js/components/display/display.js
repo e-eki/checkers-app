@@ -38,6 +38,7 @@ export default class Display extends Component {
             currentAITurn: this.defaultSettings.currentAITurn,
         };
 
+        this.switchStartGame = this.switchStartGame.bind(this);
         this.updateData = this.updateData.bind(this);
         this.drawGameOver = this.drawGameOver.bind(this);
         this.resetDisplay = this.resetDisplay.bind(this);
@@ -46,14 +47,57 @@ export default class Display extends Component {
 
     // обновление настроек по событиям из тулбара
     updateData(data, value) {
-        debugger;
+
         this.state[`${data}`] = value;
-
-        if (data == 'startOfGame') {
-            this.state.isUserTurn = (this.state.userColor == 'white') ? true : false;
-        };
-
         this.setState({});
+    }
+
+    switchStartGame() {
+        console.log('switchStartGame');
+
+        if (this.state.startOfGame == false) {
+            this.setState({
+                startOfGame: true,
+                endOfGame: false,
+                isUserTurn: (this.state.userColor == 'white') ? true : false,
+            });
+        }
+        else {
+            this.setState({
+                startOfGame: false,
+                endOfGame: true,
+            });
+            this.drawGameOver();
+        } 
+    }
+
+    // при завершении игры показывается табло с результатами,
+    // по клику или нажатию любой клавиши происходит reset
+    drawGameOver() {
+        console.log('drawGameOver');
+
+        addEventListener('click', this.resetDisplay);
+        addEventListener('keydown', this.resetDisplay);
+    }
+
+    resetDisplay() {
+        console.log('resetDisplay');
+
+        removeEventListener('click', this.resetDisplay);
+        removeEventListener('keydown', this.resetDisplay);
+
+        this.setState({
+            userColor: this.defaultSettings.userColor,
+            boardSize: this.defaultSettings.boardSize,
+            level: this.defaultSettings.level,
+            mode: this.defaultSettings.mode,
+            currentActionDefinition: this.defaultSettings.currentActionDefinition,
+            startOfGame: this.defaultSettings.startOfGame,
+            endOfGame: this.defaultSettings.endOfGame,
+            isUserTurn: this.defaultSettings.isUserTurn,
+            currentUserTurn: this.defaultSettings.currentUserTurn,
+            currentAITurn: this.defaultSettings.currentAITurn,
+        });
     }
 
     analyzeUserTurn(currentPosition, newPosition, movedActor, eatenActor) {
@@ -73,35 +117,7 @@ export default class Display extends Component {
         //console.log('currentUserTurn', this.state.currentUserTurn);
     }
 
-    // при завершении игры показывается табло с результатами,
-    // по клику или нажатию любой клавиши происходит reset
-    drawGameOver() {
-        this.setState({
-            endOfGame: true,
-        });
-
-        addEventListener('click', this.resetDisplay);
-        addEventListener('keydown', this.resetDisplay);
-    }
-
-    resetDisplay() {
-
-        removeEventListener('click', this.resetDisplay);
-        removeEventListener('keydown', this.resetDisplay);
-
-        this.setState({
-            userColor: this.defaultSettings.userColor,
-            boardSize: this.defaultSettings.boardSize,
-            level: this.defaultSettings.level,
-            mode: this.defaultSettings.mode,
-            currentActionDefinition: this.defaultSettings.currentActionDefinition,
-            startOfGame: this.defaultSettings.startOfGame,
-            endOfGame: this.defaultSettings.endOfGame,
-            isUserTurn: this.defaultSettings.isUserTurn,
-            currentUserTurn: this.defaultSettings.currentUserTurn,
-            currentAITurn: this.defaultSettings.currentAITurn,
-        });
-    }
+    
 
     render() {
         console.log('render display');
@@ -115,6 +131,8 @@ export default class Display extends Component {
                     <div className = 'inner-wrap'>
 
                     <Toolbar 
+                        startOfGame = {this.state.startOfGame}
+                        switchStartGame = {this.switchStartGame}
                         updateData = {this.updateData} 
                         userColor = {this.state.userColor} 
                         boardSize = {this.state.boardSize} 
@@ -124,6 +142,7 @@ export default class Display extends Component {
 
                     <div className = 'main'>
                         <Board 
+                            startOfGame = {this.state.startOfGame}
                             isUserTurn = {this.state.isUserTurn} 
                             currentAITurn = {this.state.currentAITurn}
                             analyzeUserTurn = {this.analyzeUserTurn} 
@@ -133,7 +152,10 @@ export default class Display extends Component {
                         />			
                     </div>
 
-                    <Infobar currentActionDefinition = {this.state.currentActionDefinition}/>
+                    <Infobar 
+                        startOfGame = {this.state.startOfGame}
+                        currentActionDefinition = {this.state.currentActionDefinition}
+                    />
                     </div>
                 </div>
                

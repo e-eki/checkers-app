@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 export default class Tablo extends Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
-		// отрисовка нужна только если сменился стиль - табло стало видимым
+		// отрисовка нужна, только если сменился стиль - табло стало видимым
 		return (nextProps.className !== this.props.className);
 	}
 

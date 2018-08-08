@@ -4,6 +4,10 @@ body {
     margin: 0;
 }
 
+.disabled-cursor {
+    cursor: default;
+}
+
 .wrap {
     display: flex;
     flex-direction: column;
