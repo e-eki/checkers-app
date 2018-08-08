@@ -6,6 +6,12 @@ export default class Toolbar extends Component {
 
 	constructor(props){
 		super(props);
+
+		this.state = {
+
+			// флаг, нажата ли кнопка "Начать игру"
+			startBtnClicked: false;
+		};
                  
     	this.changeData = this.changeData.bind(this);
 	}
@@ -17,9 +23,25 @@ export default class Toolbar extends Component {
 	
 	// событие изменения настроек
 	changeData(event) {
+		
 		console.log(event.target.name, event.target.value);
 		// вызывает событие в родителе - дисплее
 		this.props.updateData(event.target.name, event.target.value);		
+	}
+
+	startBtnClick(event) {
+		debugger;
+		event.preventDefault();
+		
+		console.log(event.target.name, event.target.value);
+		
+		this.setState({
+			
+		})
+
+
+		// вызывает событие в родителе - дисплее
+		this.props.updateData(event.target.name, event.target.value);	
 	}
 
 	render() {
@@ -58,7 +80,7 @@ export default class Toolbar extends Component {
 							</select>
 						</div>
 						<button >Настройки по умолчанию</button>
-						<button name="startOfGame" onclick = {this.changeData}>Начать игру</button>
+						<button name="startOfGame" onClick = {this.changeData}>Начать игру</button>
 					</form>
 				</div>
 		)

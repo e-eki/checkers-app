@@ -46,7 +46,7 @@ export default class Display extends Component {
 
     // обновление настроек по событиям из тулбара
     updateData(data, value) {
-
+        debugger;
         this.state[`${data}`] = value;
 
         if (data == 'startOfGame') {
