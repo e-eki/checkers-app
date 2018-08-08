@@ -18,8 +18,9 @@ export default class Display extends Component {
             level: 'easy',
             mode: 'classic',
             currentActionDefinition: 'Game start' + '\n' + '\n',
+            startOfGame: false,
             endOfGame: false,
-            isUserTurn: true,   // флаг, что сейчас ход пользователя
+            isUserTurn: null,   // флаг, что сейчас ход пользователя
             currentUserTurn: null,  // данные о текущем ходе пользователя
             currentAITurn: null,   // данные о текущем ходе ИИ
         }
@@ -30,6 +31,7 @@ export default class Display extends Component {
             level: this.defaultSettings.level,
             mode: this.defaultSettings.mode,
             currentActionDefinition: this.defaultSettings.currentActionDefinition,
+            startOfGame: this.defaultSettings.startOfGame,
             endOfGame: this.defaultSettings.endOfGame,
             isUserTurn: this.defaultSettings.isUserTurn,
             currentUserTurn: this.defaultSettings.currentUserTurn,
@@ -47,7 +49,7 @@ export default class Display extends Component {
 
         this.state[`${data}`] = value;
 
-        if (data == 'userColor') {
+        if (data == 'startOfGame') {
             this.state.isUserTurn = (this.state.userColor == 'white') ? true : false;
         };
 
@@ -93,7 +95,9 @@ export default class Display extends Component {
             level: this.defaultSettings.level,
             mode: this.defaultSettings.mode,
             currentActionDefinition: this.defaultSettings.currentActionDefinition,
+            startOfGame: this.defaultSettings.startOfGame,
             endOfGame: this.defaultSettings.endOfGame,
+            isUserTurn: this.defaultSettings.isUserTurn,
             currentUserTurn: this.defaultSettings.currentUserTurn,
             currentAITurn: this.defaultSettings.currentAITurn,
         });
