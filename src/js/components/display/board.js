@@ -148,7 +148,8 @@ class Actor extends Component {
 					nextProps.className !== this.props.className || 
 					nextState.className !== this.state.className || 
 					// актер стал пассивным/активным
-					nextProps.passive !== this.props.passive
+					nextProps.passive !== this.props.passive ||
+					nextProps.unmovable && !this.props.unmovable
 				);		
 	}
 
@@ -172,6 +173,11 @@ class Actor extends Component {
 		// стал активным, добавляем пользовательский функционал
 		else if (prevProps.passive && !this.props.passive) {
 			this.addUserFunctionality();
+		}
+
+		if (this.props.unmovable && !prevProps.unmovable) {
+			debugger;
+			this.ref.removeEventListener('mousedown', this.chooseActorToMove);
 		}
 	}
 	
@@ -267,9 +273,10 @@ export default class Board extends Component {
 							defaultClassName: actorClass, // для сброса выделения юзером
 							className: actorClass, 
 							isUserColor: isUserColor,   // является ли данный актер фигурой юзера
-							// флаг, есть ли пользовательский функционал у актера - у всех актеров юзера он есть, есть сейчас ход юзера
+							// флаг, есть ли пользовательский функционал - вначале у всех актеров его нет
 							// (passive = true, функционал отсутствует, passive = false, функционал есть)
-							passive: !(isUserColor && isUserTurn),     
+							passive: true, 
+							unmovable: false,    
 						});
 					}
 					else {
@@ -313,6 +320,7 @@ export default class Board extends Component {
 								drawDeselectedCells = {this.drawDeselectedCells}
 								chooseActorToMove = {this.chooseActorToMove}
 								passive = {this.state.actorsDataContainer[x][y].passive}
+								unmovable = {this.state.actorsDataContainer[x][y].unmovable}
 							/>;
 					actorKey++;
 
@@ -345,6 +353,8 @@ export default class Board extends Component {
 	drawSelectedCells(positionX, positionY) {
 		console.log('drawSelectedCells');
 
+		let actorCanMove = false;
+
 		// добавление клетке стиля выделения
 		var assignSelectedClassname = function(x, y) {
 
@@ -356,6 +366,7 @@ export default class Board extends Component {
 					
 						// то выделяем клетку
 						this.state.cellsDataContainer[x][y].className = this.state.cellsDataContainer[x][y].defaultClassName + ' highlight-cell';
+						actorCanMove = true;
 			}	
 		}.bind(this);
 
@@ -370,6 +381,11 @@ export default class Board extends Component {
 			assignSelectedClassname(positionX + 1, positionY - 1);
 		}
 		
+		debugger;
+		if (!actorCanMove) {
+			this.state.actorsDataContainer[positionX][positionY].unmovable = true;
+		}
+
 		// перерисовка шахматной доски
 		this.setState({});
 	}
@@ -450,7 +466,7 @@ export default class Board extends Component {
 		this.setState({});
 	}
 
-	// отрисовка хода текущего выбранного актера на клетку на позиции (newPositionX, newPositionY)
+	// отрисовка хода текущего выбранного актера на клетку (newPositionX, newPositionY)
 	chooseCellToMoveActor(newPositionX, newPositionY) {
 		console.log('chooseCellToMoveActor');
 
@@ -461,9 +477,9 @@ export default class Board extends Component {
 				// удаляем пользовательский функционал у всех клеток
 				this.state.cellsDataContainer[x][y].passive = true;
 
-				/*if (this.state.actorsDataContainer[x][y]) {	
-					this.state.actorsDataContainer[x][y].className = this.state.actorsDataContainer[x][y].defaultClassName;
-				}*/
+				if (this.state.actorsDataContainer[x][y]) {	
+					this.state.actorsDataContainer[x][y].unmovable = false;
+				}
 			}
 		}
 
@@ -473,7 +489,7 @@ export default class Board extends Component {
 
 		// сбрасываем выделение текущего актера
 		this.state.actorsDataContainer[currentPositionX][currentPositionY].className = this.state.actorsDataContainer[currentPositionX][currentPositionY].defaultClassName;  
-		//this.state.actorsDataContainer[currentPositionX][currentPositionY].passive = true;  
+
 		// перемещаем данные актера в массиве данных на новую позицию
 		this.state.actorsDataContainer[newPositionX][newPositionY] = this.state.actorsDataContainer[currentPositionX][currentPositionY];
 		this.state.actorsDataContainer[currentPositionX][currentPositionY] = null;
@@ -487,23 +503,18 @@ export default class Board extends Component {
 	turnIsDone(newPositionX, newPositionY) {
 		console.log('turnIsDone');
 
-		let newPosition = {
+		const newPosition = {
 			positionX: newPositionX,
 			positionY: newPositionY
 		};
 
-		let currentPosition = {
-			positionX: this.state.activeActorPosition.positionX,
-			positionX: this.state.activeActorPosition.positionY
-		};
-
-		let movedActor = this.state.activeActorPosition; //TODO???
-		let eatenActor = this.state.actorsDataContainer[newPositionX][newPositionY];
+		const currentPosition = this.state.activeActorPosition; 
+		//let eatenActor = this.state.actorsDataContainer[newPositionX][newPositionY];
 
 		// сбрасываем данные о текущем актере
 		this.state.activeActorPosition = null;
 
-		this.props.analyzeUserTurn(currentPosition, newPosition, movedActor, eatenActor);	
+		this.props.analyzeUserTurn(currentPosition, newPosition);	
 	}
 
 	// заполнение начальных данных перед первым рендерингом
@@ -511,25 +522,28 @@ export default class Board extends Component {
 		this.fillGridData();
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-
-		//TODO???????????
-		if (nextProps.boardSize !== this.props.boardSize || nextProps.mode !== this.props.mode
-			|| nextProps.userColor !== this.props.userColor || nextProps.isUserTurn !== this.props.isUserTurn
-			|| nextState.cellsDataContainer !== this.state.cellsDataContainer) {
-
-			return true;
-		}
-		else return true;
-	}
-
 	// и заполнение начальных данных после смены настроек
 	componentWillUpdate(nextProps) {
 		//console.log('componentWillUpdate');
 
-		if (nextProps.boardSize !== this.props.boardSize || nextProps.mode !== this.props.mode || nextProps.userColor !== this.props.userColor) {
+		if (nextProps.boardSize !== this.props.boardSize || 
+			nextProps.mode !== this.props.mode || 
+			nextProps.userColor !== this.props.userColor ||
+			(!nextProps.endOfGame && this.props.endOfGame)) {
 			this.fillGridData(nextProps.boardSize, nextProps.mode, nextProps.userColor, nextProps.isUserTurn);
-		}	
+		}
+		
+		if (!this.props.startOfGame && nextProps.startOfGame && nextProps.isUserTurn) {
+
+			for (let y = 0; y < this.props.boardSize; y++) {
+				for (let x = 0; x < this.props.boardSize; x++) {
+	
+					if (this.state.actorsDataContainer[x][y] && this.state.actorsDataContainer[x][y].isUserColor) {
+						this.state.actorsDataContainer[x][y].passive = false;
+					}
+				}
+			}
+		}
 	}
 
     render() {

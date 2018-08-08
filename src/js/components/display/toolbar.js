@@ -8,7 +8,8 @@ export default class Toolbar extends Component {
 		super(props);
 		   
 		this.switchStartHandle = this.switchStartHandle.bind(this);
-    	this.changeData = this.changeData.bind(this);
+		this.changeData = this.changeData.bind(this);
+		this.resetHandle = this.resetHandle.bind(this);
 	}
 
 	switchStartHandle(event) {
@@ -20,95 +21,106 @@ export default class Toolbar extends Component {
 	
 	// событие изменения настроек
 	changeData(event) {
-		
 		console.log(event.target.name, event.target.value);
 		// вызывает событие в родителе - дисплее
 		this.props.updateData(event.target.name, event.target.value);		
 	}
 
+	resetHandle(event) {
+		event.preventDefault();
+
+		// вызывает событие в родителе - дисплее
+		this.props.resetDisplay();	
+	}
+
 	shouldComponentUpdate(nextProps, nextState) {
-		// перерисовка тулбара нужна, когда изменяется размер доски 
-		// (чтобы менялось value в инпуте при настройке/дефолтное при ресете)
-		// TODO???
-		return (nextProps.boardSize !== this.props.boardSize || 
-				// или когда изменяется состояние игры: старт/завершение
-				nextProps.startOfGame !== this.props.startOfGame);
+		
+		return (
+				nextProps.userColor !== this.props.userColor || 
+				nextProps.boardSize !== this.props.boardSize ||
+				nextProps.level !== this.props.level || 
+				nextProps.mode !== this.props.mode ||
+				nextProps.startOfGame !== this.props.startOfGame || 
+				nextProps.endOfGame !== this.props.endOfGame
+			);			
     }
 
 	render() {
 		console.log('render toolbar', this.props.startOfGame);
 
-		const disabled = this.props.startOfGame;
+		/*const disabledElements = this.props.startOfGame;
 		const disabledClass = this.props.startOfGame ? 'disabled-cursor' : '';
-		const switchStartBtnText = this.props.startOfGame ? 'Завершить игру' : 'Начать игру';
-		//const switchStartBtnClass = this.
+		const switchStartBtnText = (!this.props.startOfGame && !this.props.endOfGame) ? 'Начать игру' : 'Завершить игру';
+		const switchStartBtnClass = (!this.props.startOfGame && !this.props.endOfGame) ? 'button_start' : 'button_finish';*/
 
-			return (
-				<div className = "bar">
-					<form>
-						<div>
-							Выберите цвет ваших фигур: 
-							<select 
-								name="userColor" 
-								className = {disabledClass}
-								disabled = {disabled} 
-								onChange = {this.changeData}>
-									<option value="white">белые</option>
-									<option value="black">черные</option>
-							</select>
-						</div>
-						<div>
-							Выберите размер доски: 
-							<span>{this.props.boardSize}</span>
-							<input 
-								name = "boardSize" 
-								type = "range" 
-								min = "2" 
-								max = "14" 
-								step = "2" 
-								value = {this.props.boardSize} 
-								className = {disabledClass}
-								disabled = {disabled} 
-								onChange = {this.changeData}
-							/>
-							
-						</div>
-						<div>
-							Выберите уровень сложности: 
-							<select
-								name="level" 
-								className = {disabledClass}
-								disabled = {disabled} 
-								onChange = {this.changeData}>
-									<option value="easy">легкий</option>
-									<option value="medium">средний</option>
-									<option value="hard">сложный</option>
-									<option value="hard">randomize</option>
-							</select>
-						</div>
-						<div>
-							Выберите режим игры: 
-							<select 
-								name="mode" 
-								className = {disabledClass}
-								disabled = {disabled} 
-								onChange = {this.changeData}>
-									<option value="classic">классический</option>
-									<option value="dam">играть только дамками</option>
-							</select>
-						</div>
-						<button 
+		let disabledElements;
+		let disabledClass;
+		let switchStartBtnText;
+		let switchStartBtnClass;
+
+		if (!this.props.startOfGame && !this.props.endOfGame) {
+			disabledElements = false;
+			disabledClass = '';
+			switchStartBtnText = 'Начать игру';
+			switchStartBtnClass = 'button_start';
+		}
+		else {
+			disabledElements = true;
+			disabledClass = 'disabled-cursor';
+			switchStartBtnText = 'Завершить игру';
+			switchStartBtnClass = 'button_finish';
+		}
+
+		return (
+			<div className = "bar">
+				<form>
+					<div>
+						Выберите цвет ваших фигур: 
+						<select name="userColor" className = {disabledClass} disabled = {disabledElements} onChange = {this.changeData} value = {this.props.userColor}>
+							<option value="white">белые</option>
+							<option value="black">черные</option>
+						</select>
+					</div>
+					<div>
+						Выберите размер доски: 
+						<span>{this.props.boardSize}</span>
+						<input 
+							name = "boardSize" 
+							type = "range" 
+							min = "4" 
+							max = "14" 
+							step = "2" 
+							value = {this.props.boardSize} 
 							className = {disabledClass}
-							disabled = {disabled}>
-								Настройки по умолчанию
-						</button>
-						<button 
-							name = "switchStartBtn" 
-							onClick = {this.switchStartHandle}>
-								{switchStartBtnText}
-						</button>
-					</form>
-				</div>
+							disabled = {disabledElements} 
+							onChange = {this.changeData}
+						/>
+						
+					</div>
+					<div>
+						Выберите уровень сложности: 
+						<select name="level" className = {disabledClass} disabled = {disabledElements} onChange = {this.changeData} value = {this.props.level}>
+							<option value="easy">легкий</option>
+							<option value="medium">средний</option>
+							<option value="hard">сложный</option>
+							<option value="randomize">randomize</option>
+						</select>
+					</div>
+					<div>
+						Выберите режим игры: 
+						<select name="mode" className = {disabledClass} disabled = {disabledElements} onChange = {this.changeData} value = {this.props.mode}>>
+							<option value="classic">классический</option>
+							<option value="dam">играть только дамками</option>
+						</select>
+					</div>
+					<button name = "resetBtn" className = {disabledClass} disabled = {disabledElements} onClick = {this.resetHandle}>
+						Настройки по умолчанию
+					</button>
+					<button name = "switchStartBtn" className = {switchStartBtnClass} onClick = {this.switchStartHandle}>
+						{switchStartBtnText}
+					</button>
+				</form>
+			</div>
 		)
 	}
 }

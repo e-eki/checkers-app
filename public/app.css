@@ -70,6 +70,14 @@ button {
     cursor: pointer;
 }
 
+.button_start {
+    background: red;
+}
+
+.button_finish {
+    background: green;
+}
+
 select {
     cursor: pointer;
 }

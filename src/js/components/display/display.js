@@ -40,7 +40,6 @@ export default class Display extends Component {
 
         this.switchStartGame = this.switchStartGame.bind(this);
         this.updateData = this.updateData.bind(this);
-        this.drawGameOver = this.drawGameOver.bind(this);
         this.resetDisplay = this.resetDisplay.bind(this);
         this.analyzeUserTurn = this.analyzeUserTurn.bind(this);
     }
@@ -67,24 +66,18 @@ export default class Display extends Component {
                 startOfGame: false,
                 endOfGame: true,
             });
-            this.drawGameOver();
         } 
     }
 
     // при завершении игры показывается табло с результатами,
     // по клику или нажатию любой клавиши происходит reset
-    drawGameOver() {
-        console.log('drawGameOver');
+    resetDisplay(event) {
+        console.log('resetDisplay', event);
 
-        addEventListener('click', this.resetDisplay);
-        addEventListener('keydown', this.resetDisplay);
-    }
-
-    resetDisplay() {
-        console.log('resetDisplay');
-
-        removeEventListener('click', this.resetDisplay);
-        removeEventListener('keydown', this.resetDisplay);
+        if (event) {
+            this.wrap.removeEventListener('click', this.resetDisplay);
+            this.wrap.removeEventListener('keydown', this.resetDisplay);
+        }
 
         this.setState({
             userColor: this.defaultSettings.userColor,
@@ -100,24 +93,28 @@ export default class Display extends Component {
         });
     }
 
-    analyzeUserTurn(currentPosition, newPosition, movedActor, eatenActor) {
+    analyzeUserTurn(currentPosition, newPosition) {
 
         console.log('display analyzeUserTurn');
         
         this.state.currentUserTurn = {
             currentPosition: currentPosition,
             newPosition: newPosition,
-            movedActor: movedActor,
-            eatenActor: eatenActor
         };
 
         this.state.isUserTurn = false;
 
         this.setState({});
-        //console.log('currentUserTurn', this.state.currentUserTurn);
     }
 
-    
+    componentDidUpdate(prevState) {
+        
+        if (!prevState.endOfGame && this.state.endOfGame) {
+            console.log('display componentDidUpdate');
+            this.wrap.addEventListener('click', this.resetDisplay);
+            this.wrap.addEventListener('keydown', this.resetDisplay);
+        }
+    }
 
     render() {
         console.log('render display');
@@ -125,15 +122,17 @@ export default class Display extends Component {
         const tabloClass = this.state.endOfGame ? 'tablo_shown' : 'tablo_hidden';
 
         return (
-            <div className = 'wrap'>
+            <div ref = {elem => this.wrap = elem} className = 'wrap'>
                 <div className = {gameOverClass}>
                     <Header/>
                     <div className = 'inner-wrap'>
 
                     <Toolbar 
                         startOfGame = {this.state.startOfGame}
+                        endOfGame = {this.state.endOfGame}
                         switchStartGame = {this.switchStartGame}
                         updateData = {this.updateData} 
+                        resetDisplay = {this.resetDisplay}
                         userColor = {this.state.userColor} 
                         boardSize = {this.state.boardSize} 
                         level = {this.state.level} 
@@ -143,6 +142,7 @@ export default class Display extends Component {
                     <div className = 'main'>
                         <Board 
                             startOfGame = {this.state.startOfGame}
+                            endOfGame = {this.state.endOfGame}
                             isUserTurn = {this.state.isUserTurn} 
                             currentAITurn = {this.state.currentAITurn}
                             analyzeUserTurn = {this.analyzeUserTurn} 
