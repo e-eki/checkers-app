@@ -148,8 +148,7 @@ class Actor extends Component {
 					nextProps.className !== this.props.className || 
 					nextState.className !== this.state.className || 
 					// актер стал пассивным/активным
-					nextProps.passive !== this.props.passive ||
-					nextProps.unmovable && !this.props.unmovable
+					nextProps.passive !== this.props.passive
 				);		
 	}
 
@@ -173,11 +172,6 @@ class Actor extends Component {
 		// стал активным, добавляем пользовательский функционал
 		else if (prevProps.passive && !this.props.passive) {
 			this.addUserFunctionality();
-		}
-
-		if (this.props.unmovable && !prevProps.unmovable) {
-			debugger;
-			this.ref.removeEventListener('mousedown', this.chooseActorToMove);
 		}
 	}
 	
@@ -275,8 +269,7 @@ export default class Board extends Component {
 							isUserColor: isUserColor,   // является ли данный актер фигурой юзера
 							// флаг, есть ли пользовательский функционал - вначале у всех актеров его нет
 							// (passive = true, функционал отсутствует, passive = false, функционал есть)
-							passive: true, 
-							unmovable: false,    
+							passive: true,    
 						});
 					}
 					else {
@@ -320,7 +313,6 @@ export default class Board extends Component {
 								drawDeselectedCells = {this.drawDeselectedCells}
 								chooseActorToMove = {this.chooseActorToMove}
 								passive = {this.state.actorsDataContainer[x][y].passive}
-								unmovable = {this.state.actorsDataContainer[x][y].unmovable}
 							/>;
 					actorKey++;
 
@@ -353,8 +345,6 @@ export default class Board extends Component {
 	drawSelectedCells(positionX, positionY) {
 		console.log('drawSelectedCells');
 
-		let actorCanMove = false;
-
 		// добавление клетке стиля выделения
 		var assignSelectedClassname = function(x, y) {
 
@@ -366,7 +356,6 @@ export default class Board extends Component {
 					
 						// то выделяем клетку
 						this.state.cellsDataContainer[x][y].className = this.state.cellsDataContainer[x][y].defaultClassName + ' highlight-cell';
-						actorCanMove = true;
 			}	
 		}.bind(this);
 
@@ -379,11 +368,6 @@ export default class Board extends Component {
 		else if (this.props.userColor == 'white') {
 			assignSelectedClassname(positionX - 1, positionY - 1);
 			assignSelectedClassname(positionX + 1, positionY - 1);
-		}
-		
-		debugger;
-		if (!actorCanMove) {
-			this.state.actorsDataContainer[positionX][positionY].unmovable = true;
 		}
 
 		// перерисовка шахматной доски
@@ -423,6 +407,9 @@ export default class Board extends Component {
 	chooseActorToMove(positionX, positionY) {
 		console.log('chooseActorToMove');
 
+		debugger;
+		let actorCanMove = false;
+
 		// добавление клетке пользовательского функционала
 		// (чтобы при клике по клетке на нее делал ход выбранный актер)
 		var assignCellMethod = function(x, y) {
@@ -433,6 +420,7 @@ export default class Board extends Component {
 	
 					// проставляем флаг, что клетка активна
 					this.state.cellsDataContainer[x][y].passive = false;	
+					actorCanMove = true;
 			}
 		}.bind(this);
 
@@ -446,6 +434,8 @@ export default class Board extends Component {
 			assignCellMethod(positionX - 1, positionY - 1);
 			assignCellMethod(positionX + 1, positionY - 1);
 		}
+
+		if (!actorCanMove) return;
 
 		// после того, как на одном из актеров сделан клик, сходить можно только им,
 		// и возможность выбора (пользовательский функционал) всех актеров удаляется
@@ -476,10 +466,6 @@ export default class Board extends Component {
 				this.state.cellsDataContainer[x][y].className = this.state.cellsDataContainer[x][y].defaultClassName;
 				// удаляем пользовательский функционал у всех клеток
 				this.state.cellsDataContainer[x][y].passive = true;
-
-				if (this.state.actorsDataContainer[x][y]) {	
-					this.state.actorsDataContainer[x][y].unmovable = false;
-				}
 			}
 		}
 
@@ -526,6 +512,7 @@ export default class Board extends Component {
 	componentWillUpdate(nextProps) {
 		//console.log('componentWillUpdate');
 
+		// если изменились настройки или после завершения игры - обновление данных по умолчанию
 		if (nextProps.boardSize !== this.props.boardSize || 
 			nextProps.mode !== this.props.mode || 
 			nextProps.userColor !== this.props.userColor ||
@@ -533,7 +520,10 @@ export default class Board extends Component {
 			this.fillGridData(nextProps.boardSize, nextProps.mode, nextProps.userColor, nextProps.isUserTurn);
 		}
 		
-		if (!this.props.startOfGame && nextProps.startOfGame && nextProps.isUserTurn) {
+		// если началась игра и ход юзера
+		if (nextProps.startOfGame && nextProps.isUserTurn &&
+			// и либо это первый ход (игра только что началась), либо смена хода (до этого ходил ИИ), то делаем активными всех актеров юзера
+			(!this.props.startOfGame || !this.props.isUserTurn)) {
 
 			for (let y = 0; y < this.props.boardSize; y++) {
 				for (let x = 0; x < this.props.boardSize; x++) {

@@ -181,6 +181,10 @@ table {
     border-color: green;
 }
 
+.dam {
+    border-color: red;
+}
+
 .highlight-cell {
     background: orange;
     cursor: pointer;
@@ -191,6 +195,3 @@ table {
     cursor: pointer;
 }
 
-.dam {
-    border-color: red;
-}

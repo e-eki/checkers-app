@@ -30,7 +30,7 @@ export default class Toolbar extends Component {
 		event.preventDefault();
 
 		// вызывает событие в родителе - дисплее
-		this.props.resetDisplay();	
+		this.props.resetDefaultSettings();	
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {

@@ -41,6 +41,7 @@ export default class Display extends Component {
         this.switchStartGame = this.switchStartGame.bind(this);
         this.updateData = this.updateData.bind(this);
         this.resetDisplay = this.resetDisplay.bind(this);
+        this.resetDefaultSettings = this.resetDefaultSettings.bind(this);
         this.analyzeUserTurn = this.analyzeUserTurn.bind(this);
     }
 
@@ -69,21 +70,26 @@ export default class Display extends Component {
         } 
     }
 
-    // при завершении игры показывается табло с результатами,
-    // по клику или нажатию любой клавиши происходит reset
-    resetDisplay(event) {
-        console.log('resetDisplay', event);
-
-        if (event) {
-            this.wrap.removeEventListener('click', this.resetDisplay);
-            this.wrap.removeEventListener('keydown', this.resetDisplay);
-        }
+    resetDefaultSettings() {
+        console.log('resetSettings');
 
         this.setState({
             userColor: this.defaultSettings.userColor,
             boardSize: this.defaultSettings.boardSize,
             level: this.defaultSettings.level,
             mode: this.defaultSettings.mode,
+        })
+    }
+
+    // при завершении игры показывается табло с результатами,
+    // по клику или нажатию любой клавиши происходит reset
+    resetDisplay(event) {
+        console.log('resetDisplay', event);
+
+        this.wrap.removeEventListener('click', this.resetDisplay);
+        this.wrap.removeEventListener('keydown', this.resetDisplay);
+
+        this.setState({  
             currentActionDefinition: this.defaultSettings.currentActionDefinition,
             startOfGame: this.defaultSettings.startOfGame,
             endOfGame: this.defaultSettings.endOfGame,
@@ -110,7 +116,6 @@ export default class Display extends Component {
     componentDidUpdate(prevState) {
         
         if (!prevState.endOfGame && this.state.endOfGame) {
-            console.log('display componentDidUpdate');
             this.wrap.addEventListener('click', this.resetDisplay);
             this.wrap.addEventListener('keydown', this.resetDisplay);
         }
@@ -132,7 +137,7 @@ export default class Display extends Component {
                         endOfGame = {this.state.endOfGame}
                         switchStartGame = {this.switchStartGame}
                         updateData = {this.updateData} 
-                        resetDisplay = {this.resetDisplay}
+                        resetDefaultSettings = {this.resetDefaultSettings}
                         userColor = {this.state.userColor} 
                         boardSize = {this.state.boardSize} 
                         level = {this.state.level} 
