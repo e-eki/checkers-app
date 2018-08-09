@@ -8,46 +8,72 @@ export default class Infobar extends Component {
 		super(props);
 		
 		this.startTime = new Date();
+		this.timer = null;
 
-		this.state = {
+		this.defaultSettings = {
 			currentHours: 0,
 			currentMinutes: 0,
-			currentActionDefinition: this.props.currentActionDefinition
+			startGameDefinition: 'Game start',
+			separatingString: '\n' + '\n',
+			endGameDefinition: 'End of Game',
+		}
+
+		this.state = {
+			currentHours: this.defaultSettings.currentHours,
+			currentMinutes: this.defaultSettings.currentMinutes,
+			currentActionDefinition: ''
 		};
+
+		this.tick = this.tick.bind(this);
+	}
+
+	tick() {
+
+		let newDate = new Date();
+		let newCurrentHours = newDate.getHours() - this.startTime.getHours() + this.state.currentHours;
+		let newCurrentMinutes = newDate.getMinutes() - this.startTime.getMinutes() + this.state.currentMinutes;
+		
+		this.startTime = newDate;
+
+		this.setState({
+			currentHours: newCurrentHours,
+			currentMinutes: newCurrentMinutes,
+		})
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
 		// TODO ??
 		// перерисовывается каждую минуту для отображения текущего времени и при каждом ходе
-		return (nextState.currentHours!== this.state.currentHours || nextState.currentMinutes!== this.state.currentMinutes ||
-				 nextProps.currentActionDefinition !== this.state.currentActionDefinition);
+		return (
+				nextState.currentHours!== this.state.currentHours ||
+				nextState.currentMinutes!== this.state.currentMinutes ||
+				nextProps.currentActionDefinition !== this.state.currentActionDefinition ||
+				nextProps.startOfGame !== this.props.startOfGame	
+			);
 	}
 	
 	componentWillUpdate(nextProps, nextState) {
-		if (nextProps.currentActionDefinition !== this.state.currentActionDefinition) {
 
-			let newDefinition = this.state.currentActionDefinition + nextProps.currentActionDefinition;
-			this.state.currentActionDefinition += nextProps.currentActionDefinition;
+		if (nextProps.startOfGame && !this.props.startOfGame) {
+			this.timer = setInterval(this.tick, 60000);
+
+			this.state.currentActionDefinition = this.defaultSettings.startGameDefinition;
 		}
-	}
-	
-	componentDidMount() {
+		else if (!nextProps.startOfGame && this.props.startOfGame) {
+			clearInterval(this.timer);
 
-		var tick = function() {
+			this.state.currentActionDefinition += this.defaultSettings.separatingString + this.defaultSettings.endGameDefinition;
+		}
+		else if (!nextProps.endOfGame && this.props.endOfGame) {
+			debugger;
+			this.state.currentHours = this.defaultSettings.currentHours;
+			this.state.currentMinutes = this.defaultSettings.currentMinutes;
+			this.state.currentActionDefinition = '';
+		}
 
-			let newDate = new Date();
-			let newCurrentHours = newDate.getHours() - this.startTime.getHours() + this.state.currentHours;
-			let newCurrentMinutes = newDate.getMinutes() - this.startTime.getMinutes() + this.state.currentMinutes;
-			
-			this.startTime = newDate;
-	
-			this.setState({
-				currentHours: newCurrentHours,
-				currentMinutes: newCurrentMinutes,
-			})
-		}.bind(this);
-
-		setInterval(tick, 60000);
+		if (nextProps.currentActionDefinition !== this.props.currentActionDefinition) {
+			this.state.currentActionDefinition += this.defaultSettings.separatingString + nextProps.currentActionDefinition;
+		}
 	}
 
     render() {
@@ -56,13 +82,16 @@ export default class Infobar extends Component {
 		let currentTime = this.state.currentHours + ' ч ' + this.state.currentMinutes + ' мин ';
 
         return (
-			<div class="bar">
-				<div>Сейчас ход: <span class="turn">ваш</span></div>
-				<div>Прошло времени: <p ref={elem => this.time = elem} class="time">{currentTime}</p></div>
-				<div>Сделано ходов: <span class="moves-count">0</span></div>
-				<div>Белые фигуры на доске: <span class="white-actors">12</span></div>
-				<div>Черные фигуры на доске: <span class="black-actors">12</span></div>
-				<div>История ходов: <textarea class="moves-history">{this.state.currentActionDefinition}</textarea></div>
+			<div className ="bar">
+				<div>Сейчас ход: <span>ваш</span></div>
+				<div>Прошло времени: <p ref={elem => this.time = elem}>{currentTime}</p></div>
+				<div>Сделано ходов: <span>0</span></div>
+				<div>Белые фигуры на доске: <span>12</span></div>
+				<div>Черные фигуры на доске: <span>12</span></div>
+				<div>История ходов: 
+					<textarea value = {this.state.currentActionDefinition}></textarea>
+				</div>
+				
 			</div>
         )
     }

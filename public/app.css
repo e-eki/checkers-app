@@ -32,6 +32,14 @@ body {
     justify-content: center;
 }
 
+.quotebar_hidden {
+    display: none;
+}
+
+.quotebar_shown {
+    display: block;
+}
+
 .quotebar p {
     margin: 0.3%;
     font-size: 84%;

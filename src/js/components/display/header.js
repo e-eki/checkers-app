@@ -5,15 +5,17 @@ import Quotebar from './quotebar';
 export default class Header extends Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
-		// перерисовка не нужна, внутри цитаты перерисовываются сами
-		return false;
+		
+		return (nextProps.quotesSwitchedOff !== this.props.quotesSwitchedOff);
 	}
 
     render() {
 		console.log('render header');
 
         return (
-			<Quotebar/>
+			<div className = 'header'>
+				<Quotebar quotesSwitchedOff = {this.props.quotesSwitchedOff}/>
+			</div>
         )
     }
 }

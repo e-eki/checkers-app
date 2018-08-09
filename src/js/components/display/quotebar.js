@@ -98,37 +98,51 @@ export default class Quotebar extends Component {
 		]);
 
 		this.quotes = JSON.parse(quotesFile);
+		this.changeQuoteTimer = null;
 
 		this.state = {
 			currentQuote: this.quotes[Math.floor(Math.random() * this.quotes.length)]
 		}
+
+		this.updateQuote = this.updateQuote.bind(this);
+	}
+
+	// обновление цитаты
+	updateQuote() {
+		// рандомная цитата из массива
+		let newQuote = this.quotes[Math.floor(Math.random() * this.quotes.length)];
+
+		this.setState({
+			currentQuote: newQuote
+		});
 	}
 
 	componentDidMount() {
+		this.changeQuoteTimer = setInterval(this.updateQuote, 60000);
+	}
 
-		// обновление цитаты
-		var updateQuote = function() {
-			// рандомная цитата из массива
-			let newQuote = this.quotes[Math.floor(Math.random() * this.quotes.length)];
-	
-			this.setState({
-				currentQuote: newQuote
-			});
-		}.bind(this);
+	componentDidUpdate(prevProps) {
 
-		setInterval(updateQuote, 60000);
+		if (this.props.quotesSwitchedOff && !prevProps.quotesSwitchedOff) {
+			clearInterval(this.changeQuoteTimer);
+		}
+		else if (!this.quotesSwitchedOff && prevProps.quotesSwitchedOff) {
+			this.changeQuoteTimer = setInterval(this.updateQuote, 60000);
+		}
 	}
 
     render() {
 		//console.log('render quotebar');
 
+		let quotebarClass = 'quotebar ' + (this.props.quotesSwitchedOff ? 'quotebar_hidden' : 'quotebar_shown');
+
 		let quoteText = '"' + this.state.currentQuote.quote + '"';
 		let quoteAuthor = this.state.currentQuote.author;
 
         return (
-			<div class="quotebar">
-				<p class="quoteText">{quoteText}</p>
-				<p class="authorText">{quoteAuthor}</p>
+			<div className = {quotebarClass}>
+				<p className ="quoteText">{quoteText}</p>
+				<p className ="authorText">{quoteAuthor}</p>
 			</div>
         )
     }

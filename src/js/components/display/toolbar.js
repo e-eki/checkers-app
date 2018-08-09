@@ -21,9 +21,15 @@ export default class Toolbar extends Component {
 	
 	// событие изменения настроек
 	changeData(event) {
+
 		console.log(event.target.name, event.target.value);
 		// вызывает событие в родителе - дисплее
-		this.props.updateData(event.target.name, event.target.value);		
+		if (event.target.name == 'quotesSwitchedOff') {
+			this.props.updateData(event.target.name, !this.props.quotesSwitchedOff);	
+		}
+		else {
+			this.props.updateData(event.target.name, event.target.value);
+		}			
 	}
 
 	resetHandle(event) {
@@ -36,6 +42,7 @@ export default class Toolbar extends Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		
 		return (
+				nextProps.quotesSwitchedOff !== this.props.quotesSwitchedOff ||
 				nextProps.userColor !== this.props.userColor || 
 				nextProps.boardSize !== this.props.boardSize ||
 				nextProps.level !== this.props.level || 
@@ -47,11 +54,6 @@ export default class Toolbar extends Component {
 
 	render() {
 		console.log('render toolbar', this.props.startOfGame);
-
-		/*const disabledElements = this.props.startOfGame;
-		const disabledClass = this.props.startOfGame ? 'disabled-cursor' : '';
-		const switchStartBtnText = (!this.props.startOfGame && !this.props.endOfGame) ? 'Начать игру' : 'Завершить игру';
-		const switchStartBtnClass = (!this.props.startOfGame && !this.props.endOfGame) ? 'button_start' : 'button_finish';*/
 
 		let disabledElements;
 		let disabledClass;
@@ -74,6 +76,10 @@ export default class Toolbar extends Component {
 		return (
 			<div className = "bar">
 				<form>
+					<div>
+						<input name = "quotesSwitchedOff" type="checkbox" checked = {this.props.quotesSwitchedOff} onChange = {this.changeData}/>
+						Выключить цитаты
+					</div>
 					<div>
 						Выберите цвет ваших фигур: 
 						<select name="userColor" className = {disabledClass} disabled = {disabledElements} onChange = {this.changeData} value = {this.props.userColor}>

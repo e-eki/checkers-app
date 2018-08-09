@@ -13,11 +13,12 @@ export default class Display extends Component {
         super(props);
 
         this.defaultSettings = {
+            quotesSwitchedOff: false,
             userColor: 'white',
             boardSize: 8,
             level: 'easy',
             mode: 'classic',
-            currentActionDefinition: 'Game start' + '\n' + '\n',
+            currentActionDefinition: '',
             startOfGame: false,
             endOfGame: false,
             isUserTurn: null,   // флаг, что сейчас ход пользователя
@@ -26,6 +27,7 @@ export default class Display extends Component {
         }
 
         this.state = {
+            quotesSwitchedOff: this.defaultSettings.quotesSwitchedOff,
             userColor: this.defaultSettings.userColor,
             boardSize: this.defaultSettings.boardSize,
             level: this.defaultSettings.level,
@@ -74,6 +76,7 @@ export default class Display extends Component {
         console.log('resetSettings');
 
         this.setState({
+            quotesSwitchedOff: this.defaultSettings.quotesSwitchedOff,
             userColor: this.defaultSettings.userColor,
             boardSize: this.defaultSettings.boardSize,
             level: this.defaultSettings.level,
@@ -129,10 +132,11 @@ export default class Display extends Component {
         return (
             <div ref = {elem => this.wrap = elem} className = 'wrap'>
                 <div className = {gameOverClass}>
-                    <Header/>
+                    <Header quotesSwitchedOff = {this.state.quotesSwitchedOff}/>
                     <div className = 'inner-wrap'>
 
                     <Toolbar 
+                        quotesSwitchedOff = {this.state.quotesSwitchedOff}
                         startOfGame = {this.state.startOfGame}
                         endOfGame = {this.state.endOfGame}
                         switchStartGame = {this.switchStartGame}
@@ -159,6 +163,7 @@ export default class Display extends Component {
 
                     <Infobar 
                         startOfGame = {this.state.startOfGame}
+                        endOfGame = {this.state.endOfGame}
                         currentActionDefinition = {this.state.currentActionDefinition}
                     />
                     </div>
