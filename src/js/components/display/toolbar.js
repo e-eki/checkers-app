@@ -47,8 +47,8 @@ export default class Toolbar extends Component {
 				nextProps.boardSize !== this.props.boardSize ||
 				nextProps.level !== this.props.level || 
 				nextProps.mode !== this.props.mode ||
-				nextProps.startOfGame !== this.props.startOfGame || 
-				nextProps.endOfGame !== this.props.endOfGame
+				(nextProps.startOfGame && !this.props.startOfGame) || 
+				(!nextProps.endOfGame && this.props.endOfGame)
 			);			
     }
 

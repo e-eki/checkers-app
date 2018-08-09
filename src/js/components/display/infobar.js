@@ -90,8 +90,7 @@ export default class Infobar extends Component {
 				<div>Черные фигуры на доске: <span>12</span></div>
 				<div>История ходов: 
 					<textarea value = {this.state.currentActionDefinition}></textarea>
-				</div>
-				
+				</div>				
 			</div>
         )
     }

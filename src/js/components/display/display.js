@@ -24,6 +24,10 @@ export default class Display extends Component {
             isUserTurn: null,   // флаг, что сейчас ход пользователя
             currentUserTurn: null,  // данные о текущем ходе пользователя
             currentAITurn: null,   // данные о текущем ходе ИИ
+
+            movesCount: 0,
+            whiteActorsCount: 0,
+            blackActorsCount: 0, 
         }
 
         this.state = {
@@ -38,6 +42,10 @@ export default class Display extends Component {
             isUserTurn: this.defaultSettings.isUserTurn,
             currentUserTurn: this.defaultSettings.currentUserTurn,
             currentAITurn: this.defaultSettings.currentAITurn,
+
+            movesCount: this.defaultSettings.movesCount,
+            whiteActorsCount: this.defaultSettings.whiteActorsCount,
+            blackActorsCount: this.defaultSettings.blackActorsCount, 
         };
 
         this.switchStartGame = this.switchStartGame.bind(this);
@@ -49,6 +57,7 @@ export default class Display extends Component {
 
     // обновление настроек по событиям из тулбара
     updateData(data, value) {
+        debugger;
 
         this.state[`${data}`] = value;
         this.setState({});
@@ -99,7 +108,16 @@ export default class Display extends Component {
             isUserTurn: this.defaultSettings.isUserTurn,
             currentUserTurn: this.defaultSettings.currentUserTurn,
             currentAITurn: this.defaultSettings.currentAITurn,
+
+            movesCount: this.defaultSettings.movesCount,
+            whiteActorsCount: this.defaultSettings.whiteActorsCount,
+            blackActorsCount: this.defaultSettings.blackActorsCount, 
         });
+    }
+
+    getTurnDefinition(actor, currentPosition, newPosition, eatenActor) {
+
+        let definition = '';
     }
 
     analyzeUserTurn(currentPosition, newPosition) {
@@ -158,6 +176,7 @@ export default class Display extends Component {
                             boardSize = {this.state.boardSize} 
                             userColor = {this.state.userColor} 
                             mode = {this.state.mode}
+                            updateData = {this.updateData} 
                         />			
                     </div>
 

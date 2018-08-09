@@ -460,6 +460,14 @@ export default class Board extends Component {
 	chooseCellToMoveActor(newPositionX, newPositionY) {
 		console.log('chooseCellToMoveActor');
 
+		// координаты текущего выбранного актера
+		const currentPositionX = this.state.activeActorPosition.positionX;
+		const currentPositionY = this.state.activeActorPosition.positionY;
+
+		const actor = {
+			color: this.state.actorsDataContainer[currentPositionX][currentPositionY].color
+		};
+
 		for (let y = 0; y < this.props.boardSize; y++) {
 			for (let x = 0; x < this.props.boardSize; x++) {
 				// сбрасываем выделение всех клеток
@@ -469,9 +477,7 @@ export default class Board extends Component {
 			}
 		}
 
-		// координаты текущего выбранного актера
-		const currentPositionX = this.state.activeActorPosition.positionX;
-		const currentPositionY = this.state.activeActorPosition.positionY;
+		
 
 		// сбрасываем выделение текущего актера
 		this.state.actorsDataContainer[currentPositionX][currentPositionY].className = this.state.actorsDataContainer[currentPositionX][currentPositionY].defaultClassName;  
@@ -495,12 +501,16 @@ export default class Board extends Component {
 		};
 
 		const currentPosition = this.state.activeActorPosition; 
-		//let eatenActor = this.state.actorsDataContainer[newPositionX][newPositionY];
 
 		// сбрасываем данные о текущем актере
 		this.state.activeActorPosition = null;
 
 		this.props.analyzeUserTurn(currentPosition, newPosition);	
+	}
+
+	sendActorsCount() {
+		
+		//let 
 	}
 
 	// заполнение начальных данных перед первым рендерингом
