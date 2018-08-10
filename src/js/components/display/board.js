@@ -102,8 +102,9 @@ class Actor extends Component {
 		
 		//вызов у родителя метода выделения клеток, на которые актер может совершить ход
 		this.props.drawSelectedCells(this.props.positionX, this.props.positionY);
-		let newClassName = this.props.defaultClassName + ' highlight-actor';
-		this.setState({className: newClassName});
+
+		//let newClassName = this.props.defaultClassName + ' highlight-actor';
+		//this.setState({className: newClassName});
 	}
 
 	// событие отмены выделения актера при уходе курсора с него
@@ -111,7 +112,8 @@ class Actor extends Component {
 		
 		//вызов у родителя метода отмены выделения клеток, на которые актер может совершить ход
 		this.props.drawDeselectedCells(this.props.positionX, this.props.positionY);
-		this.setState({className: this.props.defaultClassName});
+		
+		//this.setState({className: this.props.defaultClassName});
 	}
 
 	// событие выбора актера для текущего хода
@@ -211,7 +213,8 @@ export default class Board extends Component {
 		this.drawDeselectedCells = this.drawDeselectedCells.bind(this);
 		this.chooseActorToMove = this.chooseActorToMove.bind(this);
 		this.chooseCellToMoveActor = this.chooseCellToMoveActor.bind(this);
-		this.turnIsDone = this.turnIsDone.bind(this);
+		this.doTurn = this.doTurn.bind(this);
+		this.resetAllElements = this.resetAllElements.bind(this);
 	}
 
 	// заполнение массивов с данными о клетках поля и актерах (фигурах) на поле
@@ -359,6 +362,8 @@ export default class Board extends Component {
 			}	
 		}.bind(this);
 
+		this.state.actorsDataContainer[positionX][positionY].className = this.state.actorsDataContainer[positionX][positionY].defaultClassName + ' highlight-actor';
+
 		//!!! TODO - заглушка
 		// выбор клеток, соответствующих возможным направлениям актера
 		if (this.props.userColor == 'black') {
@@ -387,6 +392,8 @@ export default class Board extends Component {
 			}	
 		}.bind(this);
 
+		this.state.actorsDataContainer[positionX][positionY].className = this.state.actorsDataContainer[positionX][positionY].defaultClassName;
+
 		//!!! TODO - заглушка
 		// выбор клеток, соответствующих возможным направлениям актера
 		if (this.props.userColor == 'black') {
@@ -405,9 +412,8 @@ export default class Board extends Component {
 	// отрисовка выбора актера для текущего хода
 	// (вызывается из актера при клике по нему)
 	chooseActorToMove(positionX, positionY) {
-		console.log('chooseActorToMove');
+		console.log('chooseActorToMove', positionX, positionY);
 
-		debugger;
 		let actorCanMove = false;
 
 		// добавление клетке пользовательского функционала
@@ -456,17 +462,7 @@ export default class Board extends Component {
 		this.setState({});
 	}
 
-	// отрисовка хода текущего выбранного актера на клетку (newPositionX, newPositionY)
-	chooseCellToMoveActor(newPositionX, newPositionY) {
-		console.log('chooseCellToMoveActor');
-
-		// координаты текущего выбранного актера
-		const currentPositionX = this.state.activeActorPosition.positionX;
-		const currentPositionY = this.state.activeActorPosition.positionY;
-
-		const actor = {
-			color: this.state.actorsDataContainer[currentPositionX][currentPositionY].color
-		};
+	resetAllElements() {
 
 		for (let y = 0; y < this.props.boardSize; y++) {
 			for (let x = 0; x < this.props.boardSize; x++) {
@@ -474,43 +470,50 @@ export default class Board extends Component {
 				this.state.cellsDataContainer[x][y].className = this.state.cellsDataContainer[x][y].defaultClassName;
 				// удаляем пользовательский функционал у всех клеток
 				this.state.cellsDataContainer[x][y].passive = true;
+
+				if (this.state.actorsDataContainer[x][y]) {
+					this.state.actorsDataContainer[x][y].passive = true;
+					this.state.actorsDataContainer[x][y].className = this.state.actorsDataContainer[x][y].defaultClassName;
+				}	
 			}
 		}
-
-		
-
-		// сбрасываем выделение текущего актера
-		this.state.actorsDataContainer[currentPositionX][currentPositionY].className = this.state.actorsDataContainer[currentPositionX][currentPositionY].defaultClassName;  
-
-		// перемещаем данные актера в массиве данных на новую позицию
-		this.state.actorsDataContainer[newPositionX][newPositionY] = this.state.actorsDataContainer[currentPositionX][currentPositionY];
-		this.state.actorsDataContainer[currentPositionX][currentPositionY] = null;
-
-		//this.setState({});  //из дисплея??
-
-		this.turnIsDone(newPositionX, newPositionY);
 	}
 
-	// обработка и отправка данных о совершенном ходе пользователя в Display
-	turnIsDone(newPositionX, newPositionY) {
-		console.log('turnIsDone');
+	// отрисовка хода текущего выбранного актера на клетку (newPositionX, newPositionY)
+	chooseCellToMoveActor(newPositionX, newPositionY) {
+		console.log('chooseCellToMoveActor');
+
+		this.resetAllElements();
+
+		const currentPosition = {
+			positionX: this.state.activeActorPosition.positionX,
+			positionY: this.state.activeActorPosition.positionY
+		};
 
 		const newPosition = {
 			positionX: newPositionX,
 			positionY: newPositionY
 		};
 
-		const currentPosition = this.state.activeActorPosition; 
+		this.doTurn(currentPosition, newPosition);
+	}
+
+	doTurn(currentPosition, newPosition) {
+		console.log('turnIsDone');
+
+		// перемещаем данные актера в массиве данных на новую позицию
+		this.state.actorsDataContainer[newPosition.positionX][newPosition.positionY] = this.state.actorsDataContainer[currentPosition.positionX][currentPosition.positionY];
+		this.state.actorsDataContainer[currentPosition.positionX][currentPosition.positionY] = null;
 
 		// сбрасываем данные о текущем актере
 		this.state.activeActorPosition = null;
 
-		this.props.analyzeUserTurn(currentPosition, newPosition);	
-	}
-
-	sendActorsCount() {
-		
-		//let 
+		if (this.props.isUserTurn) {
+			this.props.userTurnIsDone(currentPosition, newPosition);	
+		}
+		else {
+			this.props.AITurnIsDone();
+		}
 	}
 
 	// заполнение начальных данных перед первым рендерингом
@@ -531,9 +534,11 @@ export default class Board extends Component {
 		}
 		
 		// если началась игра и ход юзера
-		if (nextProps.startOfGame && nextProps.isUserTurn &&
+		/*if (nextProps.startOfGame && nextProps.isUserTurn &&
 			// и либо это первый ход (игра только что началась), либо смена хода (до этого ходил ИИ), то делаем активными всех актеров юзера
-			(!this.props.startOfGame || !this.props.isUserTurn)) {
+			(!this.props.startOfGame || !this.props.isUserTurn))*/
+			
+		if (nextProps.startOfGame && nextProps.isUserTurn && !this.props.isUserTurn) {
 
 			for (let y = 0; y < this.props.boardSize; y++) {
 				for (let x = 0; x < this.props.boardSize; x++) {
@@ -543,6 +548,20 @@ export default class Board extends Component {
 					}
 				}
 			}
+		}
+
+		if (nextProps.endOfGame && !this.props.endOfGame) {
+
+			this.resetAllElements();
+		}
+
+		// TODO ??? !nextProps.isUserTurn
+		if (!nextProps.isUserTurn && this.props.isUserTurn && nextProps.currentAITurn) {
+
+			//TODO!
+			setTimeout(function() {
+				this.doTurn(nextProps.currentAITurn.currentPosition, nextProps.currentAITurn.newPosition);
+			}.bind(this), 3000);
 		}
 	}
 

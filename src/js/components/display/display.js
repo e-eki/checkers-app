@@ -52,7 +52,8 @@ export default class Display extends Component {
         this.updateData = this.updateData.bind(this);
         this.resetDisplay = this.resetDisplay.bind(this);
         this.resetDefaultSettings = this.resetDefaultSettings.bind(this);
-        this.analyzeUserTurn = this.analyzeUserTurn.bind(this);
+        this.userTurnIsDone = this.userTurnIsDone.bind(this);
+        this.AITurnIsDone = this.AITurnIsDone.bind(this);
     }
 
     // обновление настроек по событиям из тулбара
@@ -120,9 +121,9 @@ export default class Display extends Component {
         let definition = '';
     }
 
-    analyzeUserTurn(currentPosition, newPosition) {
+    userTurnIsDone(currentPosition, newPosition) {
 
-        console.log('display analyzeUserTurn');
+        console.log('display analyzeUserTurn', currentPosition, newPosition);
         
         this.state.currentUserTurn = {
             currentPosition: currentPosition,
@@ -130,6 +131,22 @@ export default class Display extends Component {
         };
 
         this.state.isUserTurn = false;
+
+        //TODO
+        this.state.currentAITurn = {
+            currentPosition:
+            {positionX: 2, positionY: 5},
+            newPosition:
+            {positionX: 3, positionY: 4}
+        }
+
+        this.setState({});
+    }
+
+    AITurnIsDone() {
+
+        this.state.isUserTurn = true;
+        this.state.currentAITurn = this.defaultSettings.currentAITurn;
 
         this.setState({});
     }
@@ -172,7 +189,8 @@ export default class Display extends Component {
                             endOfGame = {this.state.endOfGame}
                             isUserTurn = {this.state.isUserTurn} 
                             currentAITurn = {this.state.currentAITurn}
-                            analyzeUserTurn = {this.analyzeUserTurn} 
+                            userTurnIsDone = {this.userTurnIsDone} 
+                            AITurnIsDone = {this.AITurnIsDone}
                             boardSize = {this.state.boardSize} 
                             userColor = {this.state.userColor} 
                             mode = {this.state.mode}

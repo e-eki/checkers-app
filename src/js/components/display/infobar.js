@@ -65,7 +65,7 @@ export default class Infobar extends Component {
 			this.state.currentActionDefinition += this.defaultSettings.separatingString + this.defaultSettings.endGameDefinition;
 		}
 		else if (!nextProps.endOfGame && this.props.endOfGame) {
-			debugger;
+
 			this.state.currentHours = this.defaultSettings.currentHours;
 			this.state.currentMinutes = this.defaultSettings.currentMinutes;
 			this.state.currentActionDefinition = '';
