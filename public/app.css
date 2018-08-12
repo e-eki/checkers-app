@@ -107,7 +107,7 @@ textarea {
     background: rgb(133, 36, 36);
     border-radius: 15px;
     padding: 4.5vmin;
-    height: 77vmin;
+    height: 77.5vmin;
     margin: 0 2vw 0 2vw;
 }
 
@@ -115,6 +115,7 @@ textarea {
     position: relative;
     width: 77vmin;
     height: 77vmin;
+    margin: 0.5vmin;
 }
 
 .tablo {
@@ -203,3 +204,39 @@ table {
     cursor: pointer;
 }
 
+.marks-container {
+
+}
+
+.marks {
+    position: absolute;
+    display: flex; 
+    justify-content: space-around;
+}
+
+.marks_horizontal {
+    width: 77vmin;
+    flex-direction: row;
+}
+
+.marks_vertical {
+    width: 2vmin;
+    height: 77vmin;
+    flex-direction: column;
+}
+
+.marks_top {
+    top: 1vmin;
+}
+
+.marks_bottom {
+    bottom: 1vmin;
+}
+
+.marks_left {
+    left: 1.5vmin;
+}
+
+.marks_right {
+    right: 1.5vmin;
+}

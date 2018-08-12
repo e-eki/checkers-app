@@ -209,20 +209,18 @@ export default class Display extends Component {
                         mode = {this.state.mode}
                     />
 
-                    <div className = 'main'>
-                        <Board 
-                            startOfGame = {this.state.startOfGame}
-                            endOfGame = {this.state.endOfGame}
-                            isUserTurn = {this.state.isUserTurn} 
-                            currentAITurn = {this.state.currentAITurn}
-                            userTurnIsDone = {this.userTurnIsDone} 
-                            AITurnIsDone = {this.AITurnIsDone}
-                            boardSize = {this.state.boardSize} 
-                            userColor = {this.state.userColor} 
-                            mode = {this.state.mode}
-                            updateData = {this.updateData} 
-                        />			
-                    </div>
+                    <Board 
+                        startOfGame = {this.state.startOfGame}
+                        endOfGame = {this.state.endOfGame}
+                        isUserTurn = {this.state.isUserTurn} 
+                        currentAITurn = {this.state.currentAITurn}
+                        userTurnIsDone = {this.userTurnIsDone} 
+                        AITurnIsDone = {this.AITurnIsDone}
+                        boardSize = {this.state.boardSize} 
+                        userColor = {this.state.userColor} 
+                        mode = {this.state.mode}
+                        updateData = {this.updateData} 
+                    />			
 
                     <Infobar 
                         startOfGame = {this.state.startOfGame}

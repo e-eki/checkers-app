@@ -192,6 +192,16 @@ export default class Board extends Component {
 
 	constructor(props) {
 		super(props);
+
+		this.marksSymbols = {
+			horizontal : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'],
+			vertical: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'],
+		};
+
+		this.marks = {
+			horizontal: [],
+			vertical: [],
+		};
 		
 		this.state = {
 			// массив данных о клетках
@@ -279,6 +289,18 @@ export default class Board extends Component {
 					this.state.actorsDataContainer[x].push(null);
 				}
 			}
+		}
+	}
+
+	drawMarks(boardSize = this.props.boardSize) {
+
+		this.marks.horizontal = [];
+		this.marks.vertical = [];
+		
+		for (var i = 0; i < boardSize; i++) {
+
+			this.marks.horizontal.push(<span>{this.marksSymbols.horizontal[i]}</span>);
+			this.marks.vertical.push(<span>{this.marksSymbols.vertical[i]}</span>);
 		}
 	}
 
@@ -503,10 +525,6 @@ export default class Board extends Component {
 	doTurn(currentPosition, newPosition) {
 		console.log('doTurn');
 
-		/*var getPositionMarks = function (position) {
-        return marks.horizontal[position.x] + marks.vertical[this.chessboard.length - position.y - 1];
-      }.bind(this);*/
-
 		let currentActorData = this.state.actorsDataContainer[currentPosition.positionX][currentPosition.positionY];
 
 		let actor = {
@@ -544,6 +562,7 @@ export default class Board extends Component {
 	// заполнение начальных данных перед первым рендерингом
 	componentWillMount() {
 		this.fillGridData();
+		this.drawMarks();
 	}
 
 	// и заполнение начальных данных после смены настроек
@@ -555,7 +574,8 @@ export default class Board extends Component {
 			nextProps.mode !== this.props.mode || 
 			nextProps.userColor !== this.props.userColor ||
 			(!nextProps.endOfGame && this.props.endOfGame)) {
-			this.fillGridData(nextProps.boardSize, nextProps.mode, nextProps.userColor, nextProps.isUserTurn);
+				this.fillGridData(nextProps.boardSize, nextProps.mode, nextProps.userColor, nextProps.isUserTurn);
+				this.drawMarks(nextProps.boardSize);
 		}
 			
 		if (nextProps.startOfGame && nextProps.isUserTurn && !this.props.isUserTurn) {
@@ -593,9 +613,29 @@ export default class Board extends Component {
 
         return (
 	
-			<table className="board">
-				{grid}
-			</table>
+			<div className = 'main'>
+				<div className = 'marks-container'>
+					<div className = 'marks marks_horizontal marks_top'>
+						{this.marks.horizontal}
+					</div>
+
+					<div className = 'marks marks_horizontal marks_bottom'>
+						{this.marks.horizontal}
+					</div>
+
+					<div className = 'marks marks_vertical marks_left'>
+						{this.marks.vertical}
+					</div>
+
+					<div className = 'marks marks_vertical marks_right'>
+						{this.marks.vertical}
+					</div>
+					
+				</div>
+				<table className ="board">
+					{grid}
+				</table>
+			</div>
         )
     }
 }
