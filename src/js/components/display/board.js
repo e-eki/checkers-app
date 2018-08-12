@@ -522,6 +522,10 @@ export default class Board extends Component {
 		this.doTurn(currentPosition, newPosition);
 	}
 
+	matchPositionMarks = function (position) {
+        return marks.horizontal[position.x] + marks.vertical[this.chessboard.length - position.y - 1];
+    }
+
 	doTurn(currentPosition, newPosition) {
 		console.log('doTurn');
 
