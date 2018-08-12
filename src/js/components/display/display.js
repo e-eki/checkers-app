@@ -54,11 +54,11 @@ export default class Display extends Component {
         this.resetDefaultSettings = this.resetDefaultSettings.bind(this);
         this.userTurnIsDone = this.userTurnIsDone.bind(this);
         this.AITurnIsDone = this.AITurnIsDone.bind(this);
+        this.createTurnDefinition = this.createTurnDefinition.bind(this);
     }
 
     // обновление настроек по событиям из тулбара
     updateData(data, value) {
-        debugger;
 
         this.state[`${data}`] = value;
         this.setState({});
@@ -116,14 +116,32 @@ export default class Display extends Component {
         });
     }
 
-    getTurnDefinition(actor, currentPosition, newPosition, eatenActor) {
+    createTurnDefinition(currentPosition, newPosition, actor, eatenActor, turnedToDam) {
 
         let definition = '';
+
+        definition += this.state.movesCount + ') ';
+        definition += ' ' + (actor.isUserColor ? 'Ваша' : 'Противника');
+        definition += ' ' + (actor.type == 'checker' ? 'шашка' : 'дамка');
+        definition += ' перемещена с клетки ' + currentPosition + ' на клетку ' + newPosition + '.';
+
+        if (eatenActor) {
+            definition += ' ' + (eatenActor.isUserColor ? 'Ваша' : 'Противника');
+            definition += ' ' + (eatenActor.type == 'checker' ? 'шашка' : 'дамка');
+            definition += ' съедена.';
+        }
+
+        if (turnedToDam) {
+            definition += ' ' + (actor.isUserColor ? 'Ваша шашка' : 'Противника шашка');
+            definition += ' превратилась в дамку.';
+        }
+
+        return definition;
     }
 
-    userTurnIsDone(currentPosition, newPosition) {
+    userTurnIsDone(currentPosition, newPosition, actor, eatenActor, turnedToDam) {
 
-        console.log('display analyzeUserTurn', currentPosition, newPosition);
+        console.log('display analyzeUserTurn', currentPosition, newPosition, actor, eatenActor, turnedToDam);
         
         this.state.currentUserTurn = {
             currentPosition: currentPosition,
@@ -131,13 +149,19 @@ export default class Display extends Component {
         };
 
         this.state.isUserTurn = false;
+        this.state.movesCount ++;
+        this.state.currentActionDefinition = this.createTurnDefinition(currentPosition, newPosition, actor, eatenActor, turnedToDam);
 
         //TODO
         this.state.currentAITurn = {
             currentPosition:
-            {positionX: 2, positionY: 5},
+                {positionX: 2, positionY: 5},
             newPosition:
-            {positionX: 3, positionY: 4}
+                {positionX: 3, positionY: 4},
+            actor: 
+                {color: 'black', type: 'checker'},
+            eatenActor: null,
+            turnedToDam: false,
         }
 
         this.setState({});
@@ -146,7 +170,9 @@ export default class Display extends Component {
     AITurnIsDone() {
 
         this.state.isUserTurn = true;
-        this.state.currentAITurn = this.defaultSettings.currentAITurn;
+        this.state.movesCount ++;
+        this.state.currentActionDefinition = this.createTurnDefinition(this.state.currentAITurn.currentPosition, this.state.currentAITurn.newPosition, this.state.currentAITurn.actor, this.state.currentAITurn.eatenActor, this.state.currentAITurn.turnedToDam);
+        //this.state.currentAITurn = this.defaultSettings.currentAITurn;
 
         this.setState({});
     }
