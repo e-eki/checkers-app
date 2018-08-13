@@ -193,15 +193,8 @@ export default class Board extends Component {
 	constructor(props) {
 		super(props);
 
-		this.marksSymbols = {
-			horizontal : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'],
-			vertical: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'],
-		};
-
-		this.marks = {
-			horizontal: [],
-			vertical: [],
-		};
+		this.whiteActorsCount = 0;
+		this.blackActorsCount = 0;
 		
 		this.state = {
 			// массив данных о клетках
@@ -233,6 +226,9 @@ export default class Board extends Component {
 		const firstRowBlack = 0;
 		const lastRowBlack = boardSize/2 - 2;
 
+		this.whiteActorsCount = 0;
+		this.blackActorsCount = 0;
+
 		this.state.cellsDataContainer = [];
 		this.state.actorsDataContainer = [];
 
@@ -246,12 +242,9 @@ export default class Board extends Component {
 				// клетка
 				let cellColor = (x + y) % 2 == 0 ? 'white' : 'black';			
 				this.state.cellsDataContainer[x].push({
-					//defaultClassName: cellClass, // для сброса выделения юзером
-					//className: cellClass,
 					color: cellColor,
-					defaultColor: cellColor,
-					// флаг, есть ли пользовательский функционал у клетки - вначале у всех клеток его нет
-					passive: true, 
+					defaultColor: cellColor,  // для сброса выделения юзером
+					passive: true,    // флаг, есть ли пользовательский функционал у клетки - вначале у всех клеток его нет
 				});
 
 				// актеры могут быть только на черных клетках
@@ -259,21 +252,25 @@ export default class Board extends Component {
 
 					let actorColor = null;
 					// определяем цвет актера
-					if (y >= firstRowWhite && y <= lastRowWhite) actorColor = 'white';
-					else if (y >= firstRowBlack && y <= lastRowBlack) actorColor = 'black';
+					if (y >= firstRowWhite && y <= lastRowWhite) {
+						actorColor = 'white';
+						this.whiteActorsCount++;
+					}
+					else if (y >= firstRowBlack && y <= lastRowBlack) {
+						actorColor = 'black';
+						this.blackActorsCount++;
+					}
 
-					// если есть цвет, есть актер на данной клетке
+					// если есть цвет, то есть актер на данной клетке
 					if (actorColor) {
 
 						// актер
-						let actorType = (mode == 'classic') ? 'сhecker' : 'dam';
-						//let actorClass = actorColor + ' ' + actorType;
+						let actorType = (mode == 'classic') ? 'checker' : 'dam';
 						let isUserColor = (userColor == actorColor);
+
 						this.state.actorsDataContainer[x].push({
-							//defaultClassName: actorClass, // для сброса выделения юзером
-							//className: actorClass, 
 							color: actorColor,
-							defaultColor: actorColor,
+							defaultColor: actorColor,   // для сброса выделения юзером
 							type: actorType,
 							isUserColor: isUserColor,   // является ли данный актер фигурой юзера
 							// флаг, есть ли пользовательский функционал - вначале у всех актеров его нет
@@ -292,16 +289,13 @@ export default class Board extends Component {
 		}
 	}
 
-	drawMarks(boardSize = this.props.boardSize) {
+	//подсчет и отправка в Display количества актеров - нужно для вывода в инфобаре
+	// TODO ?? 
+	changeActorsCount() {
+		debugger;
 
-		this.marks.horizontal = [];
-		this.marks.vertical = [];
-		
-		for (var i = 0; i < boardSize; i++) {
-
-			this.marks.horizontal.push(<span>{this.marksSymbols.horizontal[i]}</span>);
-			this.marks.vertical.push(<span>{this.marksSymbols.vertical[i]}</span>);
-		}
+		this.props.updateData('whiteActorsCount', this.whiteActorsCount);
+		this.props.updateData('blackActorsCount', this.blackActorsCount);
 	}
 
 	// отрисовка шахматной доски на основе данных из this.state.cellsDataContainer и this.state.actorssDataContainer
@@ -328,8 +322,6 @@ export default class Board extends Component {
 
 					actor = <Actor 
 								key={actorKey} 
-								//className = {this.state.actorsDataContainer[x][y].className} 
-								//defaultClassName = {this.state.actorsDataContainer[x][y].defaultClassName} 
 								className = {actorClassName} 
 								defaultClassName = {defaultActorClassName} 
 								isUserColor = {this.state.actorsDataContainer[x][y].isUserColor} 
@@ -341,9 +333,6 @@ export default class Board extends Component {
 								passive = {this.state.actorsDataContainer[x][y].passive}
 							/>;
 					actorKey++;
-
-					//TODO ??
-					//this.state.cellsDataContainer[x][y].actor = {isUserColor: this.state.actorsDataContainer[x][y].isUserColor};
 				}
 
 				// кладем актера в клетку
@@ -377,8 +366,9 @@ export default class Board extends Component {
 
 			// если есть такая клетка
 			if (this.state.cellsDataContainer[x] && this.state.cellsDataContainer[x][y]
-				// если на клетке есть актер, то он должен быть другого цвета
+				// и на ней нет актера или
 				&& (!this.state.actorsDataContainer[x][y]
+					// если на клетке есть актер, то он должен быть другого цвета
 					|| (this.state.actorsDataContainer[x][y] && !this.state.actorsDataContainer[x][y].isUserColor))) {
 					
 						// то выделяем клетку
@@ -438,18 +428,20 @@ export default class Board extends Component {
 	chooseActorToMove(positionX, positionY) {
 		console.log('chooseActorToMove', positionX, positionY);
 
+		// флаг - есть ли у этого актера клетки, куда он может ходить
 		let actorCanMove = false;
 
 		// добавление клетке пользовательского функционала
-		// (чтобы при клике по клетке на нее делал ход выбранный актер)
+		// (чтобы при клике по клетке на нее происходил ход выбранного актера)
 		var assignCellMethod = function(x, y) {
 
 			if (this.state.cellsDataContainer[x] && this.state.cellsDataContainer[x][y]
-				// если стиль клетки не по умолчанию, она выделена и на нее можно сходить актером
+				// если цвет клетки не по умолчанию - то она выделена и на нее можно сходить актером
 				&& this.state.cellsDataContainer[x][y].color !== this.state.cellsDataContainer[x][y].defaultColor) {
 	
 					// проставляем флаг, что клетка активна
 					this.state.cellsDataContainer[x][y].passive = false;	
+					// проставляем флаг, что актеру есть куда ходить
 					actorCanMove = true;
 			}
 		}.bind(this);
@@ -465,6 +457,7 @@ export default class Board extends Component {
 			assignCellMethod(positionX + 1, positionY - 1);
 		}
 
+		// если у актера нет клеток, куда ходить, то при клике на него ничего не происходит
 		if (!actorCanMove) return;
 
 		// после того, как на одном из актеров сделан клик, сходить можно только им,
@@ -486,6 +479,7 @@ export default class Board extends Component {
 		this.setState({});
 	}
 
+	// сброс стилей выделения всех клеток и актеров, а также удаление у них пользовательского функционала
 	resetAllElements() {
 
 		for (let y = 0; y < this.props.boardSize; y++) {
@@ -496,7 +490,9 @@ export default class Board extends Component {
 				this.state.cellsDataContainer[x][y].passive = true;
 
 				if (this.state.actorsDataContainer[x][y]) {
+					// удаляем пользовательский функционал у актера
 					this.state.actorsDataContainer[x][y].passive = true;
+					// сбрасываем выделение актера
 					this.state.actorsDataContainer[x][y].color = this.state.actorsDataContainer[x][y].defaultColor;
 				}	
 			}
@@ -522,13 +518,12 @@ export default class Board extends Component {
 		this.doTurn(currentPosition, newPosition);
 	}
 
-	matchPositionMarks = function (position) {
-        return marks.horizontal[position.x] + marks.vertical[this.chessboard.length - position.y - 1];
-    }
-
+	// делает ход выбранным актером с клетки currentPosition на клетку newPosition
+	// (изменение положения актера в массиве actorsDataContainer и последующий вызов перерисовки)
 	doTurn(currentPosition, newPosition) {
 		console.log('doTurn');
 
+		// подготовка данных для передачи в Display
 		let currentActorData = this.state.actorsDataContainer[currentPosition.positionX][currentPosition.positionY];
 
 		let actor = {
@@ -540,9 +535,17 @@ export default class Board extends Component {
 
 		let eatenActor = null;
 		if (newActorData) {
+			
 			eatenActor = {
 				isUserColor: newActorData.isUserColor,
 				type: newActorData.type,
+			};
+
+			if (newActorData.color == 'white') {
+				this.whiteActorsCount--;
+			}
+			else if (newActorData.color == 'black') {
+				this.blackActorsCount--;
 			}
 		}
 
@@ -555,18 +558,16 @@ export default class Board extends Component {
 		// сбрасываем данные о текущем актере
 		this.state.activeActorPosition = null;
 
-		if (this.props.isUserTurn) {
-			this.props.userTurnIsDone(currentPosition, newPosition, actor, eatenActor, turnedToDam);	
-		}
-		else {
-			this.props.AITurnIsDone();
-		}
+		// сообщить Display о том, что ход был отрисован
+		// вызываем соответствующий метод в Display (перерисовка вызывается оттуда)
+		this.props.turnIsDone(currentPosition, newPosition, actor, eatenActor, turnedToDam, this.whiteActorsCount, this.blackActorsCount);	
+	
 	}
 
 	// заполнение начальных данных перед первым рендерингом
 	componentWillMount() {
 		this.fillGridData();
-		this.drawMarks();
+		this.changeActorsCount();
 	}
 
 	// и заполнение начальных данных после смены настроек
@@ -579,9 +580,10 @@ export default class Board extends Component {
 			nextProps.userColor !== this.props.userColor ||
 			(!nextProps.endOfGame && this.props.endOfGame)) {
 				this.fillGridData(nextProps.boardSize, nextProps.mode, nextProps.userColor, nextProps.isUserTurn);
-				this.drawMarks(nextProps.boardSize);
+				this.changeActorsCount();
 		}
 			
+		// если игра идет и сейчас будет ход юзера, то делаем активными всех его актеров
 		if (nextProps.startOfGame && nextProps.isUserTurn && !this.props.isUserTurn) {
 
 			for (let y = 0; y < this.props.boardSize; y++) {
@@ -594,12 +596,7 @@ export default class Board extends Component {
 			}
 		}
 
-		if (nextProps.endOfGame && !this.props.endOfGame) {
-
-			this.resetAllElements();
-		}
-
-		// TODO ??? !nextProps.isUserTurn
+		// если игра идет и сейчас будет ход ИИ, и есть данные этого хода, то вызываем ход с этими данными
 		if (!nextProps.isUserTurn && this.props.isUserTurn && nextProps.currentAITurn) {
 
 			//TODO!
@@ -608,38 +605,22 @@ export default class Board extends Component {
 				this.doTurn(nextProps.currentAITurn.currentPosition, nextProps.currentAITurn.newPosition);
 			}.bind(this), 2000);
 		}
+
+		// если игра закончилась и табло скрылось - т.е. игра в режиме ожидания - сбрасываем стили выделения всех клеток и актеров
+		if (nextProps.endOfGame && !this.props.endOfGame) {
+			this.resetAllElements();
+		}
 	}
 
     render() {
 		console.log('------------------render board--------------------');
-
 		const grid = this.drawGrid();
 
         return (
 	
-			<div className = 'main'>
-				<div className = 'marks-container'>
-					<div className = 'marks marks_horizontal marks_top'>
-						{this.marks.horizontal}
-					</div>
-
-					<div className = 'marks marks_horizontal marks_bottom'>
-						{this.marks.horizontal}
-					</div>
-
-					<div className = 'marks marks_vertical marks_left'>
-						{this.marks.vertical}
-					</div>
-
-					<div className = 'marks marks_vertical marks_right'>
-						{this.marks.vertical}
-					</div>
-					
-				</div>
-				<table className ="board">
-					{grid}
-				</table>
-			</div>
+			<table className ="board">
+				{grid}
+			</table>
         )
     }
 }

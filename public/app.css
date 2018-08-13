@@ -158,11 +158,6 @@ table {
     
 }
 
-.mark {
-    color: rgb(191, 224, 70);
-    position: absolute;
-}
-
 .horizontal {
     top: 82vmin;
 }
@@ -186,7 +181,7 @@ table {
     border-style: ridge;
 }
 
-.сhecker { 
+.checker { 
     border-color: green;
 }
 
@@ -212,6 +207,9 @@ table {
     position: absolute;
     display: flex; 
     justify-content: space-around;
+    color: darkgrey;
+    font-family: Tahoma;
+    font-size: 0.9em;
 }
 
 .marks_horizontal {

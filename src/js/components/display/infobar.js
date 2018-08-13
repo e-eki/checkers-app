@@ -53,6 +53,7 @@ export default class Infobar extends Component {
 	}
 	
 	componentWillUpdate(nextProps, nextState) {
+		//debugger;
 
 		if (nextProps.startOfGame && !this.props.startOfGame) {
 			this.timer = setInterval(this.tick, 60000);
@@ -77,7 +78,7 @@ export default class Infobar extends Component {
 	}
 
     render() {
-		//console.log('render infobar');
+		console.log('render infobar');
 
 		let currentTime = this.state.currentHours + ' ч ' + this.state.currentMinutes + ' мин ';
 

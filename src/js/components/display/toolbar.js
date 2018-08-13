@@ -53,7 +53,7 @@ export default class Toolbar extends Component {
     }
 
 	render() {
-		console.log('render toolbar', this.props.startOfGame);
+		console.log('render toolbar');
 
 		let disabledElements;
 		let disabledClass;
