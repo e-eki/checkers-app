@@ -48,12 +48,15 @@ export default class Infobar extends Component {
 				nextState.currentHours!== this.state.currentHours ||
 				nextState.currentMinutes!== this.state.currentMinutes ||
 				nextProps.currentActionDefinition !== this.state.currentActionDefinition ||
-				nextProps.startOfGame !== this.props.startOfGame	
+				nextProps.startOfGame !== this.props.startOfGame ||
+				nextProps.isUserTurn !== this.props.isUserTurn ||
+				nextProps.whiteActorsCount !== this.props.whiteActorsCount ||
+				nextProps.blackActorsCount !== this.props.blackActorsCount	
 			);
 	}
 	
 	componentWillUpdate(nextProps, nextState) {
-		//debugger;
+		debugger;
 
 		if (nextProps.startOfGame && !this.props.startOfGame) {
 			this.timer = setInterval(this.tick, 60000);
@@ -80,15 +83,16 @@ export default class Infobar extends Component {
     render() {
 		console.log('render infobar');
 
+		let whoTurns = (this.props.startOfGame || this.props.endOfGame) ? (this.props.isUserTurn ? 'ваш' : 'противника') : '-';
 		let currentTime = this.state.currentHours + ' ч ' + this.state.currentMinutes + ' мин ';
 
         return (
 			<div className ="bar">
-				<div>Сейчас ход: <span>ваш</span></div>
+				<div>Сейчас ход: <span>{whoTurns}</span></div>
 				<div>Прошло времени: <p ref={elem => this.time = elem}>{currentTime}</p></div>
-				<div>Сделано ходов: <span>0</span></div>
-				<div>Белые фигуры на доске: <span>12</span></div>
-				<div>Черные фигуры на доске: <span>12</span></div>
+				<div>Сделано ходов: <span>{this.props.movesCount}</span></div>
+				<div>Белые фигуры на доске: <span>{this.props.whiteActorsCount}</span></div>
+				<div>Черные фигуры на доске: <span>{this.props.blackActorsCount}</span></div>
 				<div>История ходов: 
 					<textarea value = {this.state.currentActionDefinition}></textarea>
 				</div>				

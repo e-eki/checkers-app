@@ -12,11 +12,12 @@ export default class Toolbar extends Component {
 		this.resetHandle = this.resetHandle.bind(this);
 	}
 
+	// начало/завершение игры
 	switchStartHandle(event) {
 		event.preventDefault();
 
 		// вызывает событие в родителе - дисплее
-		this.props.switchStartGame();	
+		this.props.switchStartGame(event);	
 	}
 	
 	// событие изменения настроек

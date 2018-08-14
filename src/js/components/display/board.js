@@ -292,7 +292,6 @@ export default class Board extends Component {
 	//подсчет и отправка в Display количества актеров - нужно для вывода в инфобаре
 	// TODO ?? 
 	changeActorsCount() {
-		debugger;
 
 		this.props.updateData('whiteActorsCount', this.whiteActorsCount);
 		this.props.updateData('blackActorsCount', this.blackActorsCount);

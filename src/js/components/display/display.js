@@ -38,6 +38,7 @@ export default class Display extends Component {
             movesCount: 0,      // количество ходов за игру - нужно для вывода в инфобаре
             whiteActorsCount: 0,     // количество белых фигур на доске - нужно для вывода в инфобаре
             blackActorsCount: 0,     // количество черных фигур на доске - нужно для вывода в инфобаре
+            standoff: false,   // ничья по завершениии игры 
         }
 
         this.state = {
@@ -61,6 +62,7 @@ export default class Display extends Component {
             movesCount: this.defaultSettings.movesCount,
             whiteActorsCount: this.defaultSettings.whiteActorsCount,
             blackActorsCount: this.defaultSettings.blackActorsCount, 
+            standoff: this.defaultSettings.standoff,
         };
 
         this.drawMarks = this.drawMarks.bind(this);
@@ -99,8 +101,8 @@ export default class Display extends Component {
         this.setState({});
     }
 
-    // переключение начала/завершения игры (кнопкой из тулбара)
-    switchStartGame() {
+    // переключение начала/завершения игры
+    switchStartGame(event) {
         console.log('switchStartGame');
 
         if (this.state.startOfGame == false) {
@@ -115,6 +117,8 @@ export default class Display extends Component {
                 startOfGame: false,
                 endOfGame: true,
             });
+
+            if (event) this.state.standoff = true;
         } 
     }
 
@@ -151,6 +155,7 @@ export default class Display extends Component {
             movesCount: this.defaultSettings.movesCount,
             whiteActorsCount: this.defaultSettings.whiteActorsCount,
             blackActorsCount: this.defaultSettings.blackActorsCount, 
+            standoff: this.state.standoff,
         });
     }
 
@@ -190,47 +195,6 @@ export default class Display extends Component {
         return definition;
     }
 
-    // событие сделанного (отрисованного) юзером хода - вызывается из Board
-    /*userTurnIsDone(currentPosition, newPosition, actor, eatenActor, turnedToDam) {
-
-        console.log('display analyzeUserTurn', currentPosition, newPosition, actor, eatenActor, turnedToDam);
-        
-        // TODO ???
-        this.state.currentUserTurn = {
-            currentPosition: currentPosition,
-            newPosition: newPosition,
-        };
-
-        this.state.isUserTurn = false;
-        this.state.movesCount ++;
-        this.state.currentActionDefinition = this.createTurnDefinition(currentPosition, newPosition, actor, eatenActor, turnedToDam);
-
-        //TODO
-        this.state.currentAITurn = {
-            currentPosition:
-                {positionX: 2, positionY: 5},
-            newPosition:
-                {positionX: 3, positionY: 4},
-            actor: 
-                {color: 'black', type: 'checker'},
-            eatenActor: null,
-            turnedToDam: false,
-        }
-
-        this.setState({});
-    }
-
-    // событие сделанного (отрисованного) ИИ хода - вызывается из Board
-    AITurnIsDone() {
-
-        this.state.isUserTurn = true;
-        this.state.movesCount ++;
-        this.state.currentActionDefinition = this.createTurnDefinition(this.state.currentAITurn.currentPosition, this.state.currentAITurn.newPosition, this.state.currentAITurn.actor, this.state.currentAITurn.eatenActor, this.state.currentAITurn.turnedToDam);
-        //this.state.currentAITurn = this.defaultSettings.currentAITurn;
-
-        this.setState({});
-    }*/
-
     turnIsDone(currentPosition, newPosition, actor, eatenActor, turnedToDam, whiteActorsCount, blackActorsCount) {
         debugger;
 
@@ -240,8 +204,8 @@ export default class Display extends Component {
         this.state.blackActorsCount = blackActorsCount;
         this.state.movesCount++;
 
+        //
         if (whiteActorsCount == 0 || blackActorsCount == 0) {
-
             this.switchStartGame();
             return;
         }
@@ -259,9 +223,9 @@ export default class Display extends Component {
             //TODO!!!
             this.state.currentAITurn = {
                 currentPosition:
-                    {positionX: 2, positionY: 5},
+                    {positionX: 1, positionY: 2},
                 newPosition:
-                    {positionX: 3, positionY: 4},
+                    {positionX: 2, positionY: 3},
                 actor: 
                     {color: 'black', type: 'checker'},
                 eatenActor: null,
@@ -369,7 +333,15 @@ export default class Display extends Component {
                     </div>
                 </div>
                
-                <Tablo className = {tabloClass}/>
+                <Tablo 
+                    className = {tabloClass}
+                    isUserTurn = {this.state.isUserTurn}
+                    movesCount = {this.state.movesCount}
+                    whiteActorsCount = {this.state.whiteActorsCount}
+                    blackActorsCount = {this.state.blackActorsCount}
+                    standoff = {this.state.standoff}
+                    userColor = {this.props.userColor}
+                />
             </div>
         )
     }
