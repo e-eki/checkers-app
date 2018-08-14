@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import Header from './header';
 import Toolbar from './toolbar';
-import Board from './board';
+import Grid from './grid';
 import Infobar from './infobar';
 import Tablo from './tablo';
 
@@ -16,7 +16,9 @@ export default class Display extends Component {
         this.marksSymbols = {
 			horizontal : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'],
 			vertical: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'],
-		};
+        };
+        
+        this.myWorker = null;
 
         this.defaultSettings = {
             quotesSwitchedOff: false,   // флаг, показывать ли панель с цитатами
@@ -153,8 +155,8 @@ export default class Display extends Component {
     resetDisplay(event) {
         console.log('resetDisplay', event);
 
-        this.wrap.removeEventListener('click', this.resetDisplay);
-        this.wrap.removeEventListener('keydown', this.resetDisplay);
+        this.page.removeEventListener('click', this.resetDisplay);
+        this.page.removeEventListener('keydown', this.resetDisplay);
 
         // сброс всех данных игры
         this.setState({  
@@ -190,13 +192,13 @@ export default class Display extends Component {
 
         definition += this.state.movesCount + ') ';
         definition += ' ' + (actor.isUserColor ? 'Ваша' : 'Противника');
-        definition += ' ' + (actor.type == "checker" ? 'шашка' : 'дамка');
+        definition += ' ' + (actor.type == "grid__actor_checker" ? 'шашка' : 'дамка');
         definition += ' перемещена с клетки ' + currentPositionMarks.markX + currentPositionMarks.markY + 
                         ' на клетку ' + newPositionMarks.markX + newPositionMarks.markY + '.';
 
         if (eatenActor) {
             definition += ' ' + (eatenActor.isUserColor ? 'Ваша' : 'Противника');
-            definition += ' ' + (eatenActor.type == 'checker' ? 'шашка' : 'дамка');
+            definition += ' ' + (eatenActor.type == 'grid__actor_checker' ? 'шашка' : 'дамка');
             definition += ' съедена.';
         }
 
@@ -240,7 +242,7 @@ export default class Display extends Component {
                 newPosition:
                     {positionX: 2, positionY: 3},
                 actor: 
-                    {color: 'black', type: 'checker'},
+                    {color: 'grid__actor_black', type: 'grid__actor_checker'},
                 eatenActor: null,
                 turnedToDam: false,
             }
@@ -260,6 +262,19 @@ export default class Display extends Component {
         this.drawMarks();
     }
 
+    /*componentDidMount() {
+
+        debugger;
+
+        this.myWorker = new Worker("game.js");
+        this.myWorker.postMessage({'cmd': 'Hello World'});
+
+        this.myWorker.onmessage = function(e) {
+            console.log('Message received from worker');
+            console.log(e.data);
+          }
+    }*/
+
     componentWillUpdate(nextProps, nextState) {
         // если в настройках изменился размер доски, перерисовываем разметку
         if (nextState.boardSize !== this.state.boardSize) {
@@ -270,22 +285,23 @@ export default class Display extends Component {
     componentDidUpdate(prevState) {     
         // если игра завершена, то появляется табло, и по клику или нажатию любой клавиши табло пропадает и сбрасываются настройки
         if (!prevState.endOfGame && this.state.endOfGame) {
-            this.wrap.addEventListener('click', this.resetDisplay);
-            this.wrap.addEventListener('keydown', this.resetDisplay);
+            this.page.addEventListener('click', this.resetDisplay);
+            this.page.addEventListener('keydown', this.resetDisplay);
         }
     }
 
     render() {
         console.log('render display');
-        const gameOverClass = this.state.endOfGame ? 'game-over' : '';
+        //const gameOverClass = this.state.endOfGame ? 'game-over' : '';
+        const pageContentStyle = 'page__content' + (this.state.endOfGame ? ' page__content_transparent' : '');
         const tabloClass = this.state.endOfGame ? 'tablo_shown' : 'tablo_hidden';
 
         return (
-            <div ref = {elem => this.wrap = elem} className = 'wrap'>
-                <div className = {gameOverClass}>
+            <div ref = {elem => this.page = elem} className = 'page'>
+                <div className = {pageContentStyle}>
                     <Header quotesSwitchedOff = {this.state.quotesSwitchedOff}/>
                     
-                    <div className = 'inner-wrap'>
+                    <div className = 'main'>
 
                         <Toolbar 
                             quotesSwitchedOff = {this.state.quotesSwitchedOff}
@@ -300,7 +316,7 @@ export default class Display extends Component {
                             mode = {this.state.mode}
                         />
 
-                        <div className = 'main'>
+                        <div className = 'main__chessboard chessboard'>
                             <div className = 'marks-container'>
                                 <div className = 'marks marks_horizontal marks_top'>
                                     {this.state.marks.horizontal}
@@ -319,7 +335,7 @@ export default class Display extends Component {
                                 </div>
                             </div>
 
-                            <Board 
+                            <Grid 
                                 startOfGame = {this.state.startOfGame}
                                 endOfGame = {this.state.endOfGame}
                                 isUserTurn = {this.state.isUserTurn} 

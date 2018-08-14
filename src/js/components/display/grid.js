@@ -188,7 +188,7 @@ class Actor extends Component {
 }
 
 // шахматная доска - визуальное представление
-export default class Board extends Component {
+export default class Grid extends Component {
 
 	constructor(props) {
 		super(props);
@@ -617,7 +617,7 @@ export default class Board extends Component {
 
         return (
 	
-			<table className ="board">
+			<table className = "grid">
 				{grid}
 			</table>
         )

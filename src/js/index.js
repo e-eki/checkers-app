@@ -1,6 +1,6 @@
 
-//import '../less/template.less';
-import '../../public/app.css';
+import '../less/template.less';
+//import '../../public/app.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
