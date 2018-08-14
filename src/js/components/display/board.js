@@ -289,7 +289,7 @@ export default class Board extends Component {
 		}
 	}
 
-	//подсчет и отправка в Display количества актеров - нужно для вывода в инфобаре
+	//при начальной отрисовек доски отправка в Display количества актеров - нужно для вывода в инфобаре
 	// TODO ?? 
 	changeActorsCount() {
 

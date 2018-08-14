@@ -38,7 +38,7 @@ export default class Display extends Component {
             movesCount: 0,      // количество ходов за игру - нужно для вывода в инфобаре
             whiteActorsCount: 0,     // количество белых фигур на доске - нужно для вывода в инфобаре
             blackActorsCount: 0,     // количество черных фигур на доске - нужно для вывода в инфобаре
-            standoff: false,   // ничья по завершениии игры 
+            totalOfGame: 'standoff',   // результат игры - по умолчанию ничья
         }
 
         this.state = {
@@ -62,7 +62,7 @@ export default class Display extends Component {
             movesCount: this.defaultSettings.movesCount,
             whiteActorsCount: this.defaultSettings.whiteActorsCount,
             blackActorsCount: this.defaultSettings.blackActorsCount, 
-            standoff: this.defaultSettings.standoff,
+            totalOfGame: this.defaultSettings.totalOfGame,
         };
 
         this.drawMarks = this.drawMarks.bind(this);
@@ -101,10 +101,11 @@ export default class Display extends Component {
         this.setState({});
     }
 
-    // переключение начала/завершения игры
+    // переключение начала/завершения игры - вызывается кнопкой в тулбаре или когда число белых или черных фигур = 0
     switchStartGame(event) {
         console.log('switchStartGame');
 
+        // начать игру
         if (this.state.startOfGame == false) {
             this.setState({
                 startOfGame: true,
@@ -112,13 +113,25 @@ export default class Display extends Component {
                 isUserTurn: (this.state.userColor == 'white') ? true : false,
             });
         }
+        //завершить игру
         else {
             this.setState({
                 startOfGame: false,
                 endOfGame: true,
             });
 
-            if (event) this.state.standoff = true;
+            // по завершении игры подводим итог - кто выиграл
+            // если передано событие event, то метод был вызван кнопкой в тулбаре, и значит, юзер сам завершил игру - ничья
+            if (!event) {
+                // если на доске не осталось фигур цвета юзера, то победил ИИ
+                if ((this.state.userColor == 'white' && this.state.whiteActorsCount == 0) ||
+                    (this.state.userColor == 'black' && this.state.blackActorsCount == 0)) {
+                        this.state.totalOfGame = 'AI';
+                    }
+                else {
+                    this.state.totalOfGame = 'user';
+                }   
+            }
         } 
     }
 
@@ -155,7 +168,7 @@ export default class Display extends Component {
             movesCount: this.defaultSettings.movesCount,
             whiteActorsCount: this.defaultSettings.whiteActorsCount,
             blackActorsCount: this.defaultSettings.blackActorsCount, 
-            standoff: this.state.standoff,
+            totalOfGame: this.state.totalOfGame,
         });
     }
 
@@ -195,16 +208,16 @@ export default class Display extends Component {
         return definition;
     }
 
+    // обработчик хода
     turnIsDone(currentPosition, newPosition, actor, eatenActor, turnedToDam, whiteActorsCount, blackActorsCount) {
-        debugger;
-
         console.log('display turnIsDone', currentPosition, newPosition, actor, eatenActor, turnedToDam);
 
+        // из Board на каждом ходе передается количество черных и белых фигур в данный момент на доске
         this.state.whiteActorsCount = whiteActorsCount;
         this.state.blackActorsCount = blackActorsCount;
         this.state.movesCount++;
 
-        //
+        // если количество черных или белых фигур = 0, то завершение игры.
         if (whiteActorsCount == 0 || blackActorsCount == 0) {
             this.switchStartGame();
             return;
@@ -247,16 +260,14 @@ export default class Display extends Component {
         this.drawMarks();
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    componentWillUpdate(nextProps, nextState) {
+        // если в настройках изменился размер доски, перерисовываем разметку
         if (nextState.boardSize !== this.state.boardSize) {
             this.drawMarks(nextState.boardSize);
         }
-
-        return true;
     }
 
-    componentDidUpdate(prevState) {
-        
+    componentDidUpdate(prevState) {     
         // если игра завершена, то появляется табло, и по клику или нажатию любой клавиши табло пропадает и сбрасываются настройки
         if (!prevState.endOfGame && this.state.endOfGame) {
             this.wrap.addEventListener('click', this.resetDisplay);
@@ -339,7 +350,7 @@ export default class Display extends Component {
                     movesCount = {this.state.movesCount}
                     whiteActorsCount = {this.state.whiteActorsCount}
                     blackActorsCount = {this.state.blackActorsCount}
-                    standoff = {this.state.standoff}
+                    totalOfGame = {this.state.totalOfGame}
                     userColor = {this.props.userColor}
                 />
             </div>

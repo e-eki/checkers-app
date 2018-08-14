@@ -12,9 +12,9 @@ export default class Tablo extends Component {
     render() {
 		console.log('render tablo');
 		const tabloClass = 'tablo ' + (this.props.className ? this.props.className : '');
-		const whoWins = this.props.standoff ? 'Ничья!' : (this.props.isUserTurn ? 'Вы выиграли!' : 'Вы проиграли!');
-		const score = (this.props.userColor == 'white') ? (this.props.whiteActorsCount + ' : ' + this.props.blackActorsCount)
-														: (this.props.blackActorsCount + ' : ' + this.props.whiteActorsCount);
+		const whoWins = (this.props.totalOfGame == 'standoff') ? 'Ничья!' : ((this.props.totalOfGame ==  'user') ? 'Вы выиграли!' : 'Вы проиграли!');
+		const score = (this.props.userColor == 'white') ? (this.props.blackActorsCount + ' : ' + this.props.whiteActorsCount)
+														: (this.props.whiteActorsCount + ' : ' + this.props.blackActorsCount);
 
         return (
 			<div className = {tabloClass}>
