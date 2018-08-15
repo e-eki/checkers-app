@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import Header from './header';
+import Footer from './footer';
 import Toolbar from './toolbar';
 import Grid from './grid';
 import Infobar from './infobar';
@@ -356,6 +357,8 @@ export default class Display extends Component {
                             blackActorsCount = {this.state.blackActorsCount}
                         />
                     </div>
+
+                    <Footer className = 'content__footer'/>
                 </div>
                
                 <Tablo 
