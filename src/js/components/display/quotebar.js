@@ -133,7 +133,6 @@ export default class Quotebar extends Component {
 
     render() {
 		//console.log('render quotebar');
-
 		let quotebarClass = 'quotebar ' + (this.props.quotesSwitchedOff ? 'quotebar_hidden' : 'quotebar_shown');
 
 		let quoteText = '"' + this.state.currentQuote.quote + '"';
@@ -141,8 +140,12 @@ export default class Quotebar extends Component {
 
         return (
 			<div className = {quotebarClass}>
-				<p className ="quoteText">{quoteText}</p>
-				<p className ="authorText">{quoteAuthor}</p>
+				<div className = "quotebar__quote">
+					{quoteText}
+				</div>
+				<div className = "quotebar__author">
+					{quoteAuthor}
+				</div>
 			</div>
         )
     }

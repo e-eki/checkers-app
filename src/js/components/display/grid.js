@@ -70,7 +70,7 @@ class Cell extends Component {
 
     render() {
 		console.log('render cell', this.props.positionX, this.props.positionY, this.ref);
-		const cellClass = 'cell ' + (this.props.className ? this.props.className : '');
+		const cellClass = 'grid__cell ' + (this.props.className ? this.props.className : '');
         
 		return (
 			<td ref={elem => this.ref = elem} className={cellClass}>
@@ -181,7 +181,7 @@ class Actor extends Component {
     
     render() {
 		console.log('render actor', this.props.positionX, this.props.positionY, this.ref);
-		const actorClass = 'actor ' + (this.state.className ? this.state.className : '');
+		const actorClass = 'grid__actor ' + (this.state.className ? this.state.className : '');
         
         return <div ref={elem => this.ref = elem} className={actorClass}></div>;
     }
@@ -240,7 +240,7 @@ export default class Grid extends Component {
             for (let y = 0; y < boardSize; y++) {
 
 				// клетка
-				let cellColor = (x + y) % 2 == 0 ? 'white' : 'black';			
+				let cellColor = (x + y) % 2 == 0 ? 'grid__cell_white' : 'grid__cell_black';			
 				this.state.cellsDataContainer[x].push({
 					color: cellColor,
 					defaultColor: cellColor,  // для сброса выделения юзером
@@ -248,7 +248,7 @@ export default class Grid extends Component {
 				});
 
 				// актеры могут быть только на черных клетках
-				if (cellColor == 'black') {
+				if (cellColor == 'grid__cell_black') {
 
 					let actorColor = null;
 					// определяем цвет актера
@@ -265,8 +265,10 @@ export default class Grid extends Component {
 					if (actorColor) {
 
 						// актер
-						let actorType = (mode == 'classic') ? 'checker' : 'dam';
 						let isUserColor = (userColor == actorColor);
+						// TODO??
+						actorColor = 'grid__actor_' + actorColor;
+						let actorType = (mode == 'classic') ? 'grid__actor_checker' : 'grid__actor_dam';
 
 						this.state.actorsDataContainer[x].push({
 							color: actorColor,
@@ -316,7 +318,7 @@ export default class Grid extends Component {
 				let actor = null;
 
 				if (this.state.actorsDataContainer[x][y]) {
-					const actorClassName = this.state.actorsDataContainer[x][y].color + ' ' + this.state.actorsDataContainer[x][y].type;
+					const actorClassName = this.state.actorsDataContainer[x][y].type + ' ' + this.state.actorsDataContainer[x][y].color;
 					const defaultActorClassName = this.state.actorsDataContainer[x][y].defaultColor + ' ' + this.state.actorsDataContainer[x][y].type;
 
 					actor = <Actor 
@@ -371,11 +373,11 @@ export default class Grid extends Component {
 					|| (this.state.actorsDataContainer[x][y] && !this.state.actorsDataContainer[x][y].isUserColor))) {
 					
 						// то выделяем клетку
-						this.state.cellsDataContainer[x][y].color = this.state.cellsDataContainer[x][y].defaultColor + ' highlight-cell';
+						this.state.cellsDataContainer[x][y].color = this.state.cellsDataContainer[x][y].defaultColor + ' grid__cell_highlight';
 			}	
 		}.bind(this);
 
-		this.state.actorsDataContainer[positionX][positionY].color = this.state.actorsDataContainer[positionX][positionY].defaultColor + ' highlight-actor';
+		this.state.actorsDataContainer[positionX][positionY].color = this.state.actorsDataContainer[positionX][positionY].defaultColor + ' grid__actor_highlight';
 
 		//!!! TODO - заглушка
 		// выбор клеток, соответствующих возможным направлениям актера
@@ -540,10 +542,10 @@ export default class Grid extends Component {
 				type: newActorData.type,
 			};
 
-			if (newActorData.color == 'white') {
+			if (newActorData.color == 'grid__actor_white') {
 				this.whiteActorsCount--;
 			}
-			else if (newActorData.color == 'black') {
+			else if (newActorData.color == 'grid__actor_black') {
 				this.blackActorsCount--;
 			}
 		}

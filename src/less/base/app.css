@@ -1,4 +1,4 @@
-body {
+/*body {
     background: #fafafa;
     font-family: 'Consolas', Arial, Helvetica, sans-serif;
     margin: 0;
@@ -6,7 +6,7 @@ body {
 
 .disabled-cursor {
     cursor: default;
-}
+}*/
 
 .wrap {
     display: flex;
@@ -21,7 +21,7 @@ body {
     /*margin: 45px 5vw 0 5vw;*/
 }
 
-.quotebar {
+/*.quotebar {
     background: #fafafa;
     border-radius: 15px;
     margin-bottom: 2vh;
@@ -52,13 +52,12 @@ body {
 .authorText {
     text-align: right;
     font-style: italic;
-}
+}*/
 
-.bar {
+/*.bar {
     background: rgba(133, 59, 36, 0.21);
     border-radius: 10px;
     width: 230px;
-    /*height: 100%;*/
     padding: 15px;
 }
 
@@ -68,9 +67,9 @@ body {
 
 .bar div p {
     margin: 0;
-}
+}*/
 
-button {
+/*button {
     padding: 10px;
     background: rgb(255, 99, 99);
     border-radius: 5px;
@@ -84,23 +83,17 @@ button {
 
 .button_finish {
     background: green;
-}
+}*/
 
-select {
-    cursor: pointer;
-}
 
-input {
-    cursor: pointer;
-}
 
-textarea {
+/*textarea {
     width: 90%;
     height: 25vh;
     outline: none;
     resize: none;
     margin-top: 5px;
-}
+}*/
 
 /*.main {
     position: relative;

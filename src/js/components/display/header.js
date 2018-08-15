@@ -11,9 +11,10 @@ export default class Header extends Component {
 
     render() {
 		console.log('render header');
+		const headerClass = 'header ' + (this.props.className ? this.props.className : '');
 
         return (
-			<div className = 'header'>
+			<div className = {headerClass}>
 				<Quotebar quotesSwitchedOff = {this.props.quotesSwitchedOff}/>
 			</div>
         )

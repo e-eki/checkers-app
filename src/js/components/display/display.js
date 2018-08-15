@@ -293,13 +293,13 @@ export default class Display extends Component {
     render() {
         console.log('render display');
         //const gameOverClass = this.state.endOfGame ? 'game-over' : '';
-        const pageContentStyle = 'page__content' + (this.state.endOfGame ? ' page__content_transparent' : '');
-        const tabloClass = this.state.endOfGame ? 'tablo_shown' : 'tablo_hidden';
+        const pageContentClass = 'page__content content' + (this.state.endOfGame ? ' content_transparent' : '');
+        const tabloClass = 'page__tablo ' + (this.state.endOfGame ? 'tablo_shown' : 'tablo_hidden');
 
         return (
             <div ref = {elem => this.page = elem} className = 'page'>
-                <div className = {pageContentStyle}>
-                    <Header quotesSwitchedOff = {this.state.quotesSwitchedOff}/>
+                <div className = {pageContentClass}>
+                    <Header className = 'content__header' quotesSwitchedOff = {this.state.quotesSwitchedOff}/>
                     
                     <div className = 'main'>
 
@@ -317,22 +317,20 @@ export default class Display extends Component {
                         />
 
                         <div className = 'main__chessboard chessboard'>
-                            <div className = 'marks-container'>
-                                <div className = 'marks marks_horizontal marks_top'>
-                                    {this.state.marks.horizontal}
-                                </div>
+                            <div className = 'chessboard__marks-container marks-container marks-container_horizontal marks-container_top'>
+                                {this.state.marks.horizontal}
+                            </div>
 
-                                <div className = 'marks marks_horizontal marks_bottom'>
-                                    {this.state.marks.horizontal}
-                                </div>
+                            <div className = 'chessboard__marks-container marks-container marks-container_horizontal marks-container_bottom'>
+                                {this.state.marks.horizontal}
+                            </div>
 
-                                <div className = 'marks marks_vertical marks_left'>
-                                    {this.state.marks.vertical}
-                                </div>
+                            <div className = 'chessboard__marks-container marks-container marks-container_vertical marks-container_left'>
+                                {this.state.marks.vertical}
+                            </div>
 
-                                <div className = 'marks marks_vertical marks_right'>
-                                    {this.state.marks.vertical}
-                                </div>
+                            <div className = 'chessboard__marks-container marks-container marks-container_vertical marks-container_right'>
+                                {this.state.marks.vertical}
                             </div>
 
                             <Grid 

@@ -56,20 +56,20 @@ export default class Toolbar extends Component {
 	render() {
 		console.log('render toolbar');
 
-		let disabledElements;
-		let disabledClass;
+		let elementIsDisabled;
+		let itemClass;
 		let switchStartBtnText;
 		let switchStartBtnClass;
 
 		if (!this.props.startOfGame && !this.props.endOfGame) {
-			disabledElements = false;
-			disabledClass = '';
+			elementIsDisabled = false;
+			itemClass = 'bar_enabled-item';
 			switchStartBtnText = 'Начать игру';
 			switchStartBtnClass = 'button_start';
 		}
 		else {
-			disabledElements = true;
-			disabledClass = 'disabled-cursor';
+			elementIsDisabled = true;
+			itemClass = 'bar_disabled-item';
 			switchStartBtnText = 'Завершить игру';
 			switchStartBtnClass = 'button_finish';
 		}
@@ -78,12 +78,12 @@ export default class Toolbar extends Component {
 			<div className = "bar">
 				<form>
 					<div>
-						<input name = "quotesSwitchedOff" type="checkbox" checked = {this.props.quotesSwitchedOff} onChange = {this.changeData}/>
+						<input name = "quotesSwitchedOff" type="checkbox" className = 'bar_enabled-item' checked = {this.props.quotesSwitchedOff} onChange = {this.changeData}/>
 						Выключить цитаты
 					</div>
 					<div>
 						Выберите цвет ваших фигур: 
-						<select name="userColor" className = {disabledClass} disabled = {disabledElements} onChange = {this.changeData} value = {this.props.userColor}>
+						<select name="userColor" className = {itemClass} disabled = {elementIsDisabled} onChange = {this.changeData} value = {this.props.userColor}>
 							<option value="white">белые</option>
 							<option value="black">черные</option>
 						</select>
@@ -98,15 +98,15 @@ export default class Toolbar extends Component {
 							max = "14" 
 							step = "2" 
 							value = {this.props.boardSize} 
-							className = {disabledClass}
-							disabled = {disabledElements} 
+							className = {itemClass}
+							disabled = {elementIsDisabled} 
 							onChange = {this.changeData}
 						/>
 						
 					</div>
 					<div>
 						Выберите уровень сложности: 
-						<select name="level" className = {disabledClass} disabled = {disabledElements} onChange = {this.changeData} value = {this.props.level}>
+						<select name="level" className = {itemClass} disabled = {elementIsDisabled} onChange = {this.changeData} value = {this.props.level}>
 							<option value="easy">легкий</option>
 							<option value="medium">средний</option>
 							<option value="hard">сложный</option>
@@ -115,15 +115,15 @@ export default class Toolbar extends Component {
 					</div>
 					<div>
 						Выберите режим игры: 
-						<select name="mode" className = {disabledClass} disabled = {disabledElements} onChange = {this.changeData} value = {this.props.mode}>>
+						<select name="mode" className = {itemClass} disabled = {elementIsDisabled} onChange = {this.changeData} value = {this.props.mode}>>
 							<option value="classic">классический</option>
 							<option value="dam">играть только дамками</option>
 						</select>
 					</div>
-					<button name = "resetBtn" className = {disabledClass} disabled = {disabledElements} onClick = {this.resetHandle}>
+					<button name = "resetBtn" className = {'bar__button button ' + itemClass} disabled = {elementIsDisabled} onClick = {this.resetHandle}>
 						Настройки по умолчанию
 					</button>
-					<button name = "switchStartBtn" className = {switchStartBtnClass} onClick = {this.switchStartHandle}>
+					<button name = "switchStartBtn" className = {'bar__button button bar_enabled-item ' + switchStartBtnClass} onClick = {this.switchStartHandle}>
 						{switchStartBtnText}
 					</button>
 				</form>
