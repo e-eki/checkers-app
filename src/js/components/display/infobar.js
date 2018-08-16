@@ -7,7 +7,7 @@ export default class Infobar extends Component {
 	constructor(props) {
 		super(props);
 		
-		this.startTime = new Date();
+		this.startTime = null;
 		this.timer = null;
 
 		this.defaultSettings = {
@@ -58,6 +58,7 @@ export default class Infobar extends Component {
 	componentWillUpdate(nextProps, nextState) {
 
 		if (nextProps.startOfGame && !this.props.startOfGame) {
+			this.startTime = new Date();
 			this.timer = setInterval(this.tick, 60000);
 
 			this.state.currentActionDefinition = this.defaultSettings.startGameDefinition;
@@ -86,14 +87,14 @@ export default class Infobar extends Component {
 		let currentTime = this.state.currentHours + ' ч ' + this.state.currentMinutes + ' мин ';
 
         return (
-			<div className ="bar">
+			<div className ="bar bar_info">
 				<div>Сейчас ход: <span>{whoTurns}</span></div>
 				<div>Прошло времени: <p ref={elem => this.time = elem}>{currentTime}</p></div>
 				<div>Сделано ходов: <span>{this.props.movesCount}</span></div>
 				<div>Белые фигуры на доске: <span>{this.props.whiteActorsCount}</span></div>
 				<div>Черные фигуры на доске: <span>{this.props.blackActorsCount}</span></div>
 				<div>История ходов: 
-					<textarea value = {this.state.currentActionDefinition}></textarea>
+					<textarea readOnly = 'true' value = {this.state.currentActionDefinition}></textarea>
 				</div>				
 			</div>
         )

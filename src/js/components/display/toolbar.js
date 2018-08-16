@@ -14,7 +14,7 @@ export default class Toolbar extends Component {
 
 	// начало/завершение игры
 	switchStartHandle(event) {
-		event.preventDefault();
+		//event.preventDefault();
 
 		// вызывает событие в родителе - дисплее
 		this.props.switchStartGame(event);	
@@ -34,7 +34,7 @@ export default class Toolbar extends Component {
 	}
 
 	resetHandle(event) {
-		event.preventDefault();
+		//event.preventDefault();
 
 		// вызывает событие в родителе - дисплее
 		this.props.resetDefaultSettings();	
@@ -75,8 +75,8 @@ export default class Toolbar extends Component {
 		}
 
 		return (
-			<div className = "bar">
-				<form>
+			<div className = "bar bar_tools">
+				
 					<div>
 						<input name = "quotesSwitchedOff" type="checkbox" className = 'bar_enabled-item' checked = {this.props.quotesSwitchedOff} onChange = {this.changeData}/>
 						Выключить цитаты
@@ -89,8 +89,7 @@ export default class Toolbar extends Component {
 						</select>
 					</div>
 					<div>
-						Выберите размер доски: 
-						<span>{this.props.boardSize}</span>
+						Выберите размер доски:<span>{this.props.boardSize}</span>
 						<input 
 							name = "boardSize" 
 							type = "range" 
@@ -126,7 +125,7 @@ export default class Toolbar extends Component {
 					<button name = "switchStartBtn" className = {'bar__button button bar_enabled-item ' + switchStartBtnClass} onClick = {this.switchStartHandle}>
 						{switchStartBtnText}
 					</button>
-				</form>
+				
 			</div>
 		)
 	}

@@ -302,7 +302,7 @@ export default class Display extends Component {
                 <div className = {pageContentClass}>
                     <Header className = 'content__header' quotesSwitchedOff = {this.state.quotesSwitchedOff}/>
                     
-                    <div className = 'main'>
+                    <div className = 'content__main main'>
 
                         <Toolbar 
                             quotesSwitchedOff = {this.state.quotesSwitchedOff}
