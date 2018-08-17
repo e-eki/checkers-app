@@ -21,10 +21,10 @@
   "dependencies": {
     "normalize.css": "^8.0.0",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "react-scroll-to-component": "^1.0.2"
+    "react-dom": "^16.4.1"
   },
   "devDependencies": {
+    "autoprefixer": "^9.1.1",
     "babel": "^6.23.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
@@ -38,6 +38,7 @@
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.4.1",
     "path": "^0.12.7",
+    "postcss-loader": "^3.0.0",
     "size-limit": "^0.18.5",
     "style-loader": "^0.21.0",
     "uglifyjs-webpack-plugin": "^1.2.7",
