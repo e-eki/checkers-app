@@ -8,7 +8,8 @@
     "build-css": "lessc ./src/less/template.less ./public/template.css",
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "server": "webpack-dev-server --mode development --hot",
+    "dev-server": "webpack-dev-server --mode development --hot",
+    "prod-server": "webpack-dev-server --mode production --hot",
     "size": "size-limit"
   },
   "repository": {
@@ -36,7 +37,6 @@
     "image-webpack-loader": "^4.3.1",
     "less": "^2.7.3",
     "less-loader": "^4.1.0",
-    "mini-css-extract-plugin": "^0.4.1",
     "path": "^0.12.7",
     "postcss-loader": "^3.0.0",
     "size-limit": "^0.18.5",
@@ -45,7 +45,6 @@
     "webpack": "^4.12.2",
     "webpack-cli": "^3.0.8",
     "webpack-command": "^0.3.0",
-    "webpack-dev-server": "^3.1.4",
-    "yargs": "^12.0.1"
+    "webpack-dev-server": "^3.1.4"
   }
 }
