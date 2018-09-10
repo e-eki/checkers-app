@@ -9,7 +9,7 @@
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
     "dev-server": "webpack-dev-server --mode development --hot",
-    "prod-server": "webpack-dev-server --mode production --hot",
+    "build-server": "webpack-dev-server --mode production --hot",
     "size": "size-limit"
   },
   "repository": {
@@ -35,7 +35,7 @@
     "eslint": "^5.3.0",
     "file-loader": "^1.1.11",
     "image-webpack-loader": "^4.3.1",
-    "less": "^2.7.3",
+    "less": "^3.8.1",
     "less-loader": "^4.1.0",
     "path": "^0.12.7",
     "postcss-loader": "^3.0.0",
