@@ -953,14 +953,14 @@ function DOMDisplay(parent, game) {
     this.infobar = null; //??
     this.tablo = null;
 
-    this.wrap = document.createElement('div');
+    this.wrap = document.createElement('div');   //app
     this.wrap.className = 'wrap';
     parent.appendChild(this.wrap);
 
-    this.quotebar = this.drawQuotebar();
+    this.quotebar = this.drawQuotebar();    //header
     this.wrap.appendChild(this.quotebar);
 
-    this.innerWrap = document.createElement('div');
+    this.innerWrap = document.createElement('div');   //main
     this.innerWrap.className = 'inner-wrap';
     //parent.appendChild(this.innerWrap);
     this.wrap.appendChild(this.innerWrap);

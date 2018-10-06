@@ -1,12 +1,12 @@
-body {
-    background-color: #fafafa;
+/*body {
+    background: #fafafa;
     font-family: 'Consolas', Arial, Helvetica, sans-serif;
     margin: 0;
 }
 
-.app {
-    /*position: relative;*/
-}
+.disabled-cursor {
+    cursor: default;
+}*/
 
 .wrap {
     display: flex;
@@ -21,7 +21,7 @@ body {
     /*margin: 45px 5vw 0 5vw;*/
 }
 
-.quotebar {
+/*.quotebar {
     background: #fafafa;
     border-radius: 15px;
     margin-bottom: 2vh;
@@ -30,6 +30,14 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.quotebar_hidden {
+    display: none;
+}
+
+.quotebar_shown {
+    display: block;
 }
 
 .quotebar p {
@@ -44,13 +52,12 @@ body {
 .authorText {
     text-align: right;
     font-style: italic;
-}
+}*/
 
-.bar {
+/*.bar {
     background: rgba(133, 59, 36, 0.21);
     border-radius: 10px;
     width: 230px;
-    /*height: 100%;*/
     padding: 15px;
 }
 
@@ -60,9 +67,9 @@ body {
 
 .bar div p {
     margin: 0;
-}
+}*/
 
-button {
+/*button {
     padding: 10px;
     background: rgb(255, 99, 99);
     border-radius: 5px;
@@ -70,39 +77,43 @@ button {
     cursor: pointer;
 }
 
-select {
-    cursor: pointer;
+.button_start {
+    background: red;
 }
 
-input {
-    cursor: pointer;
-}
+.button_finish {
+    background: green;
+}*/
 
-textarea {
+
+
+/*textarea {
     width: 90%;
     height: 25vh;
     outline: none;
     resize: none;
     margin-top: 5px;
-}
+}*/
 
-main {
+/*.main {
     position: relative;
     background: rgb(133, 36, 36);
     border-radius: 15px;
     padding: 4.5vmin;
-    height: 77vmin;
+    height: 77.5vmin;
     margin: 0 2vw 0 2vw;
-}
+}*/
 
 .board {
     position: relative;
     width: 77vmin;
     height: 77vmin;
+    margin: 0.5vmin;
 }
 
 .tablo {
     position: absolute;
+    top: 15vh;
     width: 100%;
     text-align:center;
     color: rgb(182, 18, 18);
@@ -112,6 +123,14 @@ main {
 
 .tablo div {
     margin-top: 8vmin;
+}
+
+.tablo_shown {
+    display: block;
+}
+
+.tablo_hidden {
+    display: none;
 }
 
 table {
@@ -130,11 +149,6 @@ table {
 .black {
     background: black;
     
-}
-
-.mark {
-    color: rgb(191, 224, 70);
-    position: absolute;
 }
 
 .horizontal {
@@ -160,18 +174,60 @@ table {
     border-style: ridge;
 }
 
-.сhecker { 
+.checker { 
     border-color: green;
-}
-
-.highlight-cell {
-    background: orange;
-}
-
-.highlight-actor {
-    border-color: orange;
 }
 
 .dam {
     border-color: red;
+}
+
+.highlight-cell {
+    background: orange;
+    cursor: pointer;
+}
+
+.highlight-actor {
+    border-color: orange;
+    cursor: pointer;
+}
+
+.marks-container {
+
+}
+
+.marks {
+    position: absolute;
+    display: flex; 
+    justify-content: space-around;
+    color: darkgrey;
+    font-family: Tahoma;
+    font-size: 0.9em;
+}
+
+.marks_horizontal {
+    width: 77vmin;
+    flex-direction: row;
+}
+
+.marks_vertical {
+    width: 2vmin;
+    height: 77vmin;
+    flex-direction: column;
+}
+
+.marks_top {
+    top: 1vmin;
+}
+
+.marks_bottom {
+    bottom: 1vmin;
+}
+
+.marks_left {
+    left: 1.5vmin;
+}
+
+.marks_right {
+    right: 1.5vmin;
 }

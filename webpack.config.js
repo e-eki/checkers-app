@@ -1,44 +1,50 @@
 
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
+const autoprefixer = require('autoprefixer');
 
-const argv = require('yargs').argv;
-const isDevelopment = argv.mode === 'development';
-const isProduction = !isDevelopment;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 module.exports = {
     //mode: 'development',
-    entry: './public/app.js',
+    entry: './src/js/index.js',
     output: {
         path: path.resolve(__dirname, './public'), 
         filename: 'bundle.js'
     },
+    // подключение сорсмэпс - для отладки
+    devtool: (NODE_ENV !== 'development') ? "cheap-inline-module-source-map" : false,
     module: {
         rules: [
             {
                 test: /\.jsx?$/,
                 exclude: /(node_modules)/,  
                 loader: "babel-loader",  
-                options:{
-                    presets:["env", "react"]    
-                }
             },
             {
                 test: /\.less$/, 
                 exclude: /node_modules/,
                 //loader: 'style-loader!css-loader!less-loader'
                 use: [
-                    isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+                    'style-loader',
                     {
-                      loader: 'css-loader',
-                      options: {
-                        minimize: isProduction
-                      }
+                        loader: 'css-loader',
+                        options: {
+                            minimize: true
+                        }
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: [
+                                autoprefixer({
+                                    browsers:['ie >= 8', 'last 4 version']
+                                })
+                            ]
+                        }
                     },
                     'less-loader',
-                    //'resolve-url-loader' //??
                   ]
             },
             {
@@ -55,24 +61,13 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env.NODE_ENV':  JSON.stringify('production')  //??
-            //'process.env.NODE_ENV': isProduction ? JSON.stringify('production') : JSON.stringify('development')  //??
-          }),
-        new MiniCssExtractPlugin({
-          filename: '[name].css',
-          chunkFilename: '[id].css'
+            NODE_ENV: JSON.stringify(NODE_ENV)  
         })
     ],
-    /*plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('production')
-          }),
-        new webpack.optimize.UglifyJsPlugin(),
-    ],*/
-    optimization: isProduction ? {
+    optimization: (NODE_ENV !== 'development') ? {
         minimizer: [
           new UglifyJsPlugin({
-            sourceMap: true,
+            //sourceMap: true,
             uglifyOptions: {
               compress: {
                 inline: false,
