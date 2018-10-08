@@ -40,21 +40,21 @@ class Cell extends Component {
 
 		// перерисовка клетки:
 		return (
-					// если у клетки сменился стиль - выделена/не выделена
-					(nextProps.className !== this.props.className) ||
-					// или клетка стала пассивной/активной
-					(nextProps.passive !== this.props.passive) ||
-					// или на клетке появился актер 
-					(nextProps.actor && !this.props.actor) ||
-					// или с клетки исчез актер 
-					(!nextProps.actor && this.props.actor) ||
-					// или если на клетке есть актер и
-					(nextProps.actor && this.props.actor && 
-						// либо у него изменился стиль - выделен/не выделен
-						(nextProps.actor.props.className !== this.props.actor.props.className ||
-							// либо актер стал пассивным/активным
-							nextProps.actor.props.passive !== this.props.actor.props.passive))
-				);
+				// если у клетки сменился стиль - выделена/не выделена
+				(nextProps.className !== this.props.className) ||
+				// или клетка стала пассивной/активной
+				(nextProps.passive !== this.props.passive) ||
+				// или на клетке появился актер 
+				(nextProps.actor && !this.props.actor) ||
+				// или с клетки исчез актер 
+				(!nextProps.actor && this.props.actor) ||
+				// или если на клетке есть актер и
+				(nextProps.actor && this.props.actor && 
+					// либо у него изменился стиль - выделен/не выделен
+					(nextProps.actor.props.className !== this.props.actor.props.className ||
+						// либо актер стал пассивным/активным
+						nextProps.actor.props.passive !== this.props.actor.props.passive))
+			);
 	}
 	
 	componentDidUpdate(prevProps) {
@@ -141,12 +141,12 @@ class Actor extends Component {
 
 		// перерисовка, если:
 		return (
-					// изменился стиль актера - выделен/не выделен
-					nextProps.className !== this.props.className || 
-					nextState.className !== this.state.className || 
-					// актер стал пассивным/активным
-					nextProps.passive !== this.props.passive
-				);		
+				// изменился стиль актера - выделен/не выделен
+				nextProps.className !== this.props.className || 
+				nextState.className !== this.state.className || 
+				// актер стал пассивным/активным
+				nextProps.passive !== this.props.passive
+			);		
 	}
 
 	componentWillMount() {
@@ -299,7 +299,7 @@ export default class Grid extends Component {
 		this.props.updateData('blackActorsCount', this.blackActorsCount);
 	}
 
-	// отрисовка шахматной доски на основе данных из this.state.cellsDataContainer и this.state.actorssDataContainer
+	// отрисовка шахматной доски на основе данных из this.state.cellsDataContainer и this.state.actorsDataContainer
 	// (позиции клеток и актеров соответствуют их положению в массиве)
 	drawGrid() {
 		console.log('fillGrid');
@@ -549,7 +549,7 @@ export default class Grid extends Component {
 				this.blackActorsCount--;
 			}
 		}
-
+		//TODO!!!
 		let turnedToDam = false;
 
 		// перемещаем данные актера в массиве данных на новую позицию

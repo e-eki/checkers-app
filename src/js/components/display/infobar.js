@@ -30,10 +30,16 @@ export default class Infobar extends Component {
 	tick() {
 
 		let newDate = new Date();
-		let newCurrentHours = newDate.getHours() - this.startTime.getHours() + this.state.currentHours;
-		let newCurrentMinutes = newDate.getMinutes() - this.startTime.getMinutes() + this.state.currentMinutes;
+		//let newCurrentHours = newDate.getHours() - this.startTime.getHours() + this.state.currentHours;
+		//let newCurrentMinutes = newDate.getMinutes() - this.startTime.getMinutes() + this.state.currentMinutes;
+
+		//???
+		let newCurrentHours = newDate.getHours() - this.startTime.getHours();
+		let newCurrentMinutes = newDate.getMinutes() - this.startTime.getMinutes();
+		if (newCurrentMinutes < 0) 
+			newCurrentMinutes = newCurrentMinutes * (-1);
 		
-		this.startTime = newDate;
+		//this.startTime = newDate;
 
 		this.setState({
 			currentHours: newCurrentHours,

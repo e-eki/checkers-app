@@ -18,8 +18,6 @@ export default class Display extends Component {
 			horizontal : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'],
 			vertical: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'],
         };
-        
-        this.myWorker = null;
 
         this.defaultSettings = {
             quotesSwitchedOff: false,   // флаг, показывать ли панель с цитатами
@@ -32,8 +30,10 @@ export default class Display extends Component {
             // есть три состояния игры: игра в режиме ожидания и настройки (startOfGame = false && endOfGame = false),
             // игра началась (startOfGame = true && endOfGame = false),
             // игра завершилась (startOfGame = false && endOfGame = true)
+            // игра в режиме ожидания и настройки (startOfGame = false && endOfGame = false)
             startOfGame: false,    // флаг начала игры
             endOfGame: false,      // флга завершения игры
+
             isUserTurn: null,       // флаг, что сейчас ход пользователя
             currentUserTurn: null,  // данные о текущем ходе пользователя
             currentAITurn: null,   // данные о текущем ходе ИИ
@@ -45,7 +45,7 @@ export default class Display extends Component {
         }
 
         this.state = {
-            // массив букв и цифр джля разметки доски
+            // массив букв и цифр для разметки доски
             marks: {
                 horizontal: [],
                 vertical: [],
