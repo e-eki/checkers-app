@@ -1,14 +1,27 @@
 
 import React, { Component } from 'react';
-//import Chessboard from './components/chessboard';
-import Display from './display/display';
+import { Route, Switch } from 'react-router-dom';
+
+import GamePage from './game/gamePage';
+import LoginPage from './login/loginPage';
+import RegistrationPage from './registration/registrationPage';
+import NotFoundPage from './notFound/notFoundPage';
 
 export default class App extends Component {
 
     render() {
 
         return (
-            <Display/>
+
+            <Switch>
+
+                <Route exact path="/" component={GamePage} />
+                <Route path="/login" component={LoginPage} />
+                <Route path="/registration" component={RegistrationPage} />
+
+                <Route component={NotFoundPage} />
+                
+            </Switch>
         )
     }
 }

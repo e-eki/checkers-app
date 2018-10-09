@@ -7,8 +7,8 @@ import Grid from './grid';
 import Infobar from './infobar';
 import Tablo from './tablo';
 
-// визуальное представление приложения
-export default class Display extends Component {
+// главная страница - страница игры
+export default class GamePage extends Component {
 
     constructor(props) {
         super(props);
@@ -82,11 +82,16 @@ export default class Display extends Component {
 
 		this.state.marks.horizontal = [];
 		this.state.marks.vertical = [];
-		
+        
+        // уникальный ключ для каждой метки
+        let markKey = 0;
+        
 		for (var i = 0; i < boardSize; i++) {
 
-			this.state.marks.horizontal.push(<span>{this.marksSymbols.horizontal[i]}</span>);
-			this.state.marks.vertical.push(<span>{this.marksSymbols.vertical[i]}</span>);
+			this.state.marks.horizontal.push(<span key={markKey} >{this.marksSymbols.horizontal[i]}</span>);
+            this.state.marks.vertical.push(<span key={markKey} >{this.marksSymbols.vertical[i]}</span>);
+            
+            markKey++;
 		}
 	}
 
@@ -262,19 +267,6 @@ export default class Display extends Component {
     componentWillMount() {
         this.drawMarks();
     }
-
-    /*componentDidMount() {
-
-        debugger;
-
-        this.myWorker = new Worker("game.js");
-        this.myWorker.postMessage({'cmd': 'Hello World'});
-
-        this.myWorker.onmessage = function(e) {
-            console.log('Message received from worker');
-            console.log(e.data);
-          }
-    }*/
 
     componentWillUpdate(nextProps, nextState) {
         // если в настройках изменился размер доски, перерисовываем разметку

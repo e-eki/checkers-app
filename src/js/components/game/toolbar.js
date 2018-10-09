@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 // панель настроек
 export default class Toolbar extends Component {
@@ -77,6 +78,9 @@ export default class Toolbar extends Component {
 		return (
 			<div className = "bar bar_tools">
 				
+					<Link to="/login">Вход</Link>
+					<Link to="/registration">Регистрация</Link>
+
 					<div>
 						<input name = "quotesSwitchedOff" type="checkbox" className = 'bar_enabled-item' checked = {this.props.quotesSwitchedOff} onChange = {this.changeData}/>
 						Выключить цитаты

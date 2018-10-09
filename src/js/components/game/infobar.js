@@ -86,6 +86,11 @@ export default class Infobar extends Component {
 		}
 	}
 
+	componentWillUnmount() {
+
+		clearInterval(this.timer);
+	}
+
     render() {
 		console.log('render infobar');
 

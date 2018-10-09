@@ -131,6 +131,11 @@ export default class Quotebar extends Component {
 		}
 	}
 
+	componentWillUnmount() {
+
+		clearInterval(this.changeQuoteTimer);
+	}
+
     render() {
 		//console.log('render quotebar');
 		let quotebarClass = 'quotebar ' + (this.props.quotesSwitchedOff ? 'quotebar_hidden' : 'quotebar_shown');

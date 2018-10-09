@@ -309,6 +309,8 @@ export default class Grid extends Component {
 		let cellKey = 0;
 		// уникальный ключ для каждой фигуры
 		let actorKey = 0;	
+		// уникальный ключ для строки
+		let rowKey = 0;
 
 		for (let y = 0; y < this.props.boardSize; y++) {		
 			const cells = [];
@@ -350,7 +352,9 @@ export default class Grid extends Component {
 				cells.push(cell);
 				cellKey++;
 			}			
-			const row = <tr>{cells}</tr>;
+			const row = <tr key={rowKey}>{cells}</tr>;
+			rowKey++;
+			
             grid.push(row);
 		}
 
@@ -620,7 +624,10 @@ export default class Grid extends Component {
         return (
 	
 			<table className = "grid">
-				{grid}
+				<tbody>
+					{grid}
+				</tbody>
+				
 			</table>
         )
     }
