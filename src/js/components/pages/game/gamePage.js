@@ -286,12 +286,12 @@ export default class GamePage extends Component {
     render() {
         console.log('render display');
         //const gameOverClass = this.state.endOfGame ? 'game-over' : '';
-        const pageContentClass = 'page__content content' + (this.state.endOfGame ? ' content_transparent' : '');
+        const contentClass = 'page__content content' + (this.state.endOfGame ? ' content_transparent' : '');
         const tabloClass = 'page__tablo ' + (this.state.endOfGame ? 'tablo_shown' : 'tablo_hidden');
 
         return (
             <div ref = {elem => this.page = elem} className = 'page'>
-                <div className = {pageContentClass}>
+                <div className = {contentClass}>
                     <Header className = 'content__header' quotesSwitchedOff = {this.state.quotesSwitchedOff}/>
                     
                     <div className = 'content__main main'>
