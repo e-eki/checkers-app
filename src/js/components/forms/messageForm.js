@@ -8,7 +8,6 @@ export default class MessageForm extends Component {
 	constructor(props) {
 		super(props);
 
-
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {

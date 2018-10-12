@@ -13,11 +13,16 @@ export default class LoginPage extends Component {
 		super(props);
 
 		this.titles = {
-
 			vkTitle: 'Войти с помощью Вконтакте',
 			fbTitle: 'Войти с помощью Facebook',
 			googleTitle: 'Войти с помощью Google',
 		};
+
+		this.apiUrl = {
+			loginApi: `${apiConst.api_url}/login/`,
+			vkApi: `https://oauth.vk.com/authorize?client_id=${apiConst.vk_client_id}&display=page&scope=email&redirect_uri=${apiConst.api_url}/login&response_type=code&v=5.85&state=vk`,
+			googleApi: `https://accounts.google.com/o/oauth2/auth?redirect_uri=${apiConst.api_url}/login&response_type=code&client_id=${apiConst.google_client_id}&scope=https://www.googleapis.com/auth/userinfo.email`,
+		}
 
 		this.defaultData = {
 			emailData: 'Введите e-mail',
@@ -35,7 +40,8 @@ export default class LoginPage extends Component {
 		this.clickLoginButton = this.clickLoginButton.bind(this);
 		this.clearData = this.clearData.bind(this);
 		this.socialLogin = this.socialLogin.bind(this);
-		this.resetMessage = this.resetMessage.bind(this);
+		this.resetPage = this.resetPage.bind(this);
+		this.responseHandle = this.responseHandle.bind(this);
 	}
 
 	// по клику на инпуте он очищается
@@ -55,8 +61,6 @@ export default class LoginPage extends Component {
 
 	// ввод данных юзером
 	changeData(event) {
-
-		console.log(event.target.name, event.target.value);
 
 		if (event.target.name == 'email') {
 			this.setState({
@@ -90,7 +94,7 @@ export default class LoginPage extends Component {
 		}
 
 		
-		return axios.post(`${apiConst.api_url}/login/`, {
+		return axios.post(this.apiUrl.loginApiLink, {
 			email: this.state.emailData,
 			password: this.state.passwordData
 		})
@@ -99,21 +103,29 @@ export default class LoginPage extends Component {
 				//response.status
 				//response.statusText
 				
-				this.setState({
-					messageIsShown: true,
-					message: response.data
-				})
+				this.responseHandle(response);
 			})
 			.catch((error) => {
 				//error.response.data
 				//error.response.status
 				//error.response.statusText
 
-				this.setState({
-					messageIsShown: true,
-					message: error.response.data
-				})
+				this.responseHandle(error);
 			})
+	}
+
+	responseHandle(response) {
+
+		/*switch (response.status) {
+
+			//case 404 : 
+		};*/
+		debugger;
+
+		this.setState({
+			messageIsShown: true,
+			message: response.data
+		});
 	}
 
 	socialLogin(event) {
@@ -123,10 +135,10 @@ export default class LoginPage extends Component {
 
 		switch (service) {
 			case 'vkontakte':
-				socialLink = `https://oauth.vk.com/authorize?client_id=${apiConst.vk_client_id}&display=page&scope=email&redirect_uri=${apiConst.api_url}/login&response_type=code&v=5.85&state=vk`;
+				socialLink = this.apiUrl.vkApiLink;
 				break;
 			case 'google':
-				socialLink = `https://accounts.google.com/o/oauth2/auth?redirect_uri=${apiConst.api_url}/login&response_type=code&client_id=${apiConst.google_client_id}&scope=https://www.googleapis.com/auth/userinfo.email`;
+				socialLink = this.apiUrl.googleApiLink;
 				break;
 			default:  //??
 				console.log('login error: no service name');
@@ -137,24 +149,26 @@ export default class LoginPage extends Component {
 		// TODO!!! vkontakte api не отвечает localhost (нет 'Access-Control-Allow-Origin' в заголовке)
 		return axios.get(socialLink)
 			.then((response) => {
+
 				debugger;
-				console.log(response);
-				//redirect
+				this.responseHandle(response);
 			})
 			.catch((error) => {
 
-				const answer = alert(error.message);
+				this.responseHandle(error);
 			})
 	}
 
-	resetMessage() {
+	resetPage() {
 
-		this.page.removeEventListener('click', this.resetMessage);
-		this.page.removeEventListener('keydown', this.resetMessage);
+		this.page.removeEventListener('click', this.resetPage);
+		this.page.removeEventListener('keydown', this.resetPage);
 		
 		this.setState({
 			messageIsShown: false,
-			message: ''
+			message: '',
+			emailData: this.defaultData.emailData,
+			passwordData: this.defaultData.passwordData,
 		})
 	}
 
@@ -162,12 +176,10 @@ export default class LoginPage extends Component {
         // если стала видна форма с сообщением юзеру
 		if (!prevState.messageIsShown && this.state.messageIsShown) {
 
-            this.page.addEventListener('click', this.resetMessage);
-            this.page.addEventListener('keydown', this.resetMessage);
+            this.page.addEventListener('click', this.resetPage);
+            this.page.addEventListener('keydown', this.resetPage);
 		}
 	}
-	
-
 
 	render() {
 
@@ -234,11 +246,15 @@ export default class LoginPage extends Component {
 						/>
 
 						<button className = 'button button_login login-form__button' onClick = {this.clickLoginButton}>Войти</button>
-						
+
 						<div className = 'login-form_text'>или</div>
-						
+
 						<Link to="/registration">
 							<button className = 'button button_reg login-form__button' onClick = {this.clickLoginButton}>Зарегистрироваться</button>
+						</Link>
+
+						<Link className = 'login-form_link' to="/recoveryPassword">
+							Забыли пароль?	
 						</Link>
 
 					</div>
