@@ -2,9 +2,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+const Promise = require('bluebird');
 
 import apiConst from '../apiConst';
 import MessageForm from './messageForm';
+import * as authActions from '../actions/authActions';
 
 // страница входа на сайт
 export default class AuthUtilsForm extends Component {
@@ -19,29 +21,39 @@ export default class AuthUtilsForm extends Component {
 		};
 
 		this.apiUrl = {
-			loginApi: `${apiConst.api_url}/login/`,
-			vkApi: `https://oauth.vk.com/authorize?client_id=${apiConst.vk_client_id}&display=page&scope=email&redirect_uri=${apiConst.api_url}/login&response_type=code&v=5.85&state=vk`,
-			googleApi: `https://accounts.google.com/o/oauth2/auth?redirect_uri=${apiConst.api_url}/login&response_type=code&client_id=${apiConst.google_client_id}&scope=https://www.googleapis.com/auth/userinfo.email`,
+			//loginApi: `${apiConst.api_url}/login/`,
+			//vkApi: `https://oauth.vk.com/authorize?client_id=${apiConst.vk_client_id}&display=page&scope=email&redirect_uri=${apiConst.api_url}/login&response_type=code&v=5.85&state=vk`,
+			//googleApi: `https://accounts.google.com/o/oauth2/auth?redirect_uri=${apiConst.api_url}/login&response_type=code&client_id=${apiConst.google_client_id}&scope=https://www.googleapis.com/auth/userinfo.email`,
 			changePasswordApi: `${apiConst.api_url}/changepassword/`,
 			emailConfirmApi: `${apiConst.api_url}/emailconfirm/`,
 		}
 
 		this.defaultData = {
 			emailData: 'Введите e-mail',
-			passwordData: 'Повторите пароль',
+			loginData: 'Введите логин',
+			passwordData: 'Введите пароль',
+			duplicatePasswordData: 'Повторите пароль',
+
+			messageLink: '/login',
+			messageLinkName: 'На страницу входа',
 		};
 
 		this.warningData = {
 			emailData: 'Введите корректный e-mail',
+			loginData: 'Введите корректный логин',
 			passwordData: 'Введите корректный пароль',
 			duplicatePasswordData: 'Пароли не совпадают'
 		};
 
 		this.state = {
 			emailData: this.defaultData.emailData,
+			loginData: this.defaultData.loginData,
 			passwordData: this.defaultData.passwordData,
+			duplicatePasswordData: this.defaultData.duplicatePasswordData,
 			messageIsShown: false,
-			message: ''
+			message: '',
+			messageLink: this.defaultData.messageLink,
+			messageLinkName: this.defaultData.messageLinkName,
 		};
 
 		this.changeData = this.changeData.bind(this);
@@ -54,54 +66,32 @@ export default class AuthUtilsForm extends Component {
 		this.checkData = this.checkData.bind(this);
 		this.clickEmailConfirmButton = this.clickEmailConfirmButton.bind(this);
 		this.clickResetPasswordButton = this.clickResetPasswordButton.bind(this);
+		this.clickRegistrationButton = this.clickRegistrationButton.bind(this);
 	}
 
 	// по клику на инпуте он очищается
 	clearData(event) {
 
-		if (event.target.name == 'email') {
-			this.setState({
-				emailData: ''
-			});
-		}
-		else if (event.target.name == 'password') {
-			this.setState({
-				passwordData: ''
-			});
-		}
-		else if (event.target.name == 'duplicatePassword') {
-			this.setState({
-				duplicatePasswordData: ''
-			});
-		}
+		const dataName = event.target.name;
+
+		this.state[`${dataName}Data`] = '';
+		this.setState({});
 	}
 
 	// ввод данных юзером
 	changeData(event) {
 
-		if (event.target.name == 'email') {
-			this.setState({
-				emailData: event.target.value
-			});
-		}
-		else if (event.target.name == 'password') {
-			this.setState({
-				passwordData: event.target.value
-			});
-		}
-		else if (event.target.name == 'duplicatePassword') {
-			this.setState({
-				duplicatePasswordData: event.target.value
-			});
-		}
+		const dataName = event.target.name;
+
+		this.state[`${dataName}Data`] = event.target.value;
+		this.setState({});
 	}
 
 	//check user data
-	checkData(emailData, passwordData, duplicatePasswordData) {
-
-		debugger;
+	//TODO: переписать 
+	checkData(emailData, loginData, passwordData, duplicatePasswordData) {
 		
-		if ( emailData && (
+		if ( emailData !== undefined && (
 			emailData == this.defaultData.emailData || emailData == this.warningData.emailData 
 			|| emailData == '')) {
 			this.setState({
@@ -110,7 +100,16 @@ export default class AuthUtilsForm extends Component {
 
 			return false;
 		}
-		else if ( passwordData && (
+		else if ( loginData !== undefined && (
+			loginData == this.defaultData.loginData || loginData == this.warningData.loginData 
+			|| loginData == '')) {
+			this.setState({
+				loginData: this.warningData.loginData
+			});
+
+			return false;
+		}
+		else if ( passwordData !== undefined && (
 				passwordData == this.defaultData.passwordData || 
 				passwordData == this.warningData.passwordData|| passwordData == '')) {
 					this.setState({
@@ -119,9 +118,10 @@ export default class AuthUtilsForm extends Component {
 
 					return false;
 		}
-		else if ( duplicatePasswordData && (
+		else if ( duplicatePasswordData !== undefined && (
 			duplicatePasswordData == this.defaultData.duplicatePasswordData || 
-			duplicatePasswordData == this.warningData.duplicatePasswordData|| duplicatePasswordData == '')) {
+			duplicatePasswordData == this.warningData.duplicatePasswordData || 
+			duplicatePasswordData !== passwordData || duplicatePasswordData == '')) {
 				this.setState({
 					duplicatePasswordData: this.warningData.duplicatePasswordData
 				});
@@ -135,19 +135,48 @@ export default class AuthUtilsForm extends Component {
 	clickLoginButton(event) {
 		debugger;
 
-		let dataIsCorrect = this.checkData(this.state.emailData, this.state.passwordData);
+		let dataIsCorrect = this.checkData(this.state.emailData, undefined, this.state.passwordData);
 
 		if (!dataIsCorrect) return;
 
-		return axios.post(this.apiUrl.loginApi, {
-			email: this.state.emailData,
-			password: this.state.passwordData
-		})
+		return authActions.loginAction(this.state.emailData, this.state.passwordData)
 			.then((response) => {
 				//response.data
 				//response.status
 				//response.statusText
+
+				this.state.messageLink = '/';
+				this.state.messageLinkName = 'На главную';
 				
+				response.data = 'Вы успешно вошли на сайт. Нажмите ссылку для перехода.';
+				this.responseHandle(response);
+			})
+			.catch((error) => {
+				//error.response.data
+				//error.response.status
+				//error.response.statusText
+
+				this.responseHandle(error);
+			})
+	}
+
+	clickRegistrationButton(event) {
+		debugger;
+
+		let dataIsCorrect = this.checkData(this.state.emailData, this.state.loginData, this.state.passwordData, this.state.duplicatePasswordData);
+
+		if (!dataIsCorrect) return;
+
+		return authActions.registrationAction(this.state.emailData, this.state.loginData, this.state.passwordData)
+			.then((response) => {
+				//response.data
+				//response.status
+				//response.statusText
+
+				this.state.messageLink = this.defaultData.messageLink;
+				this.state.messageLinkName = this.defaultData.messageLinkName;
+				
+				response.data = 'Вы успешно зарегистрировались на сайте. Нажмите ссылку для перехода.';
 				this.responseHandle(response);
 			})
 			.catch((error) => {
@@ -162,26 +191,15 @@ export default class AuthUtilsForm extends Component {
 	clickSocialLoginButton(event) {
 
 		const service = event.target.name;
-		let socialLink;
-
-		switch (service) {
-			case 'vkontakte':
-				socialLink = this.apiUrl.vkApi;
-				break;
-			case 'google':
-				socialLink = this.apiUrl.googleApi;
-				break;
-			default:  //??
-				console.log('login error: no service name');
-				break;
-		}
-		debugger;
 
 		// TODO!!! vkontakte api не отвечает localhost (нет 'Access-Control-Allow-Origin' в заголовке)
-		return axios.get(socialLink)
+		return authActions.socialLoginAction(service)
 			.then((response) => {
 
-				debugger;
+				this.state.messageLink = '/';
+				this.state.messageLinkName = 'На главную';
+
+				response.data = 'Вы успешно вошли на сайт. Нажмите ссылку для перехода.';
 				this.responseHandle(response);
 			})
 			.catch((error) => {
@@ -204,6 +222,8 @@ export default class AuthUtilsForm extends Component {
 				//response.data
 				//response.status
 				//response.statusText
+				this.state.messageLink = this.defaultData.messageLink;
+				this.state.messageLinkName = this.defaultData.messageLinkName;
 				
 				response.data = 'Инструкции по восстановлению пароля отправлены на указанный адрес электронной почты.';
 				this.responseHandle(response);
@@ -231,8 +251,10 @@ export default class AuthUtilsForm extends Component {
 				//response.data
 				//response.status
 				//response.statusText
-				response.data = 'Письмо с кодом подтверждения отправлено на указанный адрес электронной почты.';
-				
+				this.state.messageLink = this.defaultData.messageLink;
+				this.state.messageLinkName = this.defaultData.messageLinkName;
+
+				response.data = 'Письмо с кодом подтверждения отправлено на указанный адрес электронной почты.';		
 				this.responseHandle(response);
 			})
 			.catch((error) => {
@@ -244,22 +266,54 @@ export default class AuthUtilsForm extends Component {
 			})
 	}
 
+	// TODO!!!: должен извлекать параметр из строки запроса, и использовать его как аксесс токен при запросе на сброс пароля
 	clickResetPasswordButton(event) {
 		debugger;
 
-		let dataIsCorrect = this.checkData(undefined, this.state.passwordData, this.state.duplicatePasswordData);
+		let dataIsCorrect = this.checkData(undefined, undefined, this.state.passwordData, this.state.duplicatePasswordData);
 
 		if (!dataIsCorrect) return;
+
+		return Promise.resolve(true)
+			.then(() => {
+
+				// если на форму попали по ссылке из письма
+				if (this.props.match && this.props.match.params && this.props.match.params.id) {
+					
+					return this.props.match.params.id;
+				}
+				// если из личного кабинета
+				else {
+
+					return authActions.getActualAccessToken();
+				}
+			})
+			.then((accessToken) => {
+
+				const params = {
+					password: this.state.passwordData,
+				};
 		
-		return axios.put(this.apiUrl.changePasswordApi, {
-			email: this.state.emailData,
-		})
+				const options = {
+					method: 'PUT',
+					headers: { 'Authorization': `Token ${accessToken}` },
+					data: params,
+					url: this.apiUrl.changePasswordApi
+				};
+				
+				return axios(options);
+				/*return axios.put(this.apiUrl.changePasswordApi, {
+					password: this.state.passwordData,
+				})*/
+			})
 			.then((response) => {
 				//response.data
 				//response.status
 				//response.statusText
-				response.data = 'Пароль изменен.';
-				
+				this.state.messageLink = this.defaultData.messageLink;
+				this.state.messageLinkName = this.defaultData.messageLinkName;
+
+				response.data = 'Пароль успешно изменен.';			
 				this.responseHandle(response);
 			})
 			.catch((error) => {
@@ -270,7 +324,6 @@ export default class AuthUtilsForm extends Component {
 				this.responseHandle(error);
 			})
 	}
-
 
 	responseHandle(response) {
 
@@ -295,7 +348,10 @@ export default class AuthUtilsForm extends Component {
 			messageIsShown: false,
 			message: '',
 			emailData: this.defaultData.emailData,
+			loginData: this.defaultData.loginData,
 			passwordData: this.defaultData.passwordData,
+			newPasswordData: this.defaultData.newPasswordData,   
+			duplicatePasswordData: this.defaultData.duplicatePasswordData,
 		})
 	}
 
@@ -307,8 +363,6 @@ export default class AuthUtilsForm extends Component {
             this.page.addEventListener('keydown', this.resetPage);
 		}
 	}
-	
-
 
 	render() {
 
@@ -376,12 +430,79 @@ export default class AuthUtilsForm extends Component {
 					<button className = 'button button_reg auth-utils-form__button'>Зарегистрироваться</button>
 				</Link>
 
-				<Link className = 'auth-utils-form_link' to="/recoveryPassword">
+				<Link className = 'auth-utils-form_link' to="/resetPassword">
 					Забыли пароль?	
 				</Link>
 
 				<Link className = 'auth-utils-form_link' to="/emailConfirm">
 					Не пришло письмо?	
+				</Link>
+
+				<Link className = 'auth-utils-form_link' to="/">
+					На главную	
+				</Link>
+
+			</div>
+		);
+
+		const RegistrationFormContent = (
+
+			<div className = 'content__auth-utils-form auth-utils-form'>
+
+				<div className = 'auth-utils-form_title'>Регистрация</div>
+
+				<input 
+					name = "email"
+					type="text" 
+					className = 'auth-utils-form_input' 
+					maxLength = '40'
+					value = {this.state.emailData}
+					onChange = {this.changeData}
+					onClick = {this.clearData}
+				/>
+
+				<input 
+					name = "login"
+					type="text" 
+					className = 'auth-utils-form_input' 
+					maxLength = '40'
+					value = {this.state.loginData}
+					onChange = {this.changeData}
+					onClick = {this.clearData}
+				/>
+
+				<input 
+					name = 'password'
+					type = "text" 
+					className = 'auth-utils-form_input' 
+					maxLength = '40'
+					value = {this.state.passwordData}
+					onChange = {this.changeData}
+					onClick = {this.clearData}
+				/>
+
+				<input 
+					name = "duplicatePassword"
+					type = "text" 
+					className = 'auth-utils-form_input' 
+					maxLength = '40'
+					value = {this.state.duplicatePasswordData}
+					onChange = {this.changeData}
+					onClick = {this.clearData}
+				/>
+
+				<button className = 'button button_reg auth-utils-form__button' onClick = {this.clickRegistrationButton}>Зарегистрироваться</button>
+
+				<Link className = 'auth-utils-form_link' to="/resetPassword">
+					Забыли пароль?	
+				</Link>
+
+				<Link className = 'auth-utils-form_link' to="/emailConfirm">
+					Не пришло письмо?	
+				</Link>
+
+				<Link className = 'auth-utils-form_link' to="/">
+					На главную	
 				</Link>
 
 			</div>
@@ -448,7 +569,7 @@ export default class AuthUtilsForm extends Component {
 					type = "text" 
 					className = 'auth-utils-form_input' 
 					maxLength = '40'
-					value = {this.state.password}
+					value = {this.state.passwordData}
 					onChange = {this.changeData}
 					onClick = {this.clearData}
 				/>
@@ -458,7 +579,7 @@ export default class AuthUtilsForm extends Component {
 					type = "text" 
 					className = 'auth-utils-form_input' 
 					maxLength = '40'
-					value = {this.state.duplicatePassword}
+					value = {this.state.duplicatePasswordData}
 					onChange = {this.changeData}
 					onClick = {this.clearData}
 				/>
@@ -481,6 +602,10 @@ export default class AuthUtilsForm extends Component {
 			case 'LoginPage':
 				formContent = LoginFormContent;
 				break;
+
+			case 'RegistrationPage':
+				formContent = RegistrationFormContent;
+			break;
 
 			case 'RecoveryPasswordPage':
 				formContent = recoveryPasswordContent;
@@ -513,6 +638,8 @@ export default class AuthUtilsForm extends Component {
 				<MessageForm
 					className = {messageFormClass}
 					message = {this.state.message}
+					messageLink = {this.state.messageLink}
+					messageLinkName = {this.state.messageLinkName}
 				/>
 
 			</div>

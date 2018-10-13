@@ -13,6 +13,16 @@ export class LoginPage extends Component {
 	}
 };
 
+export class RegistrationPage extends Component {
+
+	render() {
+
+		return (
+			<AuthUtilsForm name = 'RegistrationPage'/>
+		)
+	}
+};
+
 export class RecoveryPasswordPage extends Component {
 
 	render() {

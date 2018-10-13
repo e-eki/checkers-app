@@ -25,9 +25,10 @@ export default class MessageForm extends Component {
 
 				<p>{this.props.message}</p>
 
-				<Link to="/">
-					<p>На главную страницу</p>
+				<Link to = {this.props.messageLink}>
+					{this.props.messageLinkName}	
 				</Link>
+
 			</div>
 		)
 	}
