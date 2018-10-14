@@ -338,6 +338,7 @@ export default class AuthUtilsForm extends Component {
 	}
 
 	resetPage() {
+		debugger;
 
 		this.page.removeEventListener('click', this.resetPage);
 		this.page.removeEventListener('keydown', this.resetPage);
@@ -353,7 +354,8 @@ export default class AuthUtilsForm extends Component {
 		})
 	}
 
-	componentDidUpdate(prevState) {     
+	componentDidUpdate(prevState) {  
+		debugger;   
         // если стала видна форма с сообщением юзеру
 		if (!prevState.messageIsShown && this.state.messageIsShown) {
 
@@ -426,7 +428,7 @@ export default class AuthUtilsForm extends Component {
 					<button className = 'button button_reg auth-utils-form__button'>Зарегистрироваться</button>
 				</Link>
 
-				<Link className = 'auth-utils-form_link' to="/resetPassword">
+				<Link className = 'auth-utils-form_link' to="/recoveryPassword">
 					Забыли пароль?	
 				</Link>
 
@@ -489,7 +491,7 @@ export default class AuthUtilsForm extends Component {
 
 				<button className = 'button button_reg auth-utils-form__button' onClick = {this.clickRegistrationButton}>Зарегистрироваться</button>
 
-				<Link className = 'auth-utils-form_link' to="/resetPassword">
+				<Link className = 'auth-utils-form_link' to="/recoveryPassword">
 					Забыли пароль?	
 				</Link>
 

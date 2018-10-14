@@ -7103,7 +7103,7 @@ exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader
 
 
 // module
-exports.push([module.i, "/*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}h1{font-size:2em;margin:.67em 0}hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{-webkit-box-sizing:border-box;box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{-webkit-box-sizing:border-box;box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details{display:block}summary{display:list-item}[hidden],template{display:none}body{background:#fafafa;font-family:Consolas,Arial,Helvetica,sans-serif}.page{height:100vh}.page__content{margin:0 2vw}.page__tablo{position:absolute;top:20vh}.page__message-form{position:absolute;top:15vh}.main{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between}@media (max-width:768px){.main{-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}}.main__chessboard{position:relative;margin:0 2vw}.footer__title{color:#63866c;font-size:12px;text-align:center}.content__header{margin:2vh 0}@media (max-width:768px){.content__header{margin:2vh 3vw}}.content__main{position:relative}.content__footer{margin:7vh 0 2vh}@media (max-width:768px){.content__footer{margin:112vh 0 2vh}}@media (max-width:320px){.content__footer{margin:136vh 0 2vh}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.content__footer{margin:20vh 0 2vh}}.content__auth-utils-form{margin:auto;margin-top:15vh}.content_transparent{opacity:.15}.chessboard{background:#852424;border-radius:15px;padding:4.5vmin;height:77.5vmin}@media (max-width:425px){.chessboard{padding:5.5vmin}}@media (max-width:320px){.chessboard{padding:6vmin}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.chessboard{padding:5vmin}}.chessboard__marks-container{position:absolute}.grid{width:77vmin;height:77vmin;margin:.5vmin;border-spacing:0}.grid,.grid__cell{position:relative}.grid__cell_white{background:#fff}.grid__cell_black{background:#000}.grid__cell_highlight{background:orange;cursor:pointer}.grid__actor{position:absolute;top:5%;left:5%;height:70%;width:70%;border-radius:50px;border:5px;border-style:ridge}@media (max-width:425px){.grid__actor{height:65%;width:65%}}@media (max-width:320px){.grid__actor{height:55%;width:55%}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.grid__actor{height:60%;width:60%}}.grid__actor_white{background:#fff}.grid__actor_black{background:#000}.grid__actor_checker{border-color:green}.grid__actor_dam{border-color:red}.grid__actor_highlight{border-color:orange;cursor:pointer}.marks-container{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-pack:distribute;justify-content:space-around;color:#a9a9a9;font-family:Tahoma,sans-serif;font-size:15px}@media (max-width:425px){.marks-container{font-size:11.5px}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.marks-container{font-size:13px}}.marks-container_horizontal{width:77vmin;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}.marks-container_vertical{width:2vmin;height:77vmin;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}@media (max-width:425px){.marks-container_vertical{width:3vmin}}@media (max-width:320px){.marks-container_vertical{width:4vmin}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.marks-container_vertical{width:3vmin}}.marks-container_top{top:1vmin}.marks-container_bottom{bottom:1vmin}.marks-container_left{left:1.5vmin}.marks-container_right{right:1.5vmin}.quotebar{font-size:84%;background:#fafafa;border-radius:15px;padding:1.5vh;-webkit-box-shadow:inset 0 0 40px 0 #e1d1cc;box-shadow:inset 0 0 40px 0 #e1d1cc}.quotebar__quote{text-align:center;margin-bottom:7px}.quotebar__author{text-align:right;font-style:italic}.quotebar_hidden{display:none}.quotebar_shown{display:block}.bar{background:#853b2436;border-radius:10px;width:18vw;padding:1vw}.bar div{margin:3vh 0}@media (max-width:768px){.bar div{margin:2vh 0}}.bar input{margin:1vh}@media (max-width:320px){.bar input{max-width:103px}}.bar select{min-width:130px;width:13vw;outline:none;margin:1vh 0}@media (max-width:320px){.bar select{min-width:100px}}.bar textarea{width:90%;font-size:84%;min-width:90px;height:34vh;outline:none;resize:none;margin-top:5px}@media (max-width:768px){.bar textarea{height:27vh;font-size:100%}}@media (max-width:768px){.bar{position:absolute;top:70vh;width:36%;padding:2vw;height:87vh}}@media (max-width:425px){.bar{width:38%;height:90vh;top:58vh}}@media (max-width:320px){.bar{top:63vh;height:118vh}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.bar{position:relative;top:0;height:150vh;padding:1vw}}.bar__button{margin-bottom:3vh}.bar_enabled-item{cursor:pointer}.bar_disabled-item{cursor:default}@media (max-width:768px){.bar_tools{left:7vw}}@media (max-width:425px){.bar_tools{left:4vw}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.bar_tools{left:0}}@media (max-width:768px){.bar_info{right:7vw}}@media (max-width:425px){.bar_info{right:4vw}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.bar_info{right:0}}.button{padding:10px;background:#8fbc8f;border-radius:10px;width:100%;outline:none}.button_finish{background:#5f9ea0}.button_login{background:#5f9ea0}.button_login,.button_reg,.button_send{color:#fafafa;width:33vw;font-weight:700;font-size:18px;cursor:pointer}.button_send{background:#5f9ea0}.tablo{width:100vw;text-align:center;color:#b61212;font-weight:700;font-size:35px;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}.tablo,.tablo_shown{display:-webkit-box;display:-ms-flexbox;display:flex}.tablo_hidden{display:none}@media (max-width:320px){.tablo{font-size:29px}}.social-icon{width:43px;height:43px;margin:10px;cursor:pointer}.social-icon_facebook{cursor:not-allowed}.message-form{width:100vw;height:65vh;text-align:center;font-size:24px;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}.message-form,.message-form_shown{display:-webkit-box;display:-ms-flexbox;display:flex}.message-form_hidden{display:none}.auth-utils-form{width:50vw;border-radius:15px;padding:2vh;-webkit-box-shadow:inset 0 0 40px 0 #853b2436;box-shadow:inset 0 0 40px 0 #853b2436;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.auth-utils-form__button{margin:2vh}.auth-utils-form_title{font-weight:700;font-size:25px;color:#797979;margin:2vh}.auth-utils-form_text{font-weight:700;font-size:18px;color:#797979}.auth-utils-form_link{font-size:15px;color:#797979;-webkit-text-decoration-color:#797979;text-decoration-color:#797979;margin:1vh}.auth-utils-form_social{width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;margin:1vh}.auth-utils-form_input{padding:10px;color:#a9a9a9;width:30vw;margin:1vh}", ""]);
+exports.push([module.i, "/*! normalize.css v8.0.0 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}h1{font-size:2em;margin:.67em 0}hr{-webkit-box-sizing:content-box;box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{-webkit-box-sizing:border-box;box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{-webkit-box-sizing:border-box;box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details{display:block}summary{display:list-item}[hidden],template{display:none}body{background:#fafafa;font-family:Consolas,Arial,Helvetica,sans-serif;font-size:15px}.page{height:100vh}.page__content{margin:0 2vw}.page__tablo{position:absolute;top:20vh}.page__message-form{position:absolute;top:15vh}.main{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between}@media (max-width:768px){.main{-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}}.main__chessboard{position:relative;margin:0 2vw}.footer__title{color:#63866c;font-size:12px;text-align:center}.content__header{margin:2vh 0}@media (max-width:768px){.content__header{margin:2vh 3vw}}.content__main{position:relative}.content__footer{margin:7vh 0 2vh}@media (max-width:768px){.content__footer{margin:112vh 0 2vh}}@media (max-width:320px){.content__footer{margin:136vh 0 2vh}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.content__footer{margin:20vh 0 2vh}}.content__auth-utils-form{margin:auto;margin-top:15vh}.content_transparent{opacity:.15}.chessboard{background:#852424;border-radius:15px;padding:4.5vmin;height:77.5vmin}@media (max-width:425px){.chessboard{padding:5.5vmin}}@media (max-width:320px){.chessboard{padding:6vmin}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.chessboard{padding:5vmin}}.chessboard__marks-container{position:absolute}.grid{width:77vmin;height:77vmin;margin:.5vmin;border-spacing:0}.grid,.grid__cell{position:relative}.grid__cell_white{background:#fff}.grid__cell_black{background:#000}.grid__cell_highlight{background:orange;cursor:pointer}.grid__actor{position:absolute;top:5%;left:5%;height:70%;width:70%;border-radius:50px;border:5px;border-style:ridge}@media (max-width:425px){.grid__actor{height:65%;width:65%}}@media (max-width:320px){.grid__actor{height:55%;width:55%}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.grid__actor{height:60%;width:60%}}.grid__actor_white{background:#fff}.grid__actor_black{background:#000}.grid__actor_checker{border-color:green}.grid__actor_dam{border-color:red}.grid__actor_highlight{border-color:orange;cursor:pointer}.marks-container{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-pack:distribute;justify-content:space-around;color:#a9a9a9;font-family:Tahoma,sans-serif;font-size:15px}@media (max-width:425px){.marks-container{font-size:11.5px}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.marks-container{font-size:13px}}.marks-container_horizontal{width:77vmin;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}.marks-container_vertical{width:2vmin;height:77vmin;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}@media (max-width:425px){.marks-container_vertical{width:3vmin}}@media (max-width:320px){.marks-container_vertical{width:4vmin}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.marks-container_vertical{width:3vmin}}.marks-container_top{top:1vmin}.marks-container_bottom{bottom:1vmin}.marks-container_left{left:1.5vmin}.marks-container_right{right:1.5vmin}.quotebar{font-size:84%;background:#fafafa;border-radius:15px;padding:1.5vh;-webkit-box-shadow:inset 0 0 40px 0 #e1d1cc;box-shadow:inset 0 0 40px 0 #e1d1cc}.quotebar__quote{text-align:center;margin-bottom:7px}.quotebar__author{text-align:right;font-style:italic}.quotebar_hidden{display:none}.quotebar_shown{display:block}.bar{background:#853b2436;border-radius:10px;width:18vw;padding:1vw}.bar div{margin:3vh 0}@media (max-width:768px){.bar div{margin:2vh 0}}.bar input{margin:1vh}@media (max-width:320px){.bar input{max-width:103px}}.bar select{min-width:130px;width:13vw;outline:none;margin:1vh 0}@media (max-width:320px){.bar select{min-width:100px}}.bar textarea{width:90%;font-size:87%;min-width:90px;height:34vh;outline:none;resize:none;margin-top:5px}@media (max-width:768px){.bar textarea{height:27vh;font-size:100%}}@media (max-width:768px){.bar{position:absolute;top:70vh;width:36%;padding:2vw;height:87vh}}@media (max-width:425px){.bar{width:38%;height:90vh;top:58vh}}@media (max-width:320px){.bar{top:63vh;height:118vh}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.bar{position:relative;top:0;height:150vh;padding:1vw}}.bar__button{margin:1vh 0}.bar_enabled-item{cursor:pointer}.bar_disabled-item{cursor:default}@media (max-width:768px){.bar_tools{left:7vw}}@media (max-width:425px){.bar_tools{left:4vw}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.bar_tools{left:0}}@media (max-width:768px){.bar_info{right:7vw}}@media (max-width:425px){.bar_info{right:4vw}}@media screen and (min-width:320px) and (max-width:823px) and (orientation:landscape){.bar_info{right:0}}.button{padding:10px;background:#79ad79;border-radius:10px;width:100%;outline:none;color:#fafafa;font-weight:700;font-size:16px}.button_finish,.button_login{background:#5f9ea0}.button_login,.button_reg{cursor:pointer}.button_reg{background:#79ad79}.button_send{background:#5f9ea0;cursor:pointer}.button_lk{background:#789;cursor:pointer}.tablo{width:100vw;text-align:center;color:#b61212;font-weight:700;font-size:35px;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}.tablo,.tablo_shown{display:-webkit-box;display:-ms-flexbox;display:flex}.tablo_hidden{display:none}@media (max-width:320px){.tablo{font-size:29px}}.social-icon{width:43px;height:43px;margin:10px;cursor:pointer}.social-icon_facebook{cursor:not-allowed}.message-form{width:100vw;height:65vh;text-align:center;font-size:24px;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}.message-form,.message-form_shown{display:-webkit-box;display:-ms-flexbox;display:flex}.message-form_hidden{display:none}.auth-utils-form{width:50vw;border-radius:15px;padding:2vh;-webkit-box-shadow:inset 0 0 40px 0 #853b2436;box-shadow:inset 0 0 40px 0 #853b2436;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.auth-utils-form__button{margin:2vh;width:33vw;font-size:18px}.auth-utils-form_title{font-weight:700;font-size:25px;color:#797979;margin:2vh}.auth-utils-form_text{font-weight:700;font-size:18px;color:#797979}.auth-utils-form_link{font-size:15px;color:#797979;-webkit-text-decoration-color:#797979;text-decoration-color:#797979;margin:1vh}.auth-utils-form_social{width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;margin:1vh}.auth-utils-form_input{padding:10px;color:#a9a9a9;width:30vw;margin:1vh}", ""]);
 
 // exports
 
@@ -32439,8 +32439,10 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.loginAction = loginAction;
+exports.registrationAction = registrationAction;
 exports.socialLoginAction = socialLoginAction;
 exports.getActualAccessToken = getActualAccessToken;
+exports.getAccessToken = getAccessToken;
 
 var _axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 
@@ -32457,15 +32459,25 @@ var Promise = __webpack_require__(/*! bluebird */ "./node_modules/bluebird/js/br
 function loginAction(email, password) {
 	debugger;
 
-	return _axios2.default.post(_apiConst2.default.api_url + '/login/', {
+	return _axios2.default.post('' + _apiConst2.default.login, {
 		email: email,
 		password: password
 	}).then(function (response) {
 
-		_setAuthData(response);
+		_setAuthData(response.data);
 
 		delete response.data;
 		return response;
+	});
+};
+
+function registrationAction(email, login, password) {
+	debugger;
+
+	return _axios2.default.post('' + _apiConst2.default.registration, {
+		email: email,
+		login: login,
+		password: password
 	});
 };
 
@@ -32474,10 +32486,12 @@ function socialLoginAction(service) {
 
 	switch (service) {
 		case 'vkontakte':
-			socialLink = 'https://oauth.vk.com/authorize?client_id=' + _apiConst2.default.vk_client_id + '&display=page&scope=email&redirect_uri=' + _apiConst2.default.api_url + '/login&response_type=code&v=5.85&state=vk';
+			//socialLink = `https://oauth.vk.com/authorize?client_id=${apiConst.vk_client_id}&display=page&scope=email&redirect_uri=${apiConst.api_url}/login&response_type=code&v=5.85&state=vk`;
+			socialLink = '' + _apiConst2.default.vkApi;
 			break;
 		case 'google':
-			socialLink = 'https://accounts.google.com/o/oauth2/auth?redirect_uri=' + _apiConst2.default.api_url + '/login&response_type=code&client_id=' + _apiConst2.default.google_client_id + '&scope=https://www.googleapis.com/auth/userinfo.email';
+			//socialLink = `https://accounts.google.com/o/oauth2/auth?redirect_uri=${apiConst.api_url}/login&response_type=code&client_id=${apiConst.google_client_id}&scope=https://www.googleapis.com/auth/userinfo.email`;
+			socialLink = '' + _apiConst2.default.googleApi;
 			break;
 		default:
 			//??
@@ -32499,15 +32513,22 @@ function socialLoginAction(service) {
 function getActualAccessToken() {
 	debugger;
 
-	var accessToken = _getAccessToken();
+	var accessToken = getAccessToken();
 	var refreshToken = _getRefreshToken();
+	var isAccessTokenExpired = _isAccessTokenExpired();
 
 	return Promise.resolve(true).then(function () {
 
-		if (!_isAccessTokenExpired) return true;
+		if (!isAccessTokenExpired) return true;
 
-		if (_isAccessTokenExpired() && refreshToken) return _axios2.default.post(_apiConst2.default.api_url + '/refreshtokens/', {
+		/*if (isAccessTokenExpired && refreshToken) {
+  		return axios.post(`${apiConst.api_url}/refreshtokens/`, {	
+  		refreshToken: refreshToken,
+  	})
+  }
+  else throw new Error('no refresh token');*/
 
+		return _axios2.default.post('' + _apiConst2.default.refreshTokens, {
 			refreshToken: refreshToken
 		});
 	}).then(function (tokensData) {
@@ -32521,7 +32542,7 @@ function getActualAccessToken() {
 
 // ----------------------------------------------------
 
-function _getAccessToken() {
+function getAccessToken() {
 
 	return localStorage.getItem('accessToken');
 };
@@ -32532,7 +32553,6 @@ function _getRefreshToken() {
 };
 
 function _isAccessTokenExpired() {
-	debugger;
 
 	var accessTokenExpTime = localStorage.getItem('expires_in');
 	var nowTime = new Date().getTime();
@@ -32541,6 +32561,10 @@ function _isAccessTokenExpired() {
 };
 
 function _setAuthData(tokensData) {
+
+	if (!tokensData.refreshToken || !tokensData.accessToken || !tokensData.expires_in) {
+		throw new Error('invalid tokens data');
+	}
 
 	localStorage.setItem('refreshToken', tokensData.refreshToken);
 	localStorage.setItem('accessToken', tokensData.accessToken);
@@ -32572,7 +32596,17 @@ module.exports = {
 
 	vk_client_id: '6711833',
 	fb_client_id: '455348051621476',
-	google_client_id: '100666725887-otk617ad9448ec49096hufs8001hhel3.apps.googleusercontent.com'
+	google_client_id: '100666725887-otk617ad9448ec49096hufs8001hhel3.apps.googleusercontent.com',
+
+	vkApi: 'https://oauth.vk.com/authorize?client_id=' + vk_client_id + '&display=page&scope=email&redirect_uri=' + api_url + '/login&response_type=code&v=5.85&state=vk',
+	googleApi: 'https://accounts.google.com/o/oauth2/auth?redirect_uri=' + api_url + '/login&response_type=code&client_id=' + google_client_id + '&scope=https://www.googleapis.com/auth/userinfo.email',
+
+	changePasswordApi: api_url + '/changepassword/',
+	emailConfirmApi: api_url + '/emailconfirm/',
+	getLkDataApi: api_url + '/lkUserData/',
+	login: api_url + '/login/',
+	registration: api_url + '/registration/',
+	refreshTokens: api_url + '/refreshtokens/'
 };
 
 /***/ }),
@@ -32607,7 +32641,7 @@ var _notFoundPage = __webpack_require__(/*! ./pages/notFound/notFoundPage */ "./
 
 var _notFoundPage2 = _interopRequireDefault(_notFoundPage);
 
-var _authUtilsPages = __webpack_require__(/*! ./pages/authUtilsPages/authUtilsPages */ "./src/js/components/pages/authUtilsPages/authUtilsPages.js");
+var _authUtilsPages = __webpack_require__(/*! ./pages/authUtils/authUtilsPages */ "./src/js/components/pages/authUtils/authUtilsPages.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32638,7 +32672,7 @@ var App = function (_Component) {
                 _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _gamePage2.default }),
                 _react2.default.createElement(_reactRouterDom.Route, { path: '/login', component: _authUtilsPages.LoginPage }),
                 _react2.default.createElement(_reactRouterDom.Route, { path: '/registration', component: _authUtilsPages.RegistrationPage }),
-                _react2.default.createElement(_reactRouterDom.Route, { path: '/recoveryPassword', component: _authUtilsPages.ResetPasswordPage }),
+                _react2.default.createElement(_reactRouterDom.Route, { path: '/recoveryPassword', component: _authUtilsPages.RecoveryPasswordPage }),
                 _react2.default.createElement(_reactRouterDom.Route, { path: '/emailConfirm', component: _authUtilsPages.EmailConfirmPage }),
                 _react2.default.createElement(_reactRouterDom.Route, { path: '/resetPassword', component: _authUtilsPages.ResetPasswordPage }),
                 _react2.default.createElement(_reactRouterDom.Route, { component: _notFoundPage2.default })
@@ -32718,16 +32752,17 @@ var AuthUtilsForm = function (_Component) {
 			googleTitle: 'Войти с помощью Google'
 		};
 
-		_this.apiUrl = {
-			loginApi: _apiConst2.default.api_url + '/login/',
-			vkApi: 'https://oauth.vk.com/authorize?client_id=' + _apiConst2.default.vk_client_id + '&display=page&scope=email&redirect_uri=' + _apiConst2.default.api_url + '/login&response_type=code&v=5.85&state=vk',
-			googleApi: 'https://accounts.google.com/o/oauth2/auth?redirect_uri=' + _apiConst2.default.api_url + '/login&response_type=code&client_id=' + _apiConst2.default.google_client_id + '&scope=https://www.googleapis.com/auth/userinfo.email',
-			changePasswordApi: _apiConst2.default.api_url + '/changepassword/',
-			emailConfirmApi: _apiConst2.default.api_url + '/emailconfirm/'
-		};
+		/*this.apiUrl = {
+  	//loginApi: `${apiConst.api_url}/login/`,
+  	//vkApi: `https://oauth.vk.com/authorize?client_id=${apiConst.vk_client_id}&display=page&scope=email&redirect_uri=${apiConst.api_url}/login&response_type=code&v=5.85&state=vk`,
+  	//googleApi: `https://accounts.google.com/o/oauth2/auth?redirect_uri=${apiConst.api_url}/login&response_type=code&client_id=${apiConst.google_client_id}&scope=https://www.googleapis.com/auth/userinfo.email`,
+  	changePasswordApi: `${apiConst.changePasswordApi}/changepassword/`,
+  	emailConfirmApi: `${apiConst.emailConfirmApi}/emailconfirm/`,
+  }*/
 
 		_this.defaultData = {
 			emailData: 'Введите e-mail',
+			loginData: 'Введите логин',
 			passwordData: 'Введите пароль',
 			duplicatePasswordData: 'Повторите пароль',
 
@@ -32737,12 +32772,14 @@ var AuthUtilsForm = function (_Component) {
 
 		_this.warningData = {
 			emailData: 'Введите корректный e-mail',
+			loginData: 'Введите корректный логин',
 			passwordData: 'Введите корректный пароль',
 			duplicatePasswordData: 'Пароли не совпадают'
 		};
 
 		_this.state = {
 			emailData: _this.defaultData.emailData,
+			loginData: _this.defaultData.loginData,
 			passwordData: _this.defaultData.passwordData,
 			duplicatePasswordData: _this.defaultData.duplicatePasswordData,
 			messageIsShown: false,
@@ -32761,6 +32798,8 @@ var AuthUtilsForm = function (_Component) {
 		_this.checkData = _this.checkData.bind(_this);
 		_this.clickEmailConfirmButton = _this.clickEmailConfirmButton.bind(_this);
 		_this.clickResetPasswordButton = _this.clickResetPasswordButton.bind(_this);
+		_this.clickRegistrationButton = _this.clickRegistrationButton.bind(_this);
+		_this.getFormContent = _this.getFormContent.bind(_this);
 		return _this;
 	}
 
@@ -32770,7 +32809,6 @@ var AuthUtilsForm = function (_Component) {
 	_createClass(AuthUtilsForm, [{
 		key: 'clearData',
 		value: function clearData(event) {
-			debugger;
 
 			var dataName = event.target.name;
 
@@ -32783,7 +32821,6 @@ var AuthUtilsForm = function (_Component) {
 	}, {
 		key: 'changeData',
 		value: function changeData(event) {
-			debugger;
 
 			var dataName = event.target.name;
 
@@ -32796,13 +32833,17 @@ var AuthUtilsForm = function (_Component) {
 
 	}, {
 		key: 'checkData',
-		value: function checkData(emailData, passwordData, duplicatePasswordData) {
-
-			debugger;
+		value: function checkData(emailData, loginData, passwordData, duplicatePasswordData) {
 
 			if (emailData !== undefined && (emailData == this.defaultData.emailData || emailData == this.warningData.emailData || emailData == '')) {
 				this.setState({
 					emailData: this.warningData.emailData
+				});
+
+				return false;
+			} else if (loginData !== undefined && (loginData == this.defaultData.loginData || loginData == this.warningData.loginData || loginData == '')) {
+				this.setState({
+					loginData: this.warningData.loginData
 				});
 
 				return false;
@@ -32829,7 +32870,7 @@ var AuthUtilsForm = function (_Component) {
 
 			debugger;
 
-			var dataIsCorrect = this.checkData(this.state.emailData, this.state.passwordData);
+			var dataIsCorrect = this.checkData(this.state.emailData, undefined, this.state.passwordData);
 
 			if (!dataIsCorrect) return;
 
@@ -32852,58 +32893,57 @@ var AuthUtilsForm = function (_Component) {
 			});
 		}
 	}, {
+		key: 'clickRegistrationButton',
+		value: function clickRegistrationButton(event) {
+			var _this3 = this;
+
+			debugger;
+
+			var dataIsCorrect = this.checkData(this.state.emailData, this.state.loginData, this.state.passwordData, this.state.duplicatePasswordData);
+
+			if (!dataIsCorrect) return;
+
+			return authActions.registrationAction(this.state.emailData, this.state.loginData, this.state.passwordData).then(function (response) {
+				//response.data
+				//response.status
+				//response.statusText
+
+				_this3.state.messageLink = _this3.defaultData.messageLink;
+				_this3.state.messageLinkName = _this3.defaultData.messageLinkName;
+
+				response.data = 'Вы успешно зарегистрировались на сайте. Нажмите ссылку для перехода.';
+				_this3.responseHandle(response);
+			}).catch(function (error) {
+				//error.response.data
+				//error.response.status
+				//error.response.statusText
+
+				_this3.responseHandle(error);
+			});
+		}
+	}, {
 		key: 'clickSocialLoginButton',
 		value: function clickSocialLoginButton(event) {
-			var _this3 = this;
+			var _this4 = this;
 
 			var service = event.target.name;
 
 			// TODO!!! vkontakte api не отвечает localhost (нет 'Access-Control-Allow-Origin' в заголовке)
 			return authActions.socialLoginAction(service).then(function (response) {
 
-				_this3.state.messageLink = '/';
-				_this3.state.messageLinkName = 'На главную';
+				_this4.state.messageLink = '/';
+				_this4.state.messageLinkName = 'На главную';
 
 				response.data = 'Вы успешно вошли на сайт. Нажмите ссылку для перехода.';
-				_this3.responseHandle(response);
-			}).catch(function (error) {
-
-				_this3.responseHandle(error);
-			});
-		}
-	}, {
-		key: 'clickRecoveryPasswordButton',
-		value: function clickRecoveryPasswordButton(event) {
-			var _this4 = this;
-
-			debugger;
-
-			var dataIsCorrect = this.checkData(this.state.emailData);
-
-			if (!dataIsCorrect) return;
-
-			return _axios2.default.post(this.apiUrl.changePasswordApi, {
-				email: this.state.emailData
-			}).then(function (response) {
-				//response.data
-				//response.status
-				//response.statusText
-				_this4.state.messageLink = _this4.defaultData.messageLink;
-				_this4.state.messageLinkName = _this4.defaultData.messageLinkName;
-
-				response.data = 'Инструкции по восстановлению пароля отправлены на указанный адрес электронной почты.';
 				_this4.responseHandle(response);
 			}).catch(function (error) {
-				//error.response.data
-				//error.response.status
-				//error.response.statusText
 
 				_this4.responseHandle(error);
 			});
 		}
 	}, {
-		key: 'clickEmailConfirmButton',
-		value: function clickEmailConfirmButton(event) {
+		key: 'clickRecoveryPasswordButton',
+		value: function clickRecoveryPasswordButton(event) {
 			var _this5 = this;
 
 			debugger;
@@ -32912,7 +32952,7 @@ var AuthUtilsForm = function (_Component) {
 
 			if (!dataIsCorrect) return;
 
-			return _axios2.default.post(this.apiUrl.emailConfirmApi, {
+			return _axios2.default.post('' + _apiConst2.default.changePasswordApi, {
 				email: this.state.emailData
 			}).then(function (response) {
 				//response.data
@@ -32921,7 +32961,7 @@ var AuthUtilsForm = function (_Component) {
 				_this5.state.messageLink = _this5.defaultData.messageLink;
 				_this5.state.messageLinkName = _this5.defaultData.messageLinkName;
 
-				response.data = 'Письмо с кодом подтверждения отправлено на указанный адрес электронной почты.';
+				response.data = 'Инструкции по восстановлению пароля отправлены на указанный адрес электронной почты.';
 				_this5.responseHandle(response);
 			}).catch(function (error) {
 				//error.response.data
@@ -32931,49 +32971,19 @@ var AuthUtilsForm = function (_Component) {
 				_this5.responseHandle(error);
 			});
 		}
-
-		// TODO!!!: должен извлекать параметр из строки запроса, и использовать его как аксесс токен при запросе на сброс пароля
-
 	}, {
-		key: 'clickResetPasswordButton',
-		value: function clickResetPasswordButton(event) {
+		key: 'clickEmailConfirmButton',
+		value: function clickEmailConfirmButton(event) {
 			var _this6 = this;
 
 			debugger;
 
-			var dataIsCorrect = this.checkData(undefined, this.state.passwordData, this.state.duplicatePasswordData);
+			var dataIsCorrect = this.checkData(this.state.emailData);
 
 			if (!dataIsCorrect) return;
 
-			return Promise.resolve(true).then(function () {
-
-				// если на форму попали по ссылке из письма
-				if (_this6.props.match && _this6.props.match.params && _this6.props.match.params.id) {
-
-					return _this6.props.match.params.id;
-				}
-				// если из личного кабинета
-				else {
-
-						return authActions.getActualAccessToken();
-					}
-			}).then(function (accessToken) {
-
-				var params = {
-					password: _this6.state.passwordData
-				};
-
-				var options = {
-					method: 'PUT',
-					headers: { 'Authorization': 'Token ' + accessToken },
-					data: params,
-					url: _this6.apiUrl.changePasswordApi
-				};
-
-				return (0, _axios2.default)(options);
-				/*return axios.put(this.apiUrl.changePasswordApi, {
-    	password: this.state.passwordData,
-    })*/
+			return _axios2.default.post('' + _apiConst2.default.emailConfirmApi, {
+				email: this.state.emailData
 			}).then(function (response) {
 				//response.data
 				//response.status
@@ -32981,7 +32991,7 @@ var AuthUtilsForm = function (_Component) {
 				_this6.state.messageLink = _this6.defaultData.messageLink;
 				_this6.state.messageLinkName = _this6.defaultData.messageLinkName;
 
-				response.data = 'Пароль изменен.';
+				response.data = 'Письмо с кодом подтверждения отправлено на указанный адрес электронной почты.';
 				_this6.responseHandle(response);
 			}).catch(function (error) {
 				//error.response.data
@@ -32989,6 +32999,63 @@ var AuthUtilsForm = function (_Component) {
 				//error.response.statusText
 
 				_this6.responseHandle(error);
+			});
+		}
+
+		// TODO!!!: должен извлекать параметр из строки запроса, и использовать его как аксесс токен при запросе на сброс пароля
+
+	}, {
+		key: 'clickResetPasswordButton',
+		value: function clickResetPasswordButton(event) {
+			var _this7 = this;
+
+			debugger;
+
+			var dataIsCorrect = this.checkData(undefined, undefined, this.state.passwordData, this.state.duplicatePasswordData);
+
+			if (!dataIsCorrect) return;
+
+			return Promise.resolve(true).then(function () {
+
+				// если на форму попали по ссылке из письма
+				if (_this7.props.match && _this7.props.match.params && _this7.props.match.params.id) {
+
+					return _this7.props.match.params.id;
+				}
+				// если из личного кабинета
+				else {
+
+						return authActions.getActualAccessToken();
+					}
+			}).then(function (accessToken) {
+				//TODO: проверить редирект!!!
+
+				var params = {
+					password: _this7.state.passwordData
+				};
+
+				var options = {
+					method: 'PUT',
+					headers: { 'Authorization': 'Token ' + accessToken },
+					data: params,
+					url: '' + _apiConst2.default.changePasswordApi
+				};
+
+				return (0, _axios2.default)(options);
+			}).then(function (response) {
+				//TODO: проверить редирект!!!
+
+				_this7.state.messageLink = _this7.defaultData.messageLink;
+				_this7.state.messageLinkName = _this7.defaultData.messageLinkName;
+
+				response.data = 'Пароль успешно изменен.';
+				_this7.responseHandle(response);
+			}).catch(function (error) {
+				//error.response.data
+				//error.response.status
+				//error.response.statusText
+
+				_this7.responseHandle(error);
 			});
 		}
 	}, {
@@ -33016,6 +33083,7 @@ var AuthUtilsForm = function (_Component) {
 				messageIsShown: false,
 				message: '',
 				emailData: this.defaultData.emailData,
+				loginData: this.defaultData.loginData,
 				passwordData: this.defaultData.passwordData,
 				newPasswordData: this.defaultData.newPasswordData,
 				duplicatePasswordData: this.defaultData.duplicatePasswordData
@@ -33032,11 +33100,8 @@ var AuthUtilsForm = function (_Component) {
 			}
 		}
 	}, {
-		key: 'render',
-		value: function render() {
-			var _this7 = this;
-
-			console.log('--------render authUtilsPage--------------');
+		key: 'getFormContent',
+		value: function getFormContent() {
 
 			var LoginFormContent = _react2.default.createElement(
 				'div',
@@ -33116,6 +33181,11 @@ var AuthUtilsForm = function (_Component) {
 					_reactRouterDom.Link,
 					{ className: 'auth-utils-form_link', to: '/emailConfirm' },
 					'\u041D\u0435 \u043F\u0440\u0438\u0448\u043B\u043E \u043F\u0438\u0441\u044C\u043C\u043E?'
+				),
+				_react2.default.createElement(
+					_reactRouterDom.Link,
+					{ className: 'auth-utils-form_link', to: '/' },
+					'\u041D\u0430 \u0433\u043B\u0430\u0432\u043D\u0443\u044E'
 				)
 			);
 
@@ -33125,31 +33195,7 @@ var AuthUtilsForm = function (_Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'auth-utils-form_title' },
-					'\u0412\u0445\u043E\u0434'
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'auth-utils-form_social' },
-					_react2.default.createElement('img', {
-						name: 'vkontakte',
-						className: 'social-icon',
-						src: '/icons/vkontakte-icon_blue.png',
-						alt: this.titles.vkTitle,
-						title: this.titles.vkTitle,
-						onClick: this.clickSocialLoginButton }),
-					_react2.default.createElement('img', {
-						name: 'facebook',
-						className: 'social-icon social-icon_facebook',
-						src: '/icons/facebook-icon_grey.png',
-						alt: this.titles.fbTitle,
-						title: this.titles.fbTitle }),
-					_react2.default.createElement('img', {
-						name: 'google',
-						className: 'social-icon',
-						src: '/icons/google-icon_red.png',
-						alt: this.titles.googleTitle,
-						title: this.titles.googleTitle,
-						onClick: this.clickSocialLoginButton })
+					'\u0420\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044F'
 				),
 				_react2.default.createElement('input', {
 					name: 'email',
@@ -33157,6 +33203,15 @@ var AuthUtilsForm = function (_Component) {
 					className: 'auth-utils-form_input',
 					maxLength: '40',
 					value: this.state.emailData,
+					onChange: this.changeData,
+					onClick: this.clearData
+				}),
+				_react2.default.createElement('input', {
+					name: 'login',
+					type: 'text',
+					className: 'auth-utils-form_input',
+					maxLength: '40',
+					value: this.state.loginData,
 					onChange: this.changeData,
 					onClick: this.clearData
 				}),
@@ -33169,24 +33224,19 @@ var AuthUtilsForm = function (_Component) {
 					onChange: this.changeData,
 					onClick: this.clearData
 				}),
+				_react2.default.createElement('input', {
+					name: 'duplicatePassword',
+					type: 'text',
+					className: 'auth-utils-form_input',
+					maxLength: '40',
+					value: this.state.duplicatePasswordData,
+					onChange: this.changeData,
+					onClick: this.clearData
+				}),
 				_react2.default.createElement(
 					'button',
-					{ className: 'button button_login auth-utils-form__button', onClick: this.clickLoginButton },
-					'\u0412\u043E\u0439\u0442\u0438'
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'auth-utils-form_text' },
-					'\u0438\u043B\u0438'
-				),
-				_react2.default.createElement(
-					_reactRouterDom.Link,
-					{ to: '/registration' },
-					_react2.default.createElement(
-						'button',
-						{ className: 'button button_reg auth-utils-form__button' },
-						'\u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u0442\u044C\u0441\u044F'
-					)
+					{ className: 'button button_reg auth-utils-form__button', onClick: this.clickRegistrationButton },
+					'\u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u0442\u044C\u0441\u044F'
 				),
 				_react2.default.createElement(
 					_reactRouterDom.Link,
@@ -33197,6 +33247,11 @@ var AuthUtilsForm = function (_Component) {
 					_reactRouterDom.Link,
 					{ className: 'auth-utils-form_link', to: '/emailConfirm' },
 					'\u041D\u0435 \u043F\u0440\u0438\u0448\u043B\u043E \u043F\u0438\u0441\u044C\u043C\u043E?'
+				),
+				_react2.default.createElement(
+					_reactRouterDom.Link,
+					{ className: 'auth-utils-form_link', to: '/' },
+					'\u041D\u0430 \u0433\u043B\u0430\u0432\u043D\u0443\u044E'
 				)
 			);
 
@@ -33324,15 +33379,26 @@ var AuthUtilsForm = function (_Component) {
 					//??
 					this.responseHandle('form error: no form name');
 					break;
-			}
+			};
+
+			return formContent;
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _this8 = this;
+
+			console.log('--------render authUtilsPage--------------');
 
 			var contentClass = 'page__content content' + (this.state.messageIsShown ? ' content_transparent' : '');
 			var messageFormClass = 'page__message-form ' + (this.state.messageIsShown ? 'message-form_shown' : 'message-form_hidden');
 
+			var formContent = this.getFormContent();
+
 			return _react2.default.createElement(
 				'div',
 				{ ref: function ref(elem) {
-						return _this7.page = elem;
+						return _this8.page = elem;
 					}, className: 'page' },
 				_react2.default.createElement(
 					'div',
@@ -33432,10 +33498,10 @@ exports.default = MessageForm;
 
 /***/ }),
 
-/***/ "./src/js/components/pages/authUtilsPages/authUtilsPages.js":
-/*!******************************************************************!*\
-  !*** ./src/js/components/pages/authUtilsPages/authUtilsPages.js ***!
-  \******************************************************************/
+/***/ "./src/js/components/pages/authUtils/authUtilsPages.js":
+/*!*************************************************************!*\
+  !*** ./src/js/components/pages/authUtils/authUtilsPages.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -35344,6 +35410,16 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
+var _axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _authActions = __webpack_require__(/*! ../../actions/authActions */ "./src/js/components/actions/authActions.js");
+
+var authActions = _interopRequireWildcard(_authActions);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35351,6 +35427,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Promise = __webpack_require__(/*! bluebird */ "./node_modules/bluebird/js/browser/bluebird.js");
 
 // панель настроек
 var Toolbar = function (_Component) {
@@ -35364,6 +35442,8 @@ var Toolbar = function (_Component) {
 		_this.switchStartHandle = _this.switchStartHandle.bind(_this);
 		_this.changeData = _this.changeData.bind(_this);
 		_this.resetHandle = _this.resetHandle.bind(_this);
+		_this.getAuthContent = _this.getAuthContent.bind(_this);
+		_this.clickLkButton = _this.clickLkButton.bind(_this);
 		return _this;
 	}
 
@@ -35408,6 +35488,83 @@ var Toolbar = function (_Component) {
 			return nextProps.quotesSwitchedOff !== this.props.quotesSwitchedOff || nextProps.userColor !== this.props.userColor || nextProps.boardSize !== this.props.boardSize || nextProps.level !== this.props.level || nextProps.mode !== this.props.mode || nextProps.startOfGame && !this.props.startOfGame || !nextProps.endOfGame && this.props.endOfGame;
 		}
 	}, {
+		key: 'getAuthContent',
+		value: function getAuthContent() {
+
+			var loginContent = _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					_reactRouterDom.Link,
+					{ to: '/login' },
+					_react2.default.createElement(
+						'button',
+						{ className: 'bar__button button button_login' },
+						'\u0412\u0445\u043E\u0434'
+					)
+				),
+				_react2.default.createElement(
+					_reactRouterDom.Link,
+					{ to: '/registration' },
+					_react2.default.createElement(
+						'button',
+						{ className: 'bar__button button button_reg' },
+						'\u0420\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044F'
+					)
+				)
+			);
+
+			var lkContent = _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'button',
+					{ className: 'bar__button button button_lk', onClick: this.clickLkButton },
+					'\u041B\u0438\u0447\u043D\u044B\u0439 \u043A\u0430\u0431\u0438\u043D\u0435\u0442'
+				)
+			);
+
+			// TODO: как сделать запрос рефреша токенов прямо из рендера???
+
+			// альтернатива:
+			// в рендере просто смотрим, если ли в принципе аксесс токен - если есть, 
+			// значит юзер уже регистрировался, показываем кнопку (не ссылку!) на лк.
+			// и уже при нажатии на кнопку будет происходить рефреш токенов (если нужен) + запрос данных юзера - 
+			// если рефреш токен просрочен, апи редиректит на страницу входа,
+			// если все в порядке, апи редиректит на страницу лк с данными юзера.
+
+			var accessToken = authActions.getAccessToken();
+
+			return accessToken ? lkContent : loginContent;
+		}
+	}, {
+		key: 'clickLkButton',
+		value: function clickLkButton() {
+			debugger;
+
+			return Promise.resolve(true).then(function () {
+
+				return authActions.getActualAccessToken();
+			}).then(function (accessToken) {
+
+				var options = {
+					method: 'GET',
+					headers: { 'Authorization': 'Token ' + accessToken },
+					url: '' + apiConst.getLkDataApi
+				};
+
+				return (0, _axios2.default)(options);
+			}).then(function (response) {
+
+				//апи редиректит в лк
+				console.log(response);
+			}).catch(function (error) {
+				// вывести форму с ошибкой здесь не можем, редиректить может только апи, поэтому просто логируем ошибку (?)
+				// по идее на все ошибки апи должно редиректить на страницу входа
+				console.log(error);
+			});
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			console.log('render toolbar');
@@ -35429,19 +35586,12 @@ var Toolbar = function (_Component) {
 				switchStartBtnClass = 'button_finish';
 			}
 
+			var authContent = this.getAuthContent();
+
 			return _react2.default.createElement(
 				'div',
 				{ className: 'bar bar_tools' },
-				_react2.default.createElement(
-					_reactRouterDom.Link,
-					{ to: '/login' },
-					'\u0412\u0445\u043E\u0434'
-				),
-				_react2.default.createElement(
-					_reactRouterDom.Link,
-					{ to: '/registration' },
-					'\u0420\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044F'
-				),
+				authContent,
 				_react2.default.createElement(
 					'div',
 					null,

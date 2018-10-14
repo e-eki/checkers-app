@@ -33,6 +33,8 @@ export function registrationAction(email, login, password) {
 export function socialLoginAction(service) {
 	debugger;
 
+	let socialLink;
+
 	switch (service) {
 		case 'vkontakte':
 			//socialLink = `https://oauth.vk.com/authorize?client_id=${apiConst.vk_client_id}&display=page&scope=email&redirect_uri=${apiConst.api_url}/login&response_type=code&v=5.85&state=vk`;
@@ -63,13 +65,13 @@ export function getActualAccessToken() {
 	debugger;
 
 	const accessToken = getAccessToken();
-	const refreshToken = _getRefreshToken();
-	const isAccessTokenExpired = _isAccessTokenExpired();
+	const refreshToken = getRefreshToken();
+	const accessTokenExpired = isAccessTokenExpired();
 
 	return Promise.resolve(true)
 		.then(() => {
 
-			if (!isAccessTokenExpired) return true;
+			if (!accessTokenExpired) return true;
 
 			/*if (isAccessTokenExpired && refreshToken) {
 
@@ -92,6 +94,32 @@ export function getActualAccessToken() {
 		})
 };
 
+export function logoutAction() {
+	debugger;
+
+	return Promise.resolve(true)
+		.then(() => {
+
+			return getActualAccessToken();
+		})
+		.then((accessToken) =>{
+
+			const options = {
+				method: 'DELETE',
+				headers: { 'Authorization': `Token ${accessToken}` },
+				url: `${apiConst.logout}`
+			};
+			
+			return axios(options);
+		})
+		.then((response) => {
+
+			_removeAuthData();
+
+			return true;
+		})
+};
+
 
 // ----------------------------------------------------
 
@@ -100,12 +128,12 @@ export function getAccessToken() {
 	return localStorage.getItem('accessToken');
 };
 
-function _getRefreshToken() {
+export function getRefreshToken() {
 
 	return localStorage.getItem('refreshToken');
 };
 
-function _isAccessTokenExpired () {
+export function isAccessTokenExpired() {
 
 	const accessTokenExpTime = localStorage.getItem('expires_in');
 	const nowTime = new Date().getTime();
@@ -124,7 +152,7 @@ function _setAuthData(tokensData) {
 	localStorage.setItem('expires_in', tokensData.expires_in);
 };
     
-function _removeAuthData () {
+function _removeAuthData() {
 
 	localStorage.removeItem("refreshToken");
 	localStorage.removeItem("accessToken");

@@ -1,11 +1,18 @@
 
 import React, { Component } from 'react';
+import axios from 'axios';
+const Promise = require('bluebird');
+
 import Header from './header';
 import Footer from './footer';
 import Toolbar from './toolbar';
 import Grid from './grid';
 import Infobar from './infobar';
 import Tablo from './tablo';
+import LkForm from '../../forms/lkForm';
+import MessageForm from '../../forms/messageForm';
+import * as authActions from '../../actions/authActions';
+import apiConst from '../../apiConst';
 
 // главная страница - страница игры
 export default class GamePage extends Component {
@@ -42,6 +49,13 @@ export default class GamePage extends Component {
             whiteActorsCount: 0,     // количество белых фигур на доске - нужно для вывода в инфобаре
             blackActorsCount: 0,     // количество черных фигур на доске - нужно для вывода в инфобаре
             totalOfGame: 'standoff',   // результат игры - по умолчанию ничья
+
+            messageIsShown: false,     // показывать сообщение об ошибке
+            lkFormIsShown: false,     // показывать лк
+            messageLink: '/',
+            messageLinkName: 'На главную',
+            message: '',
+            lkLogout: false,
         }
 
         this.state = {
@@ -66,6 +80,17 @@ export default class GamePage extends Component {
             whiteActorsCount: this.defaultSettings.whiteActorsCount,
             blackActorsCount: this.defaultSettings.blackActorsCount, 
             totalOfGame: this.defaultSettings.totalOfGame,
+
+            messageIsShown: this.defaultSettings.messageIsShown,
+            lkFormIsShown: this.defaultSettings.lkFormIsShown,
+            messageLink: this.defaultSettings.messageLink,
+            messageLinkName: this.defaultSettings.messageLinkName,
+            message: this.defaultSettings.message,
+            lkLogin: '',
+            lkEmail: '',
+            lkIsEmailConfirmed: '',
+            lkRole: '',
+            lkLogout: this.defaultSettings.lkLogout,
         };
 
         this.drawMarks = this.drawMarks.bind(this);
@@ -75,6 +100,11 @@ export default class GamePage extends Component {
         this.resetDefaultSettings = this.resetDefaultSettings.bind(this);
         this.createTurnDefinition = this.createTurnDefinition.bind(this);
         this.turnIsDone = this.turnIsDone.bind(this);
+        this.hideMessageForm = this.hideMessageForm.bind(this);
+        this.showMessage = this.showMessage.bind(this);
+        this.clickLkButton = this.clickLkButton.bind(this);
+        this.showLkForm = this.showLkForm.bind(this);
+        this.switchLkLogout = this.switchLkLogout.bind(this);
     }
 
     // отрисовка разметки шахматной доски
@@ -177,6 +207,43 @@ export default class GamePage extends Component {
             whiteActorsCount: this.defaultSettings.whiteActorsCount,
             blackActorsCount: this.defaultSettings.blackActorsCount, 
             totalOfGame: this.state.totalOfGame,
+
+            messageIsShown: this.defaultSettings.messageIsShown,
+            lkFormIsShown: this.defaultSettings.lkFormIsShown,
+            messageLink: this.defaultSettings.messageLink,
+            messageLinkName: this.defaultSettings.messageLinkName,
+            message: this.defaultSettings.message,
+            lkLogin: '',
+            lkEmail: '',
+            lkIsEmailConfirmed: '',
+            lkRole: '',
+        });
+    }
+
+    switchLkLogout(logout) {
+        debugger;
+
+        this.state.lkLogout = logout;
+    }
+
+    hideMessageForm(event) {
+        debugger;
+
+        this.page.removeEventListener('click', this.hideMessageForm);
+        this.page.removeEventListener('keydown', this.hideMessageForm);
+
+        this.setState({
+
+            messageIsShown: this.defaultSettings.messageIsShown,
+            messageLink: this.defaultSettings.messageLink,
+            messageLinkName: this.defaultSettings.messageLinkName,
+            message: this.defaultSettings.message,
+
+            lkFormIsShown: this.defaultSettings.lkFormIsShown,
+            lkLogin: '',
+            lkEmail: '',
+            lkIsEmailConfirmed: '',
+            lkRole: '',
         });
     }
 
@@ -264,6 +331,67 @@ export default class GamePage extends Component {
         this.setState({});
     }
 
+    showMessage(message, messageLink = this.defaultSettings.messageLink, messageLinkName = this.defaultSettings.messageLinkName) {
+
+        this.setState({
+
+            message: message,
+            messageIsShown: true,
+            messageLink: messageLink,
+            messageLinkName: messageLinkName,
+        })
+    }
+
+    /*data = {
+        login: user.login,
+        email: user.email,
+        isEmailConfirmed: user.isEmailConfirmed,
+        role: user.role,
+    }*/
+    showLkForm(data) {
+
+        this.setState({
+
+            lkFormIsShown: true,
+
+            lkLogin: data.login,
+            lkEmail: data.email,
+            lkIsEmailConfirmed: data.isEmailConfirmed,
+            lkRole: data.role,
+        })
+    }
+
+    clickLkButton() {
+		debugger;
+
+		return Promise.resolve(true)
+			.then(() => {
+
+				return authActions.getActualAccessToken();
+			})
+			.then((accessToken) => {
+		
+				const options = {
+					method: 'GET',
+					headers: { 'Authorization': `Token ${accessToken}` },
+					url: `${apiConst.getLkDataApi}`
+				};
+				
+				return axios(options);
+			})
+			.then((response) => {
+
+                if (!response.data) throw new Error(''); 
+
+				this.showLkForm(response.data);
+			})
+			.catch((error) => {
+                // TODO: почему ссылка на страницу входа не срабатывает? аналогичная ссылка на главную со страницы входа работает.
+				this.showMessage('Вы не авторизованы для данного действия', '/login', 'Войти на сайт');  
+			})
+	}
+
+
     componentWillMount() {
         this.drawMarks();
     }
@@ -275,19 +403,34 @@ export default class GamePage extends Component {
         }
     }
 
-    componentDidUpdate(prevState) {     
+    componentDidUpdate(prevState) {   
+        debugger;
+
         // если игра завершена, то появляется табло, и по клику или нажатию любой клавиши табло пропадает и сбрасываются настройки
         if (!prevState.endOfGame && this.state.endOfGame) {
             this.page.addEventListener('click', this.resetDisplay);
             this.page.addEventListener('keydown', this.resetDisplay);
         }
+        // если было показано сообщение об ошибке, по клику/нажатию сообщение пропадает, ничего не сбрасывается
+        else if ((!prevState.messageIsShown && this.state.messageIsShown) ||
+                (!prevState.lkFormIsShown && this.state.lkFormIsShown)) {
+
+            this.page.addEventListener('click', this.hideMessageForm);
+            this.page.addEventListener('keydown', this.hideMessageForm);
+        }
+        
+        //TODO!
+        this.switchLkLogout(false);
     }
 
     render() {
         console.log('render display');
-        //const gameOverClass = this.state.endOfGame ? 'game-over' : '';
-        const contentClass = 'page__content content' + (this.state.endOfGame ? ' content_transparent' : '');
+
+        const contentClass = 'page__content content' + 
+                            ((this.state.endOfGame || this.state.messageIsShown || this.state.lkFormIsShown) ? ' content_transparent' : '');
         const tabloClass = 'page__tablo ' + (this.state.endOfGame ? 'tablo_shown' : 'tablo_hidden');
+        const messageFormClass = 'page__message-form ' + (this.state.messageIsShown ? 'message-form_shown' : 'message-form_hidden');
+        const lkFormClass = 'page__lk-form ' + (this.state.lkFormIsShown ? 'lk-form_shown' : 'lk-form_hidden');
 
         return (
             <div ref = {elem => this.page = elem} className = 'page'>
@@ -307,6 +450,8 @@ export default class GamePage extends Component {
                             boardSize = {this.state.boardSize} 
                             level = {this.state.level} 
                             mode = {this.state.mode}
+                            clickLkButton = {this.clickLkButton}
+                            lkLogout = {this.state.lkLogout}
                         />
 
                         <div className = 'main__chessboard chessboard'>
@@ -362,6 +507,24 @@ export default class GamePage extends Component {
                     totalOfGame = {this.state.totalOfGame}
                     userColor = {this.props.userColor}
                 />
+
+                <LkForm 
+                    className = {lkFormClass}
+                    login = {this.state.lkLogin}
+                    email = {this.state.lkEmail}
+                    isEmailConfirmed = {this.state.lkIsEmailConfirmed}
+                    role = {this.state.lkRole}
+                    showMessage = {this.showMessage}
+                    switchLkLogout = {this.switchLkLogout}
+                />
+
+                <MessageForm 
+                    className = {messageFormClass}
+                    message = {this.state.message}
+                    messageLink = {this.state.messageLink}
+					messageLinkName = {this.state.messageLinkName}
+                />
+
             </div>
         )
     }

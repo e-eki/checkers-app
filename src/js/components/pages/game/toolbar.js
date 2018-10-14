@@ -1,8 +1,6 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-const Promise = require('bluebird');
 
 import * as authActions from '../../actions/authActions';
 
@@ -16,7 +14,6 @@ export default class Toolbar extends Component {
 		this.changeData = this.changeData.bind(this);
 		this.resetHandle = this.resetHandle.bind(this);
 		this.getAuthContent = this.getAuthContent.bind(this);
-		this.clickLkButton = this.clickLkButton.bind(this);
 	}
 
 	// начало/завершение игры
@@ -48,6 +45,7 @@ export default class Toolbar extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
+		debugger;
 		
 		return (
 				nextProps.quotesSwitchedOff !== this.props.quotesSwitchedOff ||
@@ -56,7 +54,8 @@ export default class Toolbar extends Component {
 				nextProps.level !== this.props.level || 
 				nextProps.mode !== this.props.mode ||
 				(nextProps.startOfGame && !this.props.startOfGame) || 
-				(!nextProps.endOfGame && this.props.endOfGame)
+				(!nextProps.endOfGame && this.props.endOfGame) ||
+				(nextProps.lkLogout == true && this.props.lkLogout == false)
 			);			
 	}
 	
@@ -76,7 +75,7 @@ export default class Toolbar extends Component {
 
 		const lkContent = (
 			<div>
-				<button className = 'bar__button button button_lk' onClick = {this.clickLkButton}>
+				<button className = 'bar__button button button_lk' onClick = {this.props.clickLkButton}>
 					Личный кабинет
 				</button>
 			</div>
@@ -84,49 +83,12 @@ export default class Toolbar extends Component {
 
 		// TODO: как сделать запрос рефреша токенов прямо из рендера???
 
-		// альтернатива:
-		// в рендере просто смотрим, если ли в принципе аксесс токен - если есть, 
-		// значит юзер уже регистрировался, показываем кнопку (не ссылку!) на лк.
-		// и уже при нажатии на кнопку будет происходить рефреш токенов (если нужен) + запрос данных юзера - 
-		// если рефреш токен просрочен, апи редиректит на страницу входа,
-		// если все в порядке, апи редиректит на страницу лк с данными юзера.
-
-		let accessToken = authActions.getAccessToken();
+		// если не просрочен аксесс токен и есть рефреш токен (для последующего рефреша токенов),
+		// то показываем лк (если будет нужен рефреш, то он вызывается в обработчике кнопки)
+		let authContent = (!authActions.isAccessTokenExpired() && authActions.getRefreshToken()) ? lkContent : loginContent;  
 		
-		return (accessToken) ? lkContent : loginContent;
+		return authContent;
 	}
-
-	clickLkButton() {
-		debugger;
-
-		return Promise.resolve(true)
-			.then(() => {
-
-				return authActions.getActualAccessToken();
-			})
-			.then((accessToken) => {
-		
-				const options = {
-					method: 'GET',
-					headers: { 'Authorization': `Token ${accessToken}` },
-					url: `${apiConst.getLkDataApi}`
-				};
-				
-				return axios(options);
-			})
-			.then((response) => {
-
-				//апи редиректит в лк
-				console.log(response);
-			})
-			.catch((error) => {
-				// вывести форму с ошибкой здесь не можем, редиректить может только апи, поэтому просто логируем ошибку (?)
-				// по идее на все ошибки апи должно редиректить на страницу входа
-				console.log(error);
-			})
-	}
-
-
 
 	render() {
 		console.log('render toolbar');
