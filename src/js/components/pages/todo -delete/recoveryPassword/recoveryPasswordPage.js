@@ -12,10 +12,10 @@ export default class RecoveryPasswordPage extends Component {
 	constructor(props) {
 		super(props);
 
-		this.apiUrl = {
-			changePasswordApi: `${apiConst.api_url}/changepassword/`,
+		/*this.apiUrl = {
+			changePasswordApi: `${apiConst.changepassword}/changepassword/`,
 			emailConfirmApi: `${apiConst.api_url}/emailconfirm/`,
-		}
+		}*/
 
 		this.defaultData = {
 			emailData: 'Введите e-mail',
@@ -66,7 +66,7 @@ export default class RecoveryPasswordPage extends Component {
 			return;
 		}
 		
-		return axios.post(this.apiUrl.changePasswordApi, {
+		return axios.post(`${apiConst.changepassword}`, {
 			email: this.state.emailData,
 		})
 			.then((response) => {

@@ -20,13 +20,13 @@ export default class AuthUtilsForm extends Component {
 			googleTitle: 'Войти с помощью Google',
 		};
 
-		this.apiUrl = {
+		/*this.apiUrl = {
 			//loginApi: `${apiConst.api_url}/login/`,
 			//vkApi: `https://oauth.vk.com/authorize?client_id=${apiConst.vk_client_id}&display=page&scope=email&redirect_uri=${apiConst.api_url}/login&response_type=code&v=5.85&state=vk`,
 			//googleApi: `https://accounts.google.com/o/oauth2/auth?redirect_uri=${apiConst.api_url}/login&response_type=code&client_id=${apiConst.google_client_id}&scope=https://www.googleapis.com/auth/userinfo.email`,
-			changePasswordApi: `${apiConst.api_url}/changepassword/`,
-			emailConfirmApi: `${apiConst.api_url}/emailconfirm/`,
-		}
+			changePasswordApi: `${apiConst.changePasswordApi}/changepassword/`,
+			emailConfirmApi: `${apiConst.emailConfirmApi}/emailconfirm/`,
+		}*/
 
 		this.defaultData = {
 			emailData: 'Введите e-mail',
@@ -67,6 +67,7 @@ export default class AuthUtilsForm extends Component {
 		this.clickEmailConfirmButton = this.clickEmailConfirmButton.bind(this);
 		this.clickResetPasswordButton = this.clickResetPasswordButton.bind(this);
 		this.clickRegistrationButton = this.clickRegistrationButton.bind(this);
+		this.getFormContent = this.getFormContent.bind(this);
 	}
 
 	// по клику на инпуте он очищается
@@ -215,7 +216,7 @@ export default class AuthUtilsForm extends Component {
 
 		if (!dataIsCorrect) return;
 		
-		return axios.post(this.apiUrl.changePasswordApi, {
+		return axios.post(`${apiConst.changePasswordApi}`, {
 			email: this.state.emailData,
 		})
 			.then((response) => {
@@ -244,7 +245,7 @@ export default class AuthUtilsForm extends Component {
 
 		if (!dataIsCorrect) return;
 		
-		return axios.post(this.apiUrl.emailConfirmApi, {
+		return axios.post(`${apiConst.emailConfirmApi}`, {
 			email: this.state.emailData,
 		})
 			.then((response) => {
@@ -289,6 +290,7 @@ export default class AuthUtilsForm extends Component {
 				}
 			})
 			.then((accessToken) => {
+				//TODO: проверить редирект!!!
 
 				const params = {
 					password: this.state.passwordData,
@@ -298,18 +300,14 @@ export default class AuthUtilsForm extends Component {
 					method: 'PUT',
 					headers: { 'Authorization': `Token ${accessToken}` },
 					data: params,
-					url: this.apiUrl.changePasswordApi
+					url: `${apiConst.changePasswordApi}`
 				};
 				
 				return axios(options);
-				/*return axios.put(this.apiUrl.changePasswordApi, {
-					password: this.state.passwordData,
-				})*/
 			})
 			.then((response) => {
-				//response.data
-				//response.status
-				//response.statusText
+				//TODO: проверить редирект!!!
+
 				this.state.messageLink = this.defaultData.messageLink;
 				this.state.messageLinkName = this.defaultData.messageLinkName;
 
@@ -364,9 +362,7 @@ export default class AuthUtilsForm extends Component {
 		}
 	}
 
-	render() {
-
-		console.log('--------render authUtilsPage--------------');
+	getFormContent() {
 
 		const LoginFormContent = (
 
@@ -593,8 +589,6 @@ export default class AuthUtilsForm extends Component {
 			</div>
 		);
 
-
-
 		let formContent;
 
 		switch (this.props.name) {
@@ -605,7 +599,7 @@ export default class AuthUtilsForm extends Component {
 
 			case 'RegistrationPage':
 				formContent = RegistrationFormContent;
-			break;
+				break;
 
 			case 'RecoveryPasswordPage':
 				formContent = recoveryPasswordContent;
@@ -616,16 +610,25 @@ export default class AuthUtilsForm extends Component {
 				break;
 
 			case 'ResetPasswordPage':
-			formContent = resetPasswordContent;
-			break;				
+				formContent = resetPasswordContent;
+				break;				
 
 			default:  //??
 				this.responseHandle('form error: no form name');
 				break;
-		}
+		};
+
+		return formContent;
+	}
+
+	render() {
+
+		console.log('--------render authUtilsPage--------------');
 
 		const contentClass = 'page__content content' + (this.state.messageIsShown ? ' content_transparent' : '');
 		const messageFormClass = 'page__message-form ' + (this.state.messageIsShown ? 'message-form_shown' : 'message-form_hidden');
+
+		const formContent = this.getFormContent();
 
 		return (
 

@@ -7,7 +7,7 @@ import apiConst from '../apiConst';
 export function loginAction(email, password) {
 	debugger;
 
-	return axios.post(`${apiConst.api_url}/login/`, {
+	return axios.post(`${apiConst.login}`, {
 		email: email,
 		password: password,
 	})
@@ -23,7 +23,7 @@ export function loginAction(email, password) {
 export function registrationAction(email, login, password) {
 	debugger;
 
-	return axios.post(`${apiConst.api_url}/registration/`, {
+	return axios.post(`${apiConst.registration}`, {
 		email: email,
 		login: login,
 		password: password,
@@ -35,10 +35,12 @@ export function socialLoginAction(service) {
 
 	switch (service) {
 		case 'vkontakte':
-			socialLink = `https://oauth.vk.com/authorize?client_id=${apiConst.vk_client_id}&display=page&scope=email&redirect_uri=${apiConst.api_url}/login&response_type=code&v=5.85&state=vk`;
+			//socialLink = `https://oauth.vk.com/authorize?client_id=${apiConst.vk_client_id}&display=page&scope=email&redirect_uri=${apiConst.api_url}/login&response_type=code&v=5.85&state=vk`;
+			socialLink = `${apiConst.vkApi}`;
 			break;
 		case 'google':
-			socialLink = `https://accounts.google.com/o/oauth2/auth?redirect_uri=${apiConst.api_url}/login&response_type=code&client_id=${apiConst.google_client_id}&scope=https://www.googleapis.com/auth/userinfo.email`;
+			//socialLink = `https://accounts.google.com/o/oauth2/auth?redirect_uri=${apiConst.api_url}/login&response_type=code&client_id=${apiConst.google_client_id}&scope=https://www.googleapis.com/auth/userinfo.email`;
+			socialLink = `${apiConst.googleApi}`;
 			break;
 		default:  //??
 			throw new Error('login error: no service name');
@@ -60,7 +62,7 @@ export function socialLoginAction(service) {
 export function getActualAccessToken() {
 	debugger;
 
-	const accessToken = _getAccessToken();
+	const accessToken = getAccessToken();
 	const refreshToken = _getRefreshToken();
 	const isAccessTokenExpired = _isAccessTokenExpired();
 
@@ -69,13 +71,17 @@ export function getActualAccessToken() {
 
 			if (!isAccessTokenExpired) return true;
 
-			if (isAccessTokenExpired && refreshToken) {
+			/*if (isAccessTokenExpired && refreshToken) {
 
 				return axios.post(`${apiConst.api_url}/refreshtokens/`, {	
 					refreshToken: refreshToken,
 				})
 			}
-			else throw new Error('no refresh token');
+			else throw new Error('no refresh token');*/
+
+			return axios.post(`${apiConst.refreshTokens}`, {	
+				refreshToken: refreshToken,
+			})
 		})
 		.then((tokensData) => {
 
@@ -89,7 +95,7 @@ export function getActualAccessToken() {
 
 // ----------------------------------------------------
 
-function _getAccessToken() {
+export function getAccessToken() {
 
 	return localStorage.getItem('accessToken');
 };
@@ -100,7 +106,6 @@ function _getRefreshToken() {
 };
 
 function _isAccessTokenExpired () {
-	debugger;
 
 	const accessTokenExpTime = localStorage.getItem('expires_in');
 	const nowTime = new Date().getTime();
@@ -111,7 +116,7 @@ function _isAccessTokenExpired () {
 function _setAuthData(tokensData) {
 
 	if (!tokensData.refreshToken || !tokensData.accessToken || !tokensData.expires_in) {
-		throw new Error('invzlid tokens data');
+		throw new Error('invalid tokens data');
 	}
 
 	localStorage.setItem('refreshToken', tokensData.refreshToken);

@@ -1,6 +1,10 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+const Promise = require('bluebird');
+
+import * as authActions from '../../actions/authActions';
 
 // панель настроек
 export default class Toolbar extends Component {
@@ -11,6 +15,8 @@ export default class Toolbar extends Component {
 		this.switchStartHandle = this.switchStartHandle.bind(this);
 		this.changeData = this.changeData.bind(this);
 		this.resetHandle = this.resetHandle.bind(this);
+		this.getAuthContent = this.getAuthContent.bind(this);
+		this.clickLkButton = this.clickLkButton.bind(this);
 	}
 
 	// начало/завершение игры
@@ -52,7 +58,75 @@ export default class Toolbar extends Component {
 				(nextProps.startOfGame && !this.props.startOfGame) || 
 				(!nextProps.endOfGame && this.props.endOfGame)
 			);			
-    }
+	}
+	
+	getAuthContent() {
+
+		const loginContent = (
+			<div>
+				<Link to="/login">
+					<button className = 'bar__button button button_login'>Вход</button>
+				</Link>
+				
+				<Link to="/registration">
+					<button className = 'bar__button button button_reg'>Регистрация</button>
+				</Link>
+			</div>
+		);
+
+		const lkContent = (
+			<div>
+				<button className = 'bar__button button button_lk' onClick = {this.clickLkButton}>
+					Личный кабинет
+				</button>
+			</div>
+		);
+
+		// TODO: как сделать запрос рефреша токенов прямо из рендера???
+
+		// альтернатива:
+		// в рендере просто смотрим, если ли в принципе аксесс токен - если есть, 
+		// значит юзер уже регистрировался, показываем кнопку (не ссылку!) на лк.
+		// и уже при нажатии на кнопку будет происходить рефреш токенов (если нужен) + запрос данных юзера - 
+		// если рефреш токен просрочен, апи редиректит на страницу входа,
+		// если все в порядке, апи редиректит на страницу лк с данными юзера.
+
+		let accessToken = authActions.getAccessToken();
+		
+		return (accessToken) ? lkContent : loginContent;
+	}
+
+	clickLkButton() {
+		debugger;
+
+		return Promise.resolve(true)
+			.then(() => {
+
+				return authActions.getActualAccessToken();
+			})
+			.then((accessToken) => {
+		
+				const options = {
+					method: 'GET',
+					headers: { 'Authorization': `Token ${accessToken}` },
+					url: `${apiConst.getLkDataApi}`
+				};
+				
+				return axios(options);
+			})
+			.then((response) => {
+
+				//апи редиректит в лк
+				console.log(response);
+			})
+			.catch((error) => {
+				// вывести форму с ошибкой здесь не можем, редиректить может только апи, поэтому просто логируем ошибку (?)
+				// по идее на все ошибки апи должно редиректить на страницу входа
+				console.log(error);
+			})
+	}
+
+
 
 	render() {
 		console.log('render toolbar');
@@ -75,61 +149,62 @@ export default class Toolbar extends Component {
 			switchStartBtnClass = 'button_finish';
 		}
 
+		let authContent = this.getAuthContent();
+
 		return (
 			<div className = "bar bar_tools">
-				
-					<Link to="/login">Вход</Link>
-					<Link to="/registration">Регистрация</Link>
 
-					<div>
-						<input name = "quotesSwitchedOff" type="checkbox" className = 'bar_enabled-item' checked = {this.props.quotesSwitchedOff} onChange = {this.changeData}/>
-						Выключить цитаты
-					</div>
-					<div>
-						Выберите цвет ваших фигур: 
-						<select name="userColor" className = {itemClass} disabled = {elementIsDisabled} onChange = {this.changeData} value = {this.props.userColor}>
-							<option value="white">белые</option>
-							<option value="black">черные</option>
-						</select>
-					</div>
-					<div>
-						Выберите размер доски:<span>{this.props.boardSize}</span>
-						<input 
-							name = "boardSize" 
-							type = "range" 
-							min = "4" 
-							max = "14" 
-							step = "2" 
-							value = {this.props.boardSize} 
-							className = {itemClass}
-							disabled = {elementIsDisabled} 
-							onChange = {this.changeData}
-						/>
-						
-					</div>
-					<div>
-						Выберите уровень сложности: 
-						<select name="level" className = {itemClass} disabled = {elementIsDisabled} onChange = {this.changeData} value = {this.props.level}>
-							<option value="easy">легкий</option>
-							<option value="medium">средний</option>
-							<option value="hard">сложный</option>
-							<option value="randomize">randomize</option>
-						</select>
-					</div>
-					<div>
-						Выберите режим игры: 
-						<select name="mode" className = {itemClass} disabled = {elementIsDisabled} onChange = {this.changeData} value = {this.props.mode}>>
-							<option value="classic">классический</option>
-							<option value="dam">играть только дамками</option>
-						</select>
-					</div>
-					<button name = "resetBtn" className = {'bar__button button ' + itemClass} disabled = {elementIsDisabled} onClick = {this.resetHandle}>
-						Настройки по умолчанию
-					</button>
-					<button name = "switchStartBtn" className = {'bar__button button bar_enabled-item ' + switchStartBtnClass} onClick = {this.switchStartHandle}>
-						{switchStartBtnText}
-					</button>
-				
+				{authContent}
+
+				<div>
+					<input name = "quotesSwitchedOff" type="checkbox" className = 'bar_enabled-item' checked = {this.props.quotesSwitchedOff} onChange = {this.changeData}/>
+					Выключить цитаты
+				</div>
+				<div>
+					Выберите цвет ваших фигур: 
+					<select name="userColor" className = {itemClass} disabled = {elementIsDisabled} onChange = {this.changeData} value = {this.props.userColor}>
+						<option value="white">белые</option>
+						<option value="black">черные</option>
+					</select>
+				</div>
+				<div>
+					Выберите размер доски:<span>{this.props.boardSize}</span>
+					<input 
+						name = "boardSize" 
+						type = "range" 
+						min = "4" 
+						max = "14" 
+						step = "2" 
+						value = {this.props.boardSize} 
+						className = {itemClass}
+						disabled = {elementIsDisabled} 
+						onChange = {this.changeData}
+					/>
+					
+				</div>
+				<div>
+					Выберите уровень сложности: 
+					<select name="level" className = {itemClass} disabled = {elementIsDisabled} onChange = {this.changeData} value = {this.props.level}>
+						<option value="easy">легкий</option>
+						<option value="medium">средний</option>
+						<option value="hard">сложный</option>
+						<option value="randomize">randomize</option>
+					</select>
+				</div>
+				<div>
+					Выберите режим игры: 
+					<select name="mode" className = {itemClass} disabled = {elementIsDisabled} onChange = {this.changeData} value = {this.props.mode}>>
+						<option value="classic">классический</option>
+						<option value="dam">играть только дамками</option>
+					</select>
+				</div>
+				<button name = "resetBtn" className = {'bar__button button ' + itemClass} disabled = {elementIsDisabled} onClick = {this.resetHandle}>
+					Настройки по умолчанию
+				</button>
+				<button name = "switchStartBtn" className = {'bar__button button bar_enabled-item ' + switchStartBtnClass} onClick = {this.switchStartHandle}>
+					{switchStartBtnText}
+				</button>
+			
 			</div>
 		)
 	}
