@@ -255,7 +255,11 @@ export default class AuthUtilsForm extends Component {
 				this.state.messageLink = this.defaultData.messageLink;
 				this.state.messageLinkName = this.defaultData.messageLinkName;
 
-				response.data = 'Письмо с кодом подтверждения отправлено на указанный адрес электронной почты.';		
+				if (response.data == 'Confirm mail sent again') {
+
+					response.data = 'Письмо с кодом подтверждения отправлено на указанный адрес электронной почты.';
+				}
+						
 				this.responseHandle(response);
 			})
 			.catch((error) => {
@@ -306,7 +310,6 @@ export default class AuthUtilsForm extends Component {
 				return axios(options);
 			})
 			.then((response) => {
-				//TODO: проверить редирект!!!
 
 				this.state.messageLink = this.defaultData.messageLink;
 				this.state.messageLinkName = this.defaultData.messageLinkName;
@@ -324,16 +327,48 @@ export default class AuthUtilsForm extends Component {
 	}
 
 	responseHandle(response) {
-
-		/*switch (response.status) {
-
-			//case 404 : 
-		};*/
 		debugger;
+
+		if (response.response) response = response.response;  // если это ошибка
+		let message;
+
+		switch (response.status) {
+
+			case 200:
+			case 201:
+			case 204:
+				break;
+
+			case 400: 
+				message = 'Запрос не может быть обработан: ';
+				break;
+
+			case 401: 
+				message = 'Ошибка авторизации: ';
+				break;
+
+			case 403: 
+				message = 'Ошибка доступа: ';
+				break;	
+
+			case 404: 
+				message = 'Ресурс не найден: ';
+				break;	
+
+			case 500: 
+				message = 'Internal server error: ';
+				break;	
+
+			default:
+				message = 'Internal server error: ';  //???
+				break;	
+		};
+
+		message = (message || '') + (response.data || response.message || '');
 
 		this.setState({
 			messageIsShown: true,
-			message: response.data
+			message: message,
 		});
 	}
 

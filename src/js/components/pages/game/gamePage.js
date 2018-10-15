@@ -55,6 +55,10 @@ export default class GamePage extends Component {
             messageLink: '/',
             messageLinkName: 'На главную',
             message: '',
+            lkLogin: '',
+            lkEmail: '',
+            lkIsEmailConfirmed: '',
+            lkRole: '',
             lkLogout: false,
         }
 
@@ -86,10 +90,10 @@ export default class GamePage extends Component {
             messageLink: this.defaultSettings.messageLink,
             messageLinkName: this.defaultSettings.messageLinkName,
             message: this.defaultSettings.message,
-            lkLogin: '',
-            lkEmail: '',
-            lkIsEmailConfirmed: '',
-            lkRole: '',
+            lkLogin: this.defaultSettings.lkLogin,
+            lkEmail: this.defaultSettings.lkEmail,
+            lkIsEmailConfirmed: this.defaultSettings.lkIsEmailConfirmed,
+            lkRole: this.defaultSettings.lkRole,
             lkLogout: this.defaultSettings.lkLogout,
         };
 
@@ -213,10 +217,11 @@ export default class GamePage extends Component {
             messageLink: this.defaultSettings.messageLink,
             messageLinkName: this.defaultSettings.messageLinkName,
             message: this.defaultSettings.message,
-            lkLogin: '',
-            lkEmail: '',
-            lkIsEmailConfirmed: '',
-            lkRole: '',
+            lkLogin: this.defaultSettings.lkLogin,
+            lkEmail: this.defaultSettings.lkEmail,
+            lkIsEmailConfirmed: this.defaultSettings.lkIsEmailConfirmed,
+            lkRole: this.defaultSettings.lkRole,
+            lkLogout: this.defaultSettings.lkLogout,   //??
         });
     }
 
@@ -240,10 +245,11 @@ export default class GamePage extends Component {
             message: this.defaultSettings.message,
 
             lkFormIsShown: this.defaultSettings.lkFormIsShown,
-            lkLogin: '',
-            lkEmail: '',
-            lkIsEmailConfirmed: '',
-            lkRole: '',
+            lkLogin: this.defaultSettings.lkLogin,
+            lkEmail: this.defaultSettings.lkEmail,
+            lkIsEmailConfirmed: this.defaultSettings.lkIsEmailConfirmed,
+            lkRole: this.defaultSettings.lkRole,
+            lkLogout: this.defaultSettings.lkLogout,
         });
     }
 
@@ -420,7 +426,7 @@ export default class GamePage extends Component {
         }
         
         //TODO!
-        this.switchLkLogout(false);
+        //this.switchLkLogout(false);
     }
 
     render() {

@@ -96,7 +96,7 @@ export default class Toolbar extends Component {
 		let elementIsDisabled;
 		let itemClass;
 		let switchStartBtnText;
-		let switchStartBtnClass;
+		let switchStartBtnClass;  //TODO!
 
 		if (!this.props.startOfGame && !this.props.endOfGame) {
 			elementIsDisabled = false;
