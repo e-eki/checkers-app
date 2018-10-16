@@ -85,9 +85,10 @@ export function getActualAccessToken() {
 				refreshToken: refreshToken,
 			})
 		})
-		.then((tokensData) => {
+		.then((response) => {
 
-			if (tokensData === true) return accessToken;
+			if (response === true) return accessToken;
+			const tokensData = response.data;
 
 			_setAuthData(tokensData);
 			return tokensData.accessToken;

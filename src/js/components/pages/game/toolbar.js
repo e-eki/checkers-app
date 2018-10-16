@@ -9,6 +9,11 @@ export default class Toolbar extends Component {
 
 	constructor(props){
 		super(props);
+
+		this.state = {
+
+			userLoggedIn: false,
+		}
 		   
 		this.switchStartHandle = this.switchStartHandle.bind(this);
 		this.changeData = this.changeData.bind(this);
@@ -61,6 +66,8 @@ export default class Toolbar extends Component {
 	
 	getAuthContent() {
 
+		let authContent;
+
 		const loginContent = (
 			<div>
 				<Link to="/login">
@@ -85,7 +92,14 @@ export default class Toolbar extends Component {
 
 		// если не просрочен аксесс токен и есть рефреш токен (для последующего рефреша токенов),
 		// то показываем лк (если будет нужен рефреш, то он вызывается в обработчике кнопки)
-		let authContent = (!authActions.isAccessTokenExpired() && authActions.getRefreshToken()) ? lkContent : loginContent;  
+		if (!authActions.isAccessTokenExpired() && authActions.getRefreshToken()) {
+			authContent = lkContent;
+			this.state.userLoggedIn = true;
+		} 
+		else {
+			authContent = loginContent;
+			this.state.userLoggedIn = false;
+		}
 		
 		return authContent;
 	}
@@ -93,25 +107,71 @@ export default class Toolbar extends Component {
 	render() {
 		console.log('render toolbar');
 
-		let elementIsDisabled;
-		let itemClass;
-		let switchStartBtnText;
-		let switchStartBtnClass;  //TODO!
+		let authContent = this.getAuthContent();
 
-		if (!this.props.startOfGame && !this.props.endOfGame) {
-			elementIsDisabled = false;
-			itemClass = 'bar_enabled-item';
-			switchStartBtnText = 'Начать игру';
-			switchStartBtnClass = 'button_start';
+		let itemIsDisabled;
+		let itemClass;
+		let startBtnText;
+		let startBtnClass;  //TODO!
+
+		let startBtnIsDisabled;
+		let startBtnTitle;
+
+		/*if (this.state.userLoggedIn) {
+			startBtnIsDisabled = false;
+			startBtnTitle = 'Начать игру';
+			startBtnClass = 'bar_enabled-item';
 		}
 		else {
-			elementIsDisabled = true;
-			itemClass = 'bar_disabled-item';
-			switchStartBtnText = 'Завершить игру';
-			switchStartBtnClass = 'button_finish';
-		}
+			startBtnIsDisabled = true;
+			startBtnTitle = 'Чтобы начать игру, вам надо авторизоваться на сайте';
+			startBtnClass = 'button_disabled bar_help-item';
+		};
 
-		let authContent = this.getAuthContent();
+
+		if (!this.props.startOfGame && !this.props.endOfGame) {
+			itemIsDisabled = false;
+			itemClass = 'bar_enabled-item';
+			startBtnText = 'Начать игру';
+			startBtnClass += ' button_start';
+		}
+		else {
+			itemIsDisabled = true;
+			itemClass = 'bar_disabled-item';
+			startBtnText = 'Завершить игру';
+			startBtnClass += ' button_finish';
+		}*/
+
+		if (!this.state.userLoggedIn) {
+
+			startBtnIsDisabled = true;
+			startBtnTitle = 'Чтобы начать игру, вам надо авторизоваться на сайте';
+			startBtnClass = 'button_disabled bar_help-item';
+			startBtnText = 'Начать игру';
+		}
+		else {
+
+			startBtnIsDisabled = false;
+			startBtnClass = 'bar_enabled-item';
+
+			if (!this.props.startOfGame && !this.props.endOfGame) {
+				itemIsDisabled = false;
+				itemClass = 'bar_enabled-item';
+				startBtnText = 'Начать игру';
+				startBtnClass += ' button_start';
+				startBtnTitle = 'Начать игру';
+			}
+			else {
+				itemIsDisabled = true;
+				itemClass = 'bar_disabled-item';
+				startBtnText = 'Завершить игру';
+				startBtnClass += ' button_finish';
+				startBtnTitle = 'Завершить игру';
+			}
+		}
+		
+
+
 
 		return (
 			<div className = "bar bar_tools">
@@ -124,7 +184,7 @@ export default class Toolbar extends Component {
 				</div>
 				<div>
 					Выберите цвет ваших фигур: 
-					<select name="userColor" className = {itemClass} disabled = {elementIsDisabled} onChange = {this.changeData} value = {this.props.userColor}>
+					<select name="userColor" className = {itemClass} disabled = {itemIsDisabled} onChange = {this.changeData} value = {this.props.userColor}>
 						<option value="white">белые</option>
 						<option value="black">черные</option>
 					</select>
@@ -139,14 +199,14 @@ export default class Toolbar extends Component {
 						step = "2" 
 						value = {this.props.boardSize} 
 						className = {itemClass}
-						disabled = {elementIsDisabled} 
+						disabled = {itemIsDisabled} 
 						onChange = {this.changeData}
 					/>
 					
 				</div>
 				<div>
 					Выберите уровень сложности: 
-					<select name="level" className = {itemClass} disabled = {elementIsDisabled} onChange = {this.changeData} value = {this.props.level}>
+					<select name="level" className = {itemClass} disabled = {itemIsDisabled} onChange = {this.changeData} value = {this.props.level}>
 						<option value="easy">легкий</option>
 						<option value="medium">средний</option>
 						<option value="hard">сложный</option>
@@ -155,16 +215,25 @@ export default class Toolbar extends Component {
 				</div>
 				<div>
 					Выберите режим игры: 
-					<select name="mode" className = {itemClass} disabled = {elementIsDisabled} onChange = {this.changeData} value = {this.props.mode}>>
+					<select name="mode" className = {itemClass} disabled = {itemIsDisabled} onChange = {this.changeData} value = {this.props.mode}>>
 						<option value="classic">классический</option>
 						<option value="dam">играть только дамками</option>
 					</select>
 				</div>
-				<button name = "resetBtn" className = {'bar__button button ' + itemClass} disabled = {elementIsDisabled} onClick = {this.resetHandle}>
-					Настройки по умолчанию
+				<button 
+					name = "resetBtn" 
+					className = {'bar__button button ' + itemClass} 
+					disabled = {itemIsDisabled} 
+					onClick = {this.resetHandle}>
+						Настройки по умолчанию
 				</button>
-				<button name = "switchStartBtn" className = {'bar__button button bar_enabled-item ' + switchStartBtnClass} onClick = {this.switchStartHandle}>
-					{switchStartBtnText}
+				<button 
+					name = "startBtn" 
+					className = {'bar__button button ' + startBtnClass} 
+					title = {startBtnTitle}
+					disabled = {startBtnIsDisabled} 
+					onClick = {this.switchStartHandle}>
+						{startBtnText}
 				</button>
 			
 			</div>

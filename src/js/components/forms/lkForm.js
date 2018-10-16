@@ -24,9 +24,9 @@ export default class LkForm extends Component {
 				return authActions.logoutAction();
 			})
 			.then((response) => {
-
-				this.props.switchLkLogout(true);
+				 // TODO!! сделать, чтобы сначала выводилось сообщение о выходе, а потом табло с завершением игры
 				this.props.showMessage('Выход из аккаунта осуществлен успешно.');
+				this.props.switchLkLogout(true); 
 			})
 			.catch((error) => {
 

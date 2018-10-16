@@ -91,7 +91,9 @@ export default class Infobar extends Component {
 		clearInterval(this.timer);
 	}
 
+	// TODO!! - возвращать время в gamePage для отображения на табло (и отправки на сервер для записи в данные об игре)
     render() {
+
 		console.log('render infobar');
 
 		let whoTurns = (this.props.startOfGame || this.props.endOfGame) ? (this.props.isUserTurn ? 'ваш' : 'противника') : '-';

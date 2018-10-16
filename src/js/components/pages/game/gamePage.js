@@ -221,35 +221,7 @@ export default class GamePage extends Component {
             lkEmail: this.defaultSettings.lkEmail,
             lkIsEmailConfirmed: this.defaultSettings.lkIsEmailConfirmed,
             lkRole: this.defaultSettings.lkRole,
-            lkLogout: this.defaultSettings.lkLogout,   //??
-        });
-    }
-
-    switchLkLogout(logout) {
-        debugger;
-
-        this.state.lkLogout = logout;
-    }
-
-    hideMessageForm(event) {
-        debugger;
-
-        this.page.removeEventListener('click', this.hideMessageForm);
-        this.page.removeEventListener('keydown', this.hideMessageForm);
-
-        this.setState({
-
-            messageIsShown: this.defaultSettings.messageIsShown,
-            messageLink: this.defaultSettings.messageLink,
-            messageLinkName: this.defaultSettings.messageLinkName,
-            message: this.defaultSettings.message,
-
-            lkFormIsShown: this.defaultSettings.lkFormIsShown,
-            lkLogin: this.defaultSettings.lkLogin,
-            lkEmail: this.defaultSettings.lkEmail,
-            lkIsEmailConfirmed: this.defaultSettings.lkIsEmailConfirmed,
-            lkRole: this.defaultSettings.lkRole,
-            lkLogout: this.defaultSettings.lkLogout,
+            lkLogout: this.defaultSettings.lkLogout,   //TODO: костыль?
         });
     }
 
@@ -291,9 +263,8 @@ export default class GamePage extends Component {
 
     // обработчик хода
     turnIsDone(currentPosition, newPosition, actor, eatenActor, turnedToDam, whiteActorsCount, blackActorsCount) {
-        console.log('display turnIsDone', currentPosition, newPosition, actor, eatenActor, turnedToDam);
 
-        // из Board на каждом ходе передается количество черных и белых фигур в данный момент на доске
+        // из Board на каждом ходе передается количество черных и белых фигур в данный момент на доске ??для синхронизации??
         this.state.whiteActorsCount = whiteActorsCount;
         this.state.blackActorsCount = blackActorsCount;
         this.state.movesCount++;
@@ -397,6 +368,36 @@ export default class GamePage extends Component {
 			})
 	}
 
+    switchLkLogout(logout) {
+        debugger;
+
+        this.state.lkLogout = logout;
+
+        if (this.state.startOfGame) this.switchStartGame();
+    }
+
+    // когда скрывается сообщение, скрывается и лк (если был показан)
+    hideMessageForm(event) {
+        debugger;
+
+        this.page.removeEventListener('click', this.hideMessageForm);
+        this.page.removeEventListener('keydown', this.hideMessageForm);
+
+        this.setState({
+
+            messageIsShown: this.defaultSettings.messageIsShown,
+            messageLink: this.defaultSettings.messageLink,
+            messageLinkName: this.defaultSettings.messageLinkName,
+            message: this.defaultSettings.message,
+
+            lkFormIsShown: this.defaultSettings.lkFormIsShown,
+            lkLogin: this.defaultSettings.lkLogin,
+            lkEmail: this.defaultSettings.lkEmail,
+            lkIsEmailConfirmed: this.defaultSettings.lkIsEmailConfirmed,
+            lkRole: this.defaultSettings.lkRole,
+            lkLogout: this.defaultSettings.lkLogout,
+        });
+    }
 
     componentWillMount() {
         this.drawMarks();
@@ -506,7 +507,6 @@ export default class GamePage extends Component {
                
                 <Tablo 
                     className = {tabloClass}
-                    isUserTurn = {this.state.isUserTurn}
                     movesCount = {this.state.movesCount}
                     whiteActorsCount = {this.state.whiteActorsCount}
                     blackActorsCount = {this.state.blackActorsCount}
