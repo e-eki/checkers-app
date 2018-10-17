@@ -1,12 +1,11 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 const Promise = require('bluebird');
 
-import apiConst from '../apiConst';
 import MessageForm from './messageForm';
 import * as authActions from '../actions/authActions';
+import * as utilsActions from '../actions/utilsActions';
 
 // страница входа на сайт
 export default class AuthUtilsForm extends Component {
@@ -170,20 +169,14 @@ export default class AuthUtilsForm extends Component {
 
 		return authActions.registrationAction(this.state.emailData, this.state.loginData, this.state.passwordData)
 			.then((response) => {
-				//response.data
-				//response.status
-				//response.statusText
 
-				this.state.messageLink = this.defaultData.messageLink;
-				this.state.messageLinkName = this.defaultData.messageLinkName;
+				//this.state.messageLink = this.defaultData.messageLink;
+				//this.state.messageLinkName = this.defaultData.messageLinkName;
 				
 				response.data = 'Вы успешно зарегистрировались на сайте. Нажмите ссылку для перехода.';
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-				//error.response.data
-				//error.response.status
-				//error.response.statusText
 
 				this.responseHandle(error);
 			})
@@ -216,23 +209,16 @@ export default class AuthUtilsForm extends Component {
 
 		if (!dataIsCorrect) return;
 		
-		return axios.post(`${apiConst.changePasswordApi}`, {
-			email: this.state.emailData,
-		})
+		return authActions.recoveryPasswordAction(this.state.emailData)
 			.then((response) => {
-				//response.data
-				//response.status
-				//response.statusText
-				this.state.messageLink = this.defaultData.messageLink;
-				this.state.messageLinkName = this.defaultData.messageLinkName;
+				
+				//this.state.messageLink = this.defaultData.messageLink;
+				//this.state.messageLinkName = this.defaultData.messageLinkName;
 				
 				response.data = 'Инструкции по восстановлению пароля отправлены на указанный адрес электронной почты.';
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-				//error.response.data
-				//error.response.status
-				//error.response.statusText
 
 				this.responseHandle(error);
 			})
@@ -245,15 +231,11 @@ export default class AuthUtilsForm extends Component {
 
 		if (!dataIsCorrect) return;
 		
-		return axios.post(`${apiConst.emailConfirmApi}`, {
-			email: this.state.emailData,
-		})
+		return authActions.emailConfirmAction(this.state.emailData)
 			.then((response) => {
-				//response.data
-				//response.status
-				//response.statusText
-				this.state.messageLink = this.defaultData.messageLink;
-				this.state.messageLinkName = this.defaultData.messageLinkName;
+
+				//this.state.messageLink = this.defaultData.messageLink;
+				//this.state.messageLinkName = this.defaultData.messageLinkName;
 
 				if (response.data == 'Confirm mail sent again') {
 
@@ -263,9 +245,6 @@ export default class AuthUtilsForm extends Component {
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-				//error.response.data
-				//error.response.status
-				//error.response.statusText
 
 				this.responseHandle(error);
 			})
@@ -294,33 +273,18 @@ export default class AuthUtilsForm extends Component {
 				}
 			})
 			.then((accessToken) => {
-				//TODO: проверить редирект!!!
 
-				const params = {
-					password: this.state.passwordData,
-				};
-		
-				const options = {
-					method: 'PUT',
-					headers: { 'Authorization': `Token ${accessToken}` },
-					data: params,
-					url: `${apiConst.changePasswordApi}`
-				};
-				
-				return axios(options);
+				return authActions.changePasswordAction(accessToken, this.state.passwordData)
 			})
 			.then((response) => {
 
-				this.state.messageLink = this.defaultData.messageLink;
-				this.state.messageLinkName = this.defaultData.messageLinkName;
+				//this.state.messageLink = this.defaultData.messageLink;
+				//this.state.messageLinkName = this.defaultData.messageLinkName;
 
 				response.data = 'Пароль успешно изменен.';			
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-				//error.response.data
-				//error.response.status
-				//error.response.statusText
 
 				this.responseHandle(error);
 			})
@@ -330,41 +294,8 @@ export default class AuthUtilsForm extends Component {
 		debugger;
 
 		if (response.response) response = response.response;  // если это ошибка
-		let message;
 
-		switch (response.status) {
-
-			case 200:
-			case 201:
-			case 204:
-				break;
-
-			case 400: 
-				message = 'Запрос не может быть обработан: ';
-				break;
-
-			case 401: 
-				message = 'Ошибка авторизации: ';
-				break;
-
-			case 403: 
-				message = 'Ошибка доступа: ';
-				break;	
-
-			case 404: 
-				message = 'Ресурс не найден: ';
-				break;	
-
-			case 500: 
-				message = 'Internal server error: ';
-				break;	
-
-			default:
-				message = 'Internal server error: ';  //???
-				break;	
-		};
-
-		message = (message || '') + (response.data || response.message || '');
+		let message = utilsActions.getResponseMessage(response);
 
 		this.setState({
 			messageIsShown: true,
@@ -381,6 +312,9 @@ export default class AuthUtilsForm extends Component {
 		this.setState({
 			messageIsShown: false,
 			message: '',
+			messageLink: this.defaultData.messageLink,
+			messageLinkName: this.defaultData.messageLinkName,
+
 			emailData: this.defaultData.emailData,
 			loginData: this.defaultData.loginData,
 			passwordData: this.defaultData.passwordData,

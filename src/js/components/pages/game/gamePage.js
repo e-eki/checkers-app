@@ -1,6 +1,5 @@
 
 import React, { Component } from 'react';
-import axios from 'axios';
 const Promise = require('bluebird');
 
 import Header from './header';
@@ -12,7 +11,8 @@ import Tablo from './tablo';
 import LkForm from '../../forms/lkForm';
 import MessageForm from '../../forms/messageForm';
 import * as authActions from '../../actions/authActions';
-import apiConst from '../../apiConst';
+import * as utilsActions from '../../actions/utilsActions';
+import * as gameActions from '../../actions/gameActions';
 
 // главная страница - страница игры
 export default class GamePage extends Component {
@@ -100,12 +100,13 @@ export default class GamePage extends Component {
         this.drawMarks = this.drawMarks.bind(this);
         this.switchStartGame = this.switchStartGame.bind(this);
         this.updateData = this.updateData.bind(this);
-        this.resetDisplay = this.resetDisplay.bind(this);
+        this.resetAll = this.resetAll.bind(this);
         this.resetDefaultSettings = this.resetDefaultSettings.bind(this);
         this.createTurnDefinition = this.createTurnDefinition.bind(this);
         this.turnIsDone = this.turnIsDone.bind(this);
-        this.hideMessageForm = this.hideMessageForm.bind(this);
-        this.showMessage = this.showMessage.bind(this);
+        this.resetPage = this.resetPage.bind(this);
+        //this.showMessage = this.showMessage.bind(this);
+        this.responseHandle = this.responseHandle.bind(this);
         this.clickLkButton = this.clickLkButton.bind(this);
         this.showLkForm = this.showLkForm.bind(this);
         this.switchLkLogout = this.switchLkLogout.bind(this);
@@ -145,7 +146,6 @@ export default class GamePage extends Component {
 
     // переключение начала/завершения игры - вызывается кнопкой в тулбаре или когда число белых или черных фигур = 0
     switchStartGame(event) {
-        console.log('switchStartGame');
 
         // начать игру
         if (this.state.startOfGame == false) {
@@ -154,6 +154,7 @@ export default class GamePage extends Component {
                 endOfGame: false,
                 isUserTurn: (this.state.userColor == 'white') ? true : false,
             });
+
         }
         //завершить игру
         else {
@@ -175,6 +176,35 @@ export default class GamePage extends Component {
                 }   
             }
         } 
+
+        debugger;
+		return Promise.resolve(true)
+			.then(() => {
+
+				return authActions.getActualAccessToken();
+			})
+			.then((accessToken) => {
+        
+                if (this.state.startOfGame === true) {
+                    return gameActions.startGameAction(accessToken, this.state.userColor, this.state.boardSize, this.state.level, this.state.mode);
+                }
+                else {
+                    return gameActions.finishGameAction(accessToken, this.state.movesCount, this.state.totalOfGame);
+                }
+            })
+            // если ответ без ошибки - ничего с ним не делаем
+			/*.then((response) => {
+
+                console.log(response);
+			})*/
+			.catch((error) => {
+               
+                this.state.messageLink = '/login';
+                this.state.messageLinkName = 'Войти на сайт';
+                //error.response.message = 'Вы не авторизованы для данного действия';
+                
+                this.responseHandle(error);
+			})
     }
 
     // вернуть все визуальные настройки игры по умолчанию (кнопкой из тулбара)
@@ -192,11 +222,10 @@ export default class GamePage extends Component {
 
     // при завершении игры показывается табло с результатами,
     // по клику или нажатию любой клавиши табло исчезает и происходит reset
-    resetDisplay(event) {
-        console.log('resetDisplay', event);
+    resetAll(event) {
 
-        this.page.removeEventListener('click', this.resetDisplay);
-        this.page.removeEventListener('keydown', this.resetDisplay);
+        this.page.removeEventListener('click', this.resetAll);
+        this.page.removeEventListener('keydown', this.resetAll);
 
         // сброс всех данных игры
         this.setState({  
@@ -300,7 +329,7 @@ export default class GamePage extends Component {
         else {
             console.log('AI turn');
             this.state.currentActionDefinition = this.createTurnDefinition(this.state.currentAITurn.currentPosition, this.state.currentAITurn.newPosition, this.state.currentAITurn.actor, this.state.currentAITurn.eatenActor, this.state.currentAITurn.turnedToDam);
-            this.state.currentAITurn = this.defaultSettings.currentAITurn;  //TODO???
+            this.state.currentAITurn = this.defaultSettings.currentAITurn;  
         }
        
         this.state.isUserTurn = !this.state.isUserTurn;
@@ -308,15 +337,40 @@ export default class GamePage extends Component {
         this.setState({});
     }
 
-    showMessage(message, messageLink = this.defaultSettings.messageLink, messageLinkName = this.defaultSettings.messageLinkName) {
+    clickLkButton() {
+		debugger;
 
-        this.setState({
+		return Promise.resolve(true)
+			.then(() => {
 
-            message: message,
-            messageIsShown: true,
-            messageLink: messageLink,
-            messageLinkName: messageLinkName,
-        })
+				return authActions.getActualAccessToken();
+			})
+			.then((accessToken) => {
+		
+				return authActions.getLkDataAction(accessToken);
+			})
+			.then((response) => {
+
+                if (!response.data) throw new Error('no lk data for user'); 
+
+				this.showLkForm(response.data);
+			})
+			.catch((error) => {
+                // TODO: почему ссылка на страницу входа не срабатывает? аналогичная ссылка на главную со страницы входа работает.
+                this.state.messageLink = '/login';
+                this.state.messageLinkName = 'Войти на сайт';
+
+                // TODO
+                if (error.response) {
+                    error.response.message = 'Вы не авторизованы для данного действия';
+                }
+                else {
+                    error.message = 'Вы не авторизованы для данного действия';
+                }    
+                
+                this.responseHandle(error);
+				//this.showMessage('Вы не авторизованы для данного действия', '/login', 'Войти на сайт');  
+			})
     }
 
     /*data = {
@@ -337,35 +391,30 @@ export default class GamePage extends Component {
             lkRole: data.role,
         })
     }
+    
+    // TODO
+    /*showMessage(message, messageLink = this.defaultSettings.messageLink, messageLinkName = this.defaultSettings.messageLinkName) {
 
-    clickLkButton() {
+        this.setState({
+
+            message: message,
+            messageIsShown: true,
+            messageLink: messageLink,
+            messageLinkName: messageLinkName,
+        })
+    }*/
+
+    responseHandle(response) {
 		debugger;
 
-		return Promise.resolve(true)
-			.then(() => {
+        if (response.response) response = response.response;  // если это ошибка
 
-				return authActions.getActualAccessToken();
-			})
-			.then((accessToken) => {
-		
-				const options = {
-					method: 'GET',
-					headers: { 'Authorization': `Token ${accessToken}` },
-					url: `${apiConst.getLkDataApi}`
-				};
-				
-				return axios(options);
-			})
-			.then((response) => {
+		let message = utilsActions.getResponseMessage(response);
 
-                if (!response.data) throw new Error(''); 
-
-				this.showLkForm(response.data);
-			})
-			.catch((error) => {
-                // TODO: почему ссылка на страницу входа не срабатывает? аналогичная ссылка на главную со страницы входа работает.
-				this.showMessage('Вы не авторизованы для данного действия', '/login', 'Войти на сайт');  
-			})
+		this.setState({
+			messageIsShown: true,
+			message: message,
+		});
 	}
 
     switchLkLogout(logout) {
@@ -377,11 +426,11 @@ export default class GamePage extends Component {
     }
 
     // когда скрывается сообщение, скрывается и лк (если был показан)
-    hideMessageForm(event) {
+    resetPage(event) {
         debugger;
 
-        this.page.removeEventListener('click', this.hideMessageForm);
-        this.page.removeEventListener('keydown', this.hideMessageForm);
+        this.page.removeEventListener('click', this.resetPage);
+        this.page.removeEventListener('keydown', this.resetPage);
 
         this.setState({
 
@@ -415,15 +464,15 @@ export default class GamePage extends Component {
 
         // если игра завершена, то появляется табло, и по клику или нажатию любой клавиши табло пропадает и сбрасываются настройки
         if (!prevState.endOfGame && this.state.endOfGame) {
-            this.page.addEventListener('click', this.resetDisplay);
-            this.page.addEventListener('keydown', this.resetDisplay);
+            this.page.addEventListener('click', this.resetAll);
+            this.page.addEventListener('keydown', this.resetAll);
         }
         // если было показано сообщение об ошибке, по клику/нажатию сообщение пропадает, ничего не сбрасывается
         else if ((!prevState.messageIsShown && this.state.messageIsShown) ||
                 (!prevState.lkFormIsShown && this.state.lkFormIsShown)) {
 
-            this.page.addEventListener('click', this.hideMessageForm);
-            this.page.addEventListener('keydown', this.hideMessageForm);
+            this.page.addEventListener('click', this.resetPage);
+            this.page.addEventListener('keydown', this.resetPage);
         }
         
         //TODO!
@@ -520,7 +569,7 @@ export default class GamePage extends Component {
                     email = {this.state.lkEmail}
                     isEmailConfirmed = {this.state.lkIsEmailConfirmed}
                     role = {this.state.lkRole}
-                    showMessage = {this.showMessage}
+                    responseHandle = {this.responseHandle}
                     switchLkLogout = {this.switchLkLogout}
                 />
 

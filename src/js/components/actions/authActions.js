@@ -16,7 +16,7 @@ export function loginAction(email, password) {
 			_setAuthData(response.data);
 
 			delete response.data;
-			return(response);
+			return response;
 		})
 };
 
@@ -57,7 +57,7 @@ export function socialLoginAction(service) {
 			_setAuthData(response.data);
 
 			delete response.data;
-			return(response);
+			return response;
 		})
 };
 
@@ -117,8 +117,53 @@ export function logoutAction() {
 
 			_removeAuthData();
 
-			return true;
+			return response;
 		})
+};
+
+export function recoveryPasswordAction(email) {
+	debugger;
+
+	return axios.post(`${apiConst.changePasswordApi}`, {
+		email: email,
+	})
+};
+
+export function emailConfirmAction(email) {
+	debugger;
+
+	return axios.post(`${apiConst.emailConfirmApi}`, {
+		email: email,
+	})
+};
+
+export function changePasswordAction(accessToken, password) {
+	debugger;
+
+	const params = {
+		password: password,
+	};
+
+	const options = {
+		method: 'PUT',
+		headers: { 'Authorization': `Token ${accessToken}` },
+		data: params,
+		url: `${apiConst.changePasswordApi}`
+	};
+	
+	return axios(options);
+};
+
+export function getLkDataAction(accessToken) {
+	debugger;
+
+	const options = {
+		method: 'GET',
+		headers: { 'Authorization': `Token ${accessToken}` },
+		url: `${apiConst.getLkDataApi}`
+	};
+	
+	return axios(options);
 };
 
 

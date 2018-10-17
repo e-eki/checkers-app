@@ -17,4 +17,5 @@ module.exports = {
 	registration: `${api_url}/registration/`,
 	refreshTokens: `${api_url}/refreshtokens/`,
 	logout: `${api_url}/logout/`,
+	gameApi: `${api_url}/game/`,
 }

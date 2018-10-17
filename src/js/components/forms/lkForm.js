@@ -25,12 +25,15 @@ export default class LkForm extends Component {
 			})
 			.then((response) => {
 				 // TODO!! сделать, чтобы сначала выводилось сообщение о выходе, а потом табло с завершением игры
-				this.props.showMessage('Выход из аккаунта осуществлен успешно.');
-				this.props.switchLkLogout(true); 
+				 this.props.switchLkLogout(true); 
+
+				response.message = 'Выход из аккаунта осуществлен успешно.';
+				this.props.responseHandle(response);
+				
 			})
 			.catch((error) => {
 
-				this.props.showMessage('Выход из аккаунта осуществлен неуспешно.');  //??
+				this.props.responseHandle(error);  
 			})
 	}
 
