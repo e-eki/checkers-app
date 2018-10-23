@@ -59,6 +59,7 @@ export default class GamePage extends Component {
             lkEmail: '',
             lkIsEmailConfirmed: '',
             lkRole: '',
+            lkGames: [],
             lkLogout: false,
         }
 
@@ -94,6 +95,7 @@ export default class GamePage extends Component {
             lkEmail: this.defaultSettings.lkEmail,
             lkIsEmailConfirmed: this.defaultSettings.lkIsEmailConfirmed,
             lkRole: this.defaultSettings.lkRole,
+            lkGames: this.defaultSettings.lkGames,
             lkLogout: this.defaultSettings.lkLogout,
         };
 
@@ -103,7 +105,7 @@ export default class GamePage extends Component {
         this.resetAll = this.resetAll.bind(this);
         this.resetDefaultSettings = this.resetDefaultSettings.bind(this);
         this.createTurnDefinition = this.createTurnDefinition.bind(this);
-        this.turnIsDone = this.turnIsDone.bind(this);
+        this.turn = this.turn.bind(this);
         this.resetPage = this.resetPage.bind(this);
         //this.showMessage = this.showMessage.bind(this);
         this.responseHandle = this.responseHandle.bind(this);
@@ -196,7 +198,12 @@ export default class GamePage extends Component {
 			/*.then((response) => {
 
                 console.log(response);
-			})*/
+            })*/
+            .then((response) => {
+
+                // TODO!
+                if (this.state.startOfGame == true && 
+            })
 			.catch((error) => {
                
                 this.state.messageLink = '/login';
@@ -250,6 +257,7 @@ export default class GamePage extends Component {
             lkEmail: this.defaultSettings.lkEmail,
             lkIsEmailConfirmed: this.defaultSettings.lkIsEmailConfirmed,
             lkRole: this.defaultSettings.lkRole,
+            lkGames: this.defaultSettings.lkGames,
             lkLogout: this.defaultSettings.lkLogout,   //TODO: костыль?
         });
     }
@@ -290,8 +298,58 @@ export default class GamePage extends Component {
         return definition;
     }
 
+    // обработчик хода юзера
+    userTurn(currentPosition, newPosition, actor, eatenActor, turnedToDam, whiteActorsCount, blackActorsCount) {
+
+        debugger;
+
+        // из Board на каждом ходе передается количество черных и белых фигур в данный момент на доске ??для синхронизации??
+        this.state.whiteActorsCount = whiteActorsCount;
+        this.state.blackActorsCount = blackActorsCount;
+        this.state.movesCount++;
+
+        // если количество черных или белых фигур = 0, то завершение игры.
+        if (whiteActorsCount == 0 || blackActorsCount == 0) {
+            this.switchStartGame();
+            return;
+        }
+
+        if (this.state.isUserTurn) {
+            console.log('user turn');
+
+            this.state.currentUserTurn = {
+                currentPosition: currentPosition,
+                newPosition: newPosition,
+            };
+    
+            this.state.currentActionDefinition = this.createTurnDefinition(currentPosition, newPosition, actor, eatenActor, turnedToDam);
+    
+            //TODO!!!
+            this.state.currentAITurn = {
+                currentPosition:
+                    {positionX: 1, positionY: 2},
+                newPosition:
+                    {positionX: 2, positionY: 3},
+                actor: 
+                    {color: 'grid__actor_black', type: 'grid__actor_checker'},
+                eatenActor: null,
+                turnedToDam: false,
+            }
+        }
+        else {
+            console.log('AI turn');
+            this.state.currentActionDefinition = this.createTurnDefinition(this.state.currentAITurn.currentPosition, this.state.currentAITurn.newPosition, this.state.currentAITurn.actor, this.state.currentAITurn.eatenActor, this.state.currentAITurn.turnedToDam);
+            this.state.currentAITurn = this.defaultSettings.currentAITurn;  
+        }
+       
+        this.state.isUserTurn = !this.state.isUserTurn;
+
+        this.setState({});
+    }
+
     // обработчик хода
-    turnIsDone(currentPosition, newPosition, actor, eatenActor, turnedToDam, whiteActorsCount, blackActorsCount) {
+    turn(currentPosition, newPosition, actor, eatenActor, turnedToDam, whiteActorsCount, blackActorsCount) {
+        debugger;
 
         // из Board на каждом ходе передается количество черных и белых фигур в данный момент на доске ??для синхронизации??
         this.state.whiteActorsCount = whiteActorsCount;
@@ -350,6 +408,7 @@ export default class GamePage extends Component {
 				return authActions.getLkDataAction(accessToken);
 			})
 			.then((response) => {
+                debugger;
 
                 if (!response.data) throw new Error('no lk data for user'); 
 
@@ -359,6 +418,7 @@ export default class GamePage extends Component {
                 // TODO: почему ссылка на страницу входа не срабатывает? аналогичная ссылка на главную со страницы входа работает.
                 this.state.messageLink = '/login';
                 this.state.messageLinkName = 'Войти на сайт';
+                this.state.lkLogout = true;
 
                 // TODO
                 if (error.response) {
@@ -389,6 +449,7 @@ export default class GamePage extends Component {
             lkEmail: data.email,
             lkIsEmailConfirmed: data.isEmailConfirmed,
             lkRole: data.role,
+            lkGames: data.games,
         })
     }
     
@@ -422,6 +483,7 @@ export default class GamePage extends Component {
 
         this.state.lkLogout = logout;
 
+        //TODO: сделать предупреждение о завершении игры или проверку на текущую игру
         if (this.state.startOfGame) this.switchStartGame();
     }
 
@@ -444,6 +506,7 @@ export default class GamePage extends Component {
             lkEmail: this.defaultSettings.lkEmail,
             lkIsEmailConfirmed: this.defaultSettings.lkIsEmailConfirmed,
             lkRole: this.defaultSettings.lkRole,
+            lkGames: this.defaultSettings.lkGames,
             lkLogout: this.defaultSettings.lkLogout,
         });
     }
@@ -476,7 +539,9 @@ export default class GamePage extends Component {
         }
         
         //TODO!
-        //this.switchLkLogout(false);
+        if (this.state.lkLogout == true && this.prevState.lkLogout == false) {
+            this.state.lkLogout = this.defaultSettings.lkLogout;
+        }
     }
 
     render() {
@@ -532,7 +597,7 @@ export default class GamePage extends Component {
                                 endOfGame = {this.state.endOfGame}
                                 isUserTurn = {this.state.isUserTurn} 
                                 currentAITurn = {this.state.currentAITurn}
-                                turnIsDone = {this.turnIsDone} 
+                                turn = {this.turn} 
                                 boardSize = {this.state.boardSize} 
                                 userColor = {this.state.userColor} 
                                 mode = {this.state.mode}
@@ -569,8 +634,10 @@ export default class GamePage extends Component {
                     email = {this.state.lkEmail}
                     isEmailConfirmed = {this.state.lkIsEmailConfirmed}
                     role = {this.state.lkRole}
+                    games = {this.state.lkGames}
                     responseHandle = {this.responseHandle}
                     switchLkLogout = {this.switchLkLogout}
+                    lkLogout = {this.state.lkLogout}
                 />
 
                 <MessageForm 

@@ -565,7 +565,7 @@ export default class Grid extends Component {
 
 		// сообщить Display о том, что ход был отрисован
 		// вызываем соответствующий метод в Display (перерисовка вызывается оттуда)
-		this.props.turnIsDone(currentPosition, newPosition, actor, eatenActor, turnedToDam, this.whiteActorsCount, this.blackActorsCount);	
+		this.props.turn(currentPosition, newPosition, actor, eatenActor, turnedToDam, this.whiteActorsCount, this.blackActorsCount);	
 	
 	}
 
