@@ -17,26 +17,11 @@ export default class LkForm extends Component {
 		this.getGamesInfo = this.getGamesInfo.bind(this);
 	}
 
-	clickLogoutButton() {
+	//TODO: сделать предупреждение о завершении игры
+	clickLogoutButton(event) {
 		debugger;
 
-		return Promise.resolve(true)
-			.then(() => {
-
-				return authActions.logoutAction();
-			})
-			.then((response) => {
-				 // TODO!! сделать, чтобы сначала выводилось сообщение о выходе, а потом табло с завершением игры
-				 this.props.switchLkLogout(true); 
-
-				response.message = 'Выход из аккаунта осуществлен успешно.';
-				this.props.responseHandle(response);
-				
-			})
-			.catch((error) => {
-
-				this.props.responseHandle(error);  
-			})
+		this.props.clickLogoutButton(event);
 	}
 
 	/*
@@ -82,7 +67,7 @@ export default class LkForm extends Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
 		
-		return (nextProps.className !== this.props.className || nextProps.message !== '');
+		return (nextProps.className !== this.props.className /*|| nextProps.lkLogout !== this.props.lkLogout*/);
 	}
 	
 	render() {
@@ -92,7 +77,7 @@ export default class LkForm extends Component {
 		const roleInfo = (this.props.role == 'user') ? 'пользователь' : '';
 		const emailInfo = 'Контактный email: ' + this.props.email + ' (' + (this.props.isEmailConfirmed ? '' : 'не ') + 'подтвержден)';
 		
-		const gamesInfo = this.getGamesInfo();
+		const gamesInfo = this.getGamesInfo();  //??TODO
 		//const gamesInfo = this.props.games ? this.props.games : this.defaultGamesInfo;
 
 		const emailConfirmLink = this.props.isEmailConfirmed ? '' : 

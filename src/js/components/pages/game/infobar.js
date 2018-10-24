@@ -28,7 +28,7 @@ export default class Infobar extends Component {
 	tick() {
 
 		const currentTime = new Date().getTime();
-		const gameTime = currentTime - startTime;
+		const gameTime = currentTime - this.startTime;
 
 		const minute = 1000 * 60;
 		const hour = minute * 60;

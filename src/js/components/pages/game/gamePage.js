@@ -48,7 +48,7 @@ export default class GamePage extends Component {
             movesCount: 0,      // количество ходов за игру - нужно для вывода в инфобаре
             whiteActorsCount: 0,     // количество белых фигур на доске - нужно для вывода в инфобаре
             blackActorsCount: 0,     // количество черных фигур на доске - нужно для вывода в инфобаре
-            totalOfGame: 'standoff',   // результат игры - по умолчанию ничья
+            totalOfGame: 'ничья',   // результат игры - по умолчанию ничья
 
             messageIsShown: false,     // показывать сообщение об ошибке
             lkFormIsShown: false,     // показывать лк
@@ -78,7 +78,7 @@ export default class GamePage extends Component {
             startOfGame: this.defaultSettings.startOfGame,
             endOfGame: this.defaultSettings.endOfGame,
             isUserTurn: this.defaultSettings.isUserTurn,
-            currentUserTurn: this.defaultSettings.currentUserTurn,
+            currentUserTurn: this.defaultSettings.currentUserTurn,  //??
             currentAITurn: this.defaultSettings.currentAITurn,
 
             movesCount: this.defaultSettings.movesCount,
@@ -111,7 +111,7 @@ export default class GamePage extends Component {
         this.responseHandle = this.responseHandle.bind(this);
         this.clickLkButton = this.clickLkButton.bind(this);
         this.showLkForm = this.showLkForm.bind(this);
-        this.switchLkLogout = this.switchLkLogout.bind(this);
+        this.clickLogoutButton = this.clickLogoutButton.bind(this);
     }
 
     // отрисовка разметки шахматной доски
@@ -146,11 +146,11 @@ export default class GamePage extends Component {
         this.setState({});
     }
 
-    // переключение начала/завершения игры - вызывается кнопкой в тулбаре или когда число белых или черных фигур = 0
+    // переключение начала/завершения игры - вызывается кнопкой в тулбаре/лк логаутом или когда число белых или черных фигур = 0
     switchStartGame(event) {
 
         // начать игру
-        if (this.state.startOfGame == false) {
+        /*if (this.state.startOfGame == false) {
             this.setState({
                 startOfGame: true,
                 endOfGame: false,
@@ -177,7 +177,7 @@ export default class GamePage extends Component {
                     this.state.totalOfGame = 'user';
                 }   
             }
-        } 
+        } */
 
         debugger;
 		return Promise.resolve(true)
@@ -186,23 +186,70 @@ export default class GamePage extends Component {
 				return authActions.getActualAccessToken();
 			})
 			.then((accessToken) => {
+
+                //TODO!
+                this.state.isUserTurn = (this.state.userColor == 'white') ? true : false;
+
+                let tasks = [];
         
-                if (this.state.startOfGame === true) {
-                    return gameActions.startGameAction(accessToken, this.state.userColor, this.state.boardSize, this.state.level, this.state.mode);
+                // начать игру
+                if (this.state.startOfGame === false) {
+
+                    tasks.push(gameActions.startGameAction(accessToken, this.state.userColor, this.state.boardSize, this.state.level, this.state.mode));
+
+                    if (!this.state.isUserTurn) tasks.push(gameActions.getAIturn(accessToken));
                 }
+                // завершить игру
                 else {
-                    return gameActions.finishGameAction(accessToken, this.state.movesCount, this.state.totalOfGame);
+
+                    // по завершении игры подводим итог - кто выиграл
+                    // если передано событие event, то метод был вызван кнопкой в тулбаре, и значит, юзер сам завершил игру - ничья
+                    if (!event) {
+                        // если на доске не осталось фигур цвета юзера, то победил ИИ
+                        if ((this.state.userColor == 'white' && this.state.whiteActorsCount == 0) ||
+                            (this.state.userColor == 'black' && this.state.blackActorsCount == 0)) {
+                                this.state.totalOfGame = 'AI';
+                            }
+                        else {
+                            this.state.totalOfGame = 'user';
+                        }   
+                    }
+
+                    tasks.push(gameActions.finishGameAction(accessToken, this.state.movesCount, this.state.totalOfGame));
                 }
+
+                return Promise.all(tasks);
             })
-            // если ответ без ошибки - ничего с ним не делаем
-			/*.then((response) => {
+            .spread((switchGameResponse, AIturnResponse) => {
+                debugger;
 
-                console.log(response);
-            })*/
-            .then((response) => {
+                // начать игру
+                if (this.state.startOfGame == false) {
 
-                // TODO!
-                if (this.state.startOfGame == true && 
+                    //TODO!
+                    if (!this.state.isUserTurn && AIturnResponse) {
+
+                        this.state.currentAITurn = {
+                            currentPosition: AIturnResponse.data.currentPosition,
+                            newPosition: AIturnResponse.data.targetPosition,
+                        };
+                    }
+                    this.setState({
+                        startOfGame: true,
+                        endOfGame: false,
+                        //isUserTurn: (this.state.userColor == 'white') ? true : false,
+                    });
+
+                }
+                //завершить игру
+                else {
+                    this.setState({
+                        startOfGame: false,
+                        endOfGame: true,
+                    });
+                } 
+
+                return switchGameResponse;
             })
 			.catch((error) => {
                
@@ -212,6 +259,76 @@ export default class GamePage extends Component {
                 
                 this.responseHandle(error);
 			})
+    }
+
+    // обработчик хода
+    turn(currentPosition, newPosition, actor, eatenActor, turnedToDam, whiteActorsCount, blackActorsCount) {
+        debugger;
+
+        return Promise.resolve(true)
+			.then(() => {
+
+                //TODO?
+                // из Board на каждом ходе передается количество черных и белых фигур в данный момент на доске ??для синхронизации??
+                this.state.whiteActorsCount = whiteActorsCount;
+                this.state.blackActorsCount = blackActorsCount;
+                this.state.movesCount++;
+
+                this.state.currentActionDefinition = this.createTurnDefinition(currentPosition, newPosition, actor, eatenActor, turnedToDam);
+
+                // если количество черных или белых фигур = 0, то завершение игры.
+                if (whiteActorsCount == 0 || blackActorsCount == 0) {
+                    this.switchStartGame();
+                    return false;
+                }
+
+				return authActions.getActualAccessToken();
+			})
+			.then((accessToken) => {
+
+                if (accessToken === false) return false;
+
+                let tasks = [];
+
+                if (this.state.isUserTurn) {
+
+                    this.state.currentUserTurn = {
+                        currentPosition: currentPosition,
+                        targetPosition: newPosition,
+                    };
+            
+                    tasks.push(gameActions.setUserTurn(accessToken, this.state.currentUserTurn));
+                    tasks.push(gameActions.getAIturn(accessToken));
+                }
+                else {
+        
+                    this.state.currentAITurn = this.defaultSettings.currentAITurn;  
+                }
+
+                return Promise.all(tasks);
+            })
+            .spread((setUserTurnResponse, AIturnResponse) => {
+
+                if (AIturnResponse) {
+
+                    this.state.currentAITurn = {
+                        currentPosition: AIturnResponse.data.currentPosition,
+                        newPosition: AIturnResponse.data.targetPosition,
+                    };
+                }
+
+                this.state.isUserTurn = !this.state.isUserTurn;
+                this.setState({});
+            })
+            .catch((error) => {
+               
+                this.state.messageLink = '/login';
+                this.state.messageLinkName = 'Войти на сайт';
+                //error.response.message = 'Вы не авторизованы для данного действия';
+                
+                this.responseHandle(error);
+			})
+
     }
 
     // вернуть все визуальные настройки игры по умолчанию (кнопкой из тулбара)
@@ -264,16 +381,17 @@ export default class GamePage extends Component {
 
     // получить описание текущего хода - нужно для вывода в инфобаре
     createTurnDefinition(currentPosition, newPosition, actor, eatenActor, turnedToDam) {
+        debugger;
 
         // метки на доске, соответствующие координатам хода
         const currentPositionMarks = {
-			markX: this.marksSymbols.horizontal[currentPosition.positionX],
-			markY: this.marksSymbols.vertical[currentPosition.positionY]
+			markX: this.marksSymbols.horizontal[currentPosition.x],
+			markY: this.marksSymbols.vertical[currentPosition.y]
 		};
 
 		const newPositionMarks = {
-			markX: this.marksSymbols.horizontal[newPosition.positionX],
-			markY: this.marksSymbols.vertical[newPosition.positionY]
+			markX: this.marksSymbols.horizontal[newPosition.x],
+			markY: this.marksSymbols.vertical[newPosition.y]
 		};
 
         let definition = '';
@@ -296,103 +414,6 @@ export default class GamePage extends Component {
         }
 
         return definition;
-    }
-
-    // обработчик хода юзера
-    userTurn(currentPosition, newPosition, actor, eatenActor, turnedToDam, whiteActorsCount, blackActorsCount) {
-
-        debugger;
-
-        // из Board на каждом ходе передается количество черных и белых фигур в данный момент на доске ??для синхронизации??
-        this.state.whiteActorsCount = whiteActorsCount;
-        this.state.blackActorsCount = blackActorsCount;
-        this.state.movesCount++;
-
-        // если количество черных или белых фигур = 0, то завершение игры.
-        if (whiteActorsCount == 0 || blackActorsCount == 0) {
-            this.switchStartGame();
-            return;
-        }
-
-        if (this.state.isUserTurn) {
-            console.log('user turn');
-
-            this.state.currentUserTurn = {
-                currentPosition: currentPosition,
-                newPosition: newPosition,
-            };
-    
-            this.state.currentActionDefinition = this.createTurnDefinition(currentPosition, newPosition, actor, eatenActor, turnedToDam);
-    
-            //TODO!!!
-            this.state.currentAITurn = {
-                currentPosition:
-                    {positionX: 1, positionY: 2},
-                newPosition:
-                    {positionX: 2, positionY: 3},
-                actor: 
-                    {color: 'grid__actor_black', type: 'grid__actor_checker'},
-                eatenActor: null,
-                turnedToDam: false,
-            }
-        }
-        else {
-            console.log('AI turn');
-            this.state.currentActionDefinition = this.createTurnDefinition(this.state.currentAITurn.currentPosition, this.state.currentAITurn.newPosition, this.state.currentAITurn.actor, this.state.currentAITurn.eatenActor, this.state.currentAITurn.turnedToDam);
-            this.state.currentAITurn = this.defaultSettings.currentAITurn;  
-        }
-       
-        this.state.isUserTurn = !this.state.isUserTurn;
-
-        this.setState({});
-    }
-
-    // обработчик хода
-    turn(currentPosition, newPosition, actor, eatenActor, turnedToDam, whiteActorsCount, blackActorsCount) {
-        debugger;
-
-        // из Board на каждом ходе передается количество черных и белых фигур в данный момент на доске ??для синхронизации??
-        this.state.whiteActorsCount = whiteActorsCount;
-        this.state.blackActorsCount = blackActorsCount;
-        this.state.movesCount++;
-
-        // если количество черных или белых фигур = 0, то завершение игры.
-        if (whiteActorsCount == 0 || blackActorsCount == 0) {
-            this.switchStartGame();
-            return;
-        }
-
-        if (this.state.isUserTurn) {
-            console.log('user turn');
-
-            this.state.currentUserTurn = {
-                currentPosition: currentPosition,
-                newPosition: newPosition,
-            };
-    
-            this.state.currentActionDefinition = this.createTurnDefinition(currentPosition, newPosition, actor, eatenActor, turnedToDam);
-    
-            //TODO!!!
-            this.state.currentAITurn = {
-                currentPosition:
-                    {positionX: 1, positionY: 2},
-                newPosition:
-                    {positionX: 2, positionY: 3},
-                actor: 
-                    {color: 'grid__actor_black', type: 'grid__actor_checker'},
-                eatenActor: null,
-                turnedToDam: false,
-            }
-        }
-        else {
-            console.log('AI turn');
-            this.state.currentActionDefinition = this.createTurnDefinition(this.state.currentAITurn.currentPosition, this.state.currentAITurn.newPosition, this.state.currentAITurn.actor, this.state.currentAITurn.eatenActor, this.state.currentAITurn.turnedToDam);
-            this.state.currentAITurn = this.defaultSettings.currentAITurn;  
-        }
-       
-        this.state.isUserTurn = !this.state.isUserTurn;
-
-        this.setState({});
     }
 
     clickLkButton() {
@@ -476,16 +497,50 @@ export default class GamePage extends Component {
 			messageIsShown: true,
 			message: message,
 		});
+    }
+    
+    clickLogoutButton(event) {
+		debugger;
+
+		return Promise.resolve(true)
+			.then(() => {
+
+                let tasks = [];
+
+                if (this.state.startOfGame === true) {
+
+                    tasks.push(this.switchStartGame(event));
+                }
+
+                debugger;
+                tasks.push(authActions.logoutAction());
+                
+                return Promise.all(tasks);
+			})
+			.then((responses) => {
+                debugger;
+
+                let response = responses[1] ? responses[1] : responses[0];
+				 // TODO!! сделать, чтобы сначала выводилось сообщение о выходе, а потом табло с завершением игры
+				 this.state.lkLogout = true;
+
+				response.message = 'Выход из аккаунта осуществлен успешно.';
+				this.responseHandle(response);
+				
+			})
+			.catch((error) => {
+
+				this.responseHandle(error);  
+			})
 	}
 
-    switchLkLogout(logout) {
+    /*switchLkLogout(logout) {
         debugger;
 
         this.state.lkLogout = logout;
 
-        //TODO: сделать предупреждение о завершении игры или проверку на текущую игру
-        if (this.state.startOfGame) this.switchStartGame();
-    }
+        //if (this.state.startOfGame) this.switchStartGame();
+    }*/
 
     // когда скрывается сообщение, скрывается и лк (если был показан)
     resetPage(event) {
@@ -539,7 +594,7 @@ export default class GamePage extends Component {
         }
         
         //TODO!
-        if (this.state.lkLogout == true && this.prevState.lkLogout == false) {
+        if (this.state.lkLogout == true && prevState.lkLogout == false) {
             this.state.lkLogout = this.defaultSettings.lkLogout;
         }
     }
@@ -636,7 +691,7 @@ export default class GamePage extends Component {
                     role = {this.state.lkRole}
                     games = {this.state.lkGames}
                     responseHandle = {this.responseHandle}
-                    switchLkLogout = {this.switchLkLogout}
+                    clickLogoutButton = {this.clickLogoutButton}
                     lkLogout = {this.state.lkLogout}
                 />
 
