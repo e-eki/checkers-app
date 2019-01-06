@@ -1,7 +1,7 @@
+'use strict';
 
 import axios from 'axios';
 const Promise = require('bluebird');
-
 import apiConst from '../apiConst';
 
 export function loginAction(email, password) {

@@ -1,7 +1,7 @@
+'use strict';
 
 import React, { Component } from 'react';
 const Promise = require('bluebird');
-
 import Header from './header';
 import Footer from './footer';
 import Toolbar from './toolbar';

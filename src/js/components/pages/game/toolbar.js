@@ -1,7 +1,7 @@
+'use strict';
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
 import * as authActions from '../../actions/authActions';
 
 // панель настроек

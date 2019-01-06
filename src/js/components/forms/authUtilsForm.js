@@ -1,8 +1,8 @@
+'use strict';
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 const Promise = require('bluebird');
-
 import MessageForm from './messageForm';
 import * as authActions from '../actions/authActions';
 import * as utilsActions from '../actions/utilsActions';
@@ -253,39 +253,31 @@ export default class AuthUtilsForm extends Component {
 	// TODO!!!: должен извлекать параметр из строки запроса, и использовать его как аксесс токен при запросе на сброс пароля
 	clickResetPasswordButton(event) {
 		debugger;
-
 		let dataIsCorrect = this.checkData(undefined, undefined, this.state.passwordData, this.state.duplicatePasswordData);
 
 		if (!dataIsCorrect) return;
 
 		return Promise.resolve(true)
 			.then(() => {
-
 				// если на форму попали по ссылке из письма
-				if (this.props.match && this.props.match.params && this.props.match.params.id) {
-					
-					return this.props.match.params.id;
+				if (this.props.match && this.props.match.params && this.props.match.params.id) {					
+					return this.props.match.params.id;   //TODO!! check
 				}
 				// если из личного кабинета
 				else {
-
 					return authActions.getActualAccessToken();
 				}
 			})
 			.then((accessToken) => {
-
 				return authActions.changePasswordAction(accessToken, this.state.passwordData)
 			})
 			.then((response) => {
-
 				//this.state.messageLink = this.defaultData.messageLink;
 				//this.state.messageLinkName = this.defaultData.messageLinkName;
-
 				response.data = 'Пароль успешно изменен.';			
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-
 				this.responseHandle(error);
 			})
 	}

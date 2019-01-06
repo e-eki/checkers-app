@@ -1,8 +1,8 @@
+'use strict';
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 const Promise = require('bluebird');
-
 import * as authActions from '../actions/authActions';
 
 // форма для личного кабинета

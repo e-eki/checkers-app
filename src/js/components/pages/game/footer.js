@@ -1,3 +1,4 @@
+'use strict';
 
 import React, { Component } from 'react';
 
@@ -11,7 +12,7 @@ export default class Footer extends Component {
             <div className = {footerClass}>
 
                  <div className ="footer__title">
-                    &#169; В. А. Дремина, 2018
+                    &#169; В.А.Дремина, 2018
                 </div>
             </div>
         )

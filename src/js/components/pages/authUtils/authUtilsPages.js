@@ -1,12 +1,11 @@
+'use strict';
 
 import React, { Component } from 'react';
-
 import AuthUtilsForm from '../../forms/authUtilsForm';
 
 export class LoginPage extends Component {
 
 	render() {
-
 		return (
 			<AuthUtilsForm name = 'LoginPage'/>
 		)
@@ -16,7 +15,6 @@ export class LoginPage extends Component {
 export class RegistrationPage extends Component {
 
 	render() {
-
 		return (
 			<AuthUtilsForm name = 'RegistrationPage'/>
 		)
@@ -26,7 +24,6 @@ export class RegistrationPage extends Component {
 export class RecoveryPasswordPage extends Component {
 
 	render() {
-
 		return (
 			<AuthUtilsForm name = 'RecoveryPasswordPage'/>
 		)
@@ -36,7 +33,6 @@ export class RecoveryPasswordPage extends Component {
 export class EmailConfirmPage extends Component {
 
 	render() {
-
 		return (
 			<AuthUtilsForm name = 'EmailConfirmPage'/>
 		)
@@ -46,7 +42,6 @@ export class EmailConfirmPage extends Component {
 export class ResetPasswordPage extends Component {
 
 	render() {
-
 		return (
 			<AuthUtilsForm name = 'ResetPasswordPage'/>
 		)
