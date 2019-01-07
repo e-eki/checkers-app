@@ -1,14 +1,13 @@
 'use strict';
 
 import axios from 'axios';
-const Promise = require('bluebird');
-import apiConst from '../apiConst';
+import Promise from 'bluebird';
+import apiConst from '../../constants/apiConst';
 
-export function startGameAction(accessToken, userColor, boardSize, level, mode) {
+export function startGameAction(accessToken, userActorsColor, boardSize, level, mode) {
 	debugger;
-
 	const params = {
-		userColor: userColor,
+		userActorsColor: userActorsColor,
 		boardSize: boardSize,
 		level: level,
 		mode: mode,
@@ -44,7 +43,6 @@ export function finishGameAction(accessToken, movesCount, totalOfGame) {
 
 export function getAIturn(accessToken) {
 	debugger;
-
 	const options = {
 		method: 'GET',
 		headers: { 'Authorization': `Token ${accessToken}` },

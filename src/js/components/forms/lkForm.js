@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-const Promise = require('bluebird');
+import Promise from 'bluebird';
 import * as authActions from '../actions/authActions';
 
 // форма для личного кабинета
@@ -71,7 +71,7 @@ export default class LkForm extends Component {
 	}
 	
 	render() {
-		console.log('--------render lkForm--------------');
+		//console.log('--------render lkForm--------------');
 
 		const lkFormClass = 'lk-form ' + (this.props.className ? this.props.className : '');
 		const roleInfo = (this.props.role == 'user') ? 'пользователь' : '';
@@ -109,7 +109,7 @@ export default class LkForm extends Component {
 
 				</div>
 
-				<button className = 'lk-form__button button button_send' onClick = {this.clickLogoutButton}>Выйти</button>
+				<button className = 'lk-form__button button button_send' onClick = {this.clickLogoutButton}>Разлогиниться</button>
 
 				<div className = 'lk-form__title'>Мои игры</div>
 

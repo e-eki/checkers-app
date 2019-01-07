@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 
-// панель с инфой
+// панель с информацией
 export default class Infobar extends Component {
 
 	constructor(props) {
@@ -27,7 +27,6 @@ export default class Infobar extends Component {
 	}
 
 	tick() {
-
 		const currentTime = new Date().getTime();
 		const gameTime = currentTime - this.startTime;
 
@@ -76,7 +75,6 @@ export default class Infobar extends Component {
 	}
 	
 	componentWillUpdate(nextProps, nextState) {
-
 		if (nextProps.startOfGame && !this.props.startOfGame) {
 			this.startTime = new Date().getTime();
 			this.timer = setInterval(this.tick, 60000);
@@ -89,7 +87,6 @@ export default class Infobar extends Component {
 			this.state.currentActionDefinition += this.defaultSettings.separatingString + this.defaultSettings.endGameDefinition;
 		}
 		else if (!nextProps.endOfGame && this.props.endOfGame) {
-
 			this.state.gameTime = this.defaultSettings.gameTime;
 			this.state.currentActionDefinition = '';
 		}
@@ -100,14 +97,12 @@ export default class Infobar extends Component {
 	}
 
 	componentWillUnmount() {
-
 		clearInterval(this.timer);
 	}
 
 	// TODO!! - возвращать время в gamePage для отображения на табло (и отправки на сервер для записи в данные об игре)
     render() {
-
-		console.log('render infobar');
+		//console.log('render infobar');
 
 		let whoTurns = (this.props.startOfGame || this.props.endOfGame) ? (this.props.isUserTurn ? 'ваш' : 'противника') : '-';
 		//let currentTime = this.state.currentHours + ' ч ' + this.state.currentMinutes + ' мин ';

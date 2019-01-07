@@ -1,16 +1,14 @@
 'use strict';
 
 import axios from 'axios';
-const Promise = require('bluebird');
-import apiConst from '../apiConst';
+import Promise from 'bluebird';
+import apiConst from '../../constants/apiConst';
 
 export function getResponseMessage(response) {
 	debugger;
-
 	let message;
 
 	switch (response.status) {
-
 		case 200:
 		case 201:
 		case 204:

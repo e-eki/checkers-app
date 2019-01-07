@@ -1,6 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
+import gameConst from '../../../constants/gameConst';
 
 // клетка шахматной доски
 class Cell extends Component {
@@ -15,22 +16,20 @@ class Cell extends Component {
 
 	// событие выбора клетки для хода на нее текущего актера
 	chooseCellToMoveActor(event) {
-		console.log('chooseCellToMoveActor', this.props.positionX, this.props.positionY, this.ref);
+		//console.log('chooseCellToMoveActor', this.props.positionX, this.props.positionY, this.ref);
 		// вызов одноименного метода у родителя - доски
 		this.props.chooseCellToMoveActor(this.props.positionX, this.props.positionY);
 	}
 
 	addUserFunctionality() {
-		console.log('cell addUserFunctionality', this.ref);
-
+		//console.log('cell addUserFunctionality', this.ref);
 		if (this.ref) {
 			this.ref.addEventListener('mouseup', this.chooseCellToMoveActor);
 		}	
 	}
 
 	removeUserFunctionality() {
-		console.log('cell removeUserFunctionality', this.ref);
-
+		//console.log('cell removeUserFunctionality', this.ref);
 		if (this.ref) {
 			this.ref.removeEventListener('mouseup', this.chooseCellToMoveActor);
 		}	
@@ -38,7 +37,6 @@ class Cell extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
 		//console.log('cell shouldComponentUpdate');
-
 		// перерисовка клетки:
 		return (
 				// если у клетки сменился стиль - выделена/не выделена
@@ -70,7 +68,7 @@ class Cell extends Component {
 	}
 
     render() {
-		console.log('render cell', this.props.positionX, this.props.positionY, this.ref);
+		//console.log('render cell', this.props.positionX, this.props.positionY, this.ref);
 		const cellClass = 'grid__cell ' + (this.props.className ? this.props.className : '');
         
 		return (
@@ -99,15 +97,13 @@ class Actor extends Component {
 	}
 
 	// событие выделения актера при наведении на него курсора
-	select(event) {
-		
+	select(event) {		
 		//вызов у родителя метода выделения клеток, на которые актер может совершить ход
 		this.props.drawSelectedCells(this.props.positionX, this.props.positionY);
 	}
 
 	// событие отмены выделения актера при уходе курсора с него
-	deselect(event) {
-		
+	deselect(event) {		
 		//вызов у родителя метода отмены выделения клеток, на которые актер может совершить ход
 		this.props.drawDeselectedCells(this.props.positionX, this.props.positionY);
 	}
@@ -118,8 +114,7 @@ class Actor extends Component {
 	}
 	
 	addUserFunctionality() {
-		console.log('actor addUserFunctionality', this.ref);
-
+		//console.log('actor addUserFunctionality', this.ref);
 		if (this.ref) {
 			this.ref.addEventListener('mouseover', this.select);
 			this.ref.addEventListener("mouseout", this.deselect); 
@@ -128,8 +123,7 @@ class Actor extends Component {
 	}
 
 	removeUserFunctionality() {
-		console.log('actor removeUserFunctionality', this.ref);
-
+		//console.log('actor removeUserFunctionality', this.ref);
 		if (this.ref) {
 			this.ref.removeEventListener('mouseover', this.select);
 			this.ref.removeEventListener("mouseout", this.deselect); 
@@ -139,7 +133,6 @@ class Actor extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
 		//console.log('actor shouldComponentUpdate');
-
 		// перерисовка, если:
 		return (
 				// изменился стиль актера - выделен/не выделен
@@ -161,7 +154,7 @@ class Actor extends Component {
 
 	componentDidUpdate(prevProps) {
 		// если актер цвета юзера и
-		if (!this.props.isUserColor) return;
+		if (!this.props.isuserActorsColor) return;
 
 		// стал пассивным, то удаляем пользовательский функционал
 		if (!prevProps.passive && this.props.passive) {
@@ -176,12 +169,12 @@ class Actor extends Component {
 	componentDidMount() {
 		//console.log('actor componentDidMount', this.props.positionX, this.props.positionY, this.ref);
 		// в самом начале добавляем пользовательский функционал, если актер активный
-		if (this.props.isUserColor && !this.props.passive)
+		if (this.props.isuserActorsColor && !this.props.passive)
 			this.addUserFunctionality();
 	}
     
     render() {
-		console.log('render actor', this.props.positionX, this.props.positionY, this.ref);
+		//console.log('render actor', this.props.positionX, this.props.positionY, this.ref);
 		const actorClass = 'grid__actor ' + (this.state.className ? this.state.className : '');
         
         return <div ref={elem => this.ref = elem} className={actorClass}></div>;
@@ -218,9 +211,7 @@ export default class Grid extends Component {
 
 	// заполнение массивов с данными о клетках поля и актерах (фигурах) на поле
 	// (начальное положение актеров)
-	fillGridData(boardSize = this.props.boardSize, mode = this.props.mode, userColor = this.props.userColor, isUserTurn = this.props.isUserTurn) {
-		console.log('fillGridData', boardSize, mode, userColor, isUserTurn);
-
+	fillGridData( boardSize = this.props.boardSize, mode = this.props.mode, userActorsColor = this.props.userActorsColor, isUserTurn = this.props.isUserTurn) {
 		// для расстановки белых и черных актеров на доске
 		const firstRowWhite = boardSize/2 + 1; 
 		const lastRowWhite = boardSize - 1;
@@ -233,13 +224,11 @@ export default class Grid extends Component {
 		this.state.cellsDataContainer = [];
 		this.state.actorsDataContainer = [];
 
-		for (let x = 0; x < boardSize; x++) {
-			
+		for (let x = 0; x < boardSize; x++) {		
 			this.state.cellsDataContainer[x] = []; 
 			this.state.actorsDataContainer[x] = [];
 
             for (let y = 0; y < boardSize; y++) {
-
 				// клетка
 				let cellColor = (x + y) % 2 == 0 ? 'grid__cell_white' : 'grid__cell_black';			
 				this.state.cellsDataContainer[x].push({
@@ -250,7 +239,6 @@ export default class Grid extends Component {
 
 				// актеры могут быть только на черных клетках
 				if (cellColor == 'grid__cell_black') {
-
 					let actorColor = null;
 					// определяем цвет актера
 					if (y >= firstRowWhite && y <= lastRowWhite) {
@@ -264,20 +252,19 @@ export default class Grid extends Component {
 
 					// если есть цвет, то есть актер на данной клетке
 					if (actorColor) {
-
 						// актер
-						let isUserColor = (userColor == actorColor);
+						let isuserActorsColor = (userActorsColor.name == actorColor);
 						// TODO??
 						actorColor = 'grid__actor_' + actorColor;
-						let actorType = (mode == 'classic') ? 'grid__actor_checker' : 'grid__actor_dam';
+						let actorType = (mode == gameConst.mode.classic) ? 'grid__actor_checker' : 'grid__actor_dam';
 
 						this.state.actorsDataContainer[x].push({
 							color: actorColor,
 							defaultColor: actorColor,   // для сброса выделения юзером
 							type: actorType,
-							isUserColor: isUserColor,   // является ли данный актер фигурой юзера
+							isuserActorsColor: isuserActorsColor,   // является ли данный актер фигурой юзера
 							// флаг, есть ли пользовательский функционал - вначале у всех актеров его нет
-							// (passive = true, функционал отсутствует, passive = false, функционал есть)
+							// (passive = true - функционал отсутствует, passive = false - функционал есть)
 							passive: true,    
 						});
 					}
@@ -292,10 +279,9 @@ export default class Grid extends Component {
 		}
 	}
 
-	//при начальной отрисовек доски отправка в Display количества актеров - нужно для вывода в инфобаре
+	//отправка в Display количества актеров - нужно для вывода в инфобаре
 	// TODO ?? 
 	changeActorsCount() {
-
 		this.props.updateData('whiteActorsCount', this.whiteActorsCount);
 		this.props.updateData('blackActorsCount', this.blackActorsCount);
 	}
@@ -303,7 +289,6 @@ export default class Grid extends Component {
 	// отрисовка шахматной доски на основе данных из this.state.cellsDataContainer и this.state.actorsDataContainer
 	// (позиции клеток и актеров соответствуют их положению в массиве)
 	drawGrid() {
-		console.log('fillGrid');
 		const grid = [];
 
 		// уникальный ключ для каждой клетки
@@ -328,7 +313,7 @@ export default class Grid extends Component {
 								key={actorKey} 
 								className = {actorClassName} 
 								defaultClassName = {defaultActorClassName} 
-								isUserColor = {this.state.actorsDataContainer[x][y].isUserColor} 
+								isuserActorsColor = {this.state.actorsDataContainer[x][y].isuserActorsColor} 
 								positionX = {x} 
 								positionY = {y} 
 								drawSelectedCells = {this.drawSelectedCells}
@@ -365,18 +350,14 @@ export default class Grid extends Component {
 	// отрисовка выделенных клеток, куда актер на позиции (positionX, positionY) может сделать ход
 	// (вызывается из актера при наведении мыши на него)
 	drawSelectedCells(positionX, positionY) {
-		console.log('drawSelectedCells');
-
 		// добавление клетке стиля выделения
 		var assignSelectedColor = function(x, y) {
-
 			// если есть такая клетка
 			if (this.state.cellsDataContainer[x] && this.state.cellsDataContainer[x][y]
 				// и на ней нет актера или
 				&& (!this.state.actorsDataContainer[x][y]
 					// если на клетке есть актер, то он должен быть другого цвета
-					|| (this.state.actorsDataContainer[x][y] && !this.state.actorsDataContainer[x][y].isUserColor))) {
-					
+					|| (this.state.actorsDataContainer[x][y] && !this.state.actorsDataContainer[x][y].isuserActorsColor))) {				
 						// то выделяем клетку
 						this.state.cellsDataContainer[x][y].color = this.state.cellsDataContainer[x][y].defaultColor + ' grid__cell_highlight';
 			}	
@@ -386,11 +367,11 @@ export default class Grid extends Component {
 
 		//!!! TODO - заглушка
 		// выбор клеток, соответствующих возможным направлениям актера
-		if (this.props.userColor == 'black') {
+		if (this.props.userActorsColor == gameConst.userActorsColor.black) {
 			assignSelectedColor(positionX - 1, positionY + 1);
 			assignSelectedColor(positionX + 1, positionY + 1);
 		}
-		else if (this.props.userColor == 'white') {
+		else if (this.props.userActorsColor == gameConst.userActorsColor.white) {
 			assignSelectedColor(positionX - 1, positionY - 1);
 			assignSelectedColor(positionX + 1, positionY - 1);
 		}
@@ -402,11 +383,8 @@ export default class Grid extends Component {
 	// отрисовка отмены выделения клеток для актера на позиции (positionX, positionY)
 	// (вызывается из актера при уходе курсора с него)
 	drawDeselectedCells(positionX, positionY) {
-		console.log('drawDeselectedCells');
-
 		// сброс стиля клетки к стилю по умолчанию
 		var assignDeselectedColor = function(x, y) {
-
 			if (this.state.cellsDataContainer[x] && this.state.cellsDataContainer[x][y]) {
 				this.state.cellsDataContainer[x][y].color = this.state.cellsDataContainer[x][y].defaultColor
 			}	
@@ -416,11 +394,11 @@ export default class Grid extends Component {
 
 		//!!! TODO - заглушка
 		// выбор клеток, соответствующих возможным направлениям актера
-		if (this.props.userColor == 'black') {
+		if (this.props.userActorsColor == gameConst.userActorsColor.black) {
 			assignDeselectedColor(positionX - 1, positionY + 1);
 			assignDeselectedColor(positionX + 1, positionY + 1);
 		}
-		else if (this.props.userColor == 'white') {
+		else if (this.props.userActorsColor == gameConst.userActorsColor.white) {
 			assignDeselectedColor(positionX - 1, positionY - 1);
 			assignDeselectedColor(positionX + 1, positionY - 1);
 		}
@@ -432,19 +410,15 @@ export default class Grid extends Component {
 	// отрисовка выбора актера для текущего хода
 	// (вызывается из актера при клике по нему)
 	chooseActorToMove(positionX, positionY) {
-		console.log('chooseActorToMove', positionX, positionY);
-
 		// флаг - есть ли у этого актера клетки, куда он может ходить
 		let actorCanMove = false;
 
 		// добавление клетке пользовательского функционала
 		// (чтобы при клике по клетке на нее происходил ход выбранного актера)
 		var assignCellMethod = function(x, y) {
-
 			if (this.state.cellsDataContainer[x] && this.state.cellsDataContainer[x][y]
 				// если цвет клетки не по умолчанию - то она выделена и на нее можно сходить актером
-				&& this.state.cellsDataContainer[x][y].color !== this.state.cellsDataContainer[x][y].defaultColor) {
-	
+				&& this.state.cellsDataContainer[x][y].color !== this.state.cellsDataContainer[x][y].defaultColor) {	
 					// проставляем флаг, что клетка активна
 					this.state.cellsDataContainer[x][y].passive = false;	
 					// проставляем флаг, что актеру есть куда ходить
@@ -454,11 +428,11 @@ export default class Grid extends Component {
 
 		//!!! TODO - заглушка
 		// выбор клеток, соответствующих возможным направлениям актера
-		if (this.props.userColor == 'black') {
+		if (this.props.userActorsColor == gameConst.userActorsColor.black) {
 			assignCellMethod(positionX - 1, positionY + 1);
 			assignCellMethod(positionX + 1, positionY + 1);
 		}
-		else if (this.props.userColor == 'white') {
+		else if (this.props.userActorsColor == gameConst.userActorsColor.white) {
 			assignCellMethod(positionX - 1, positionY - 1);
 			assignCellMethod(positionX + 1, positionY - 1);
 		}
@@ -487,7 +461,6 @@ export default class Grid extends Component {
 
 	// сброс стилей выделения всех клеток и актеров, а также удаление у них пользовательского функционала
 	resetAllElements() {
-
 		for (let y = 0; y < this.props.boardSize; y++) {
 			for (let x = 0; x < this.props.boardSize; x++) {
 				// сбрасываем выделение всех клеток
@@ -505,10 +478,9 @@ export default class Grid extends Component {
 		}
 	}
 
-	// отрисовка хода текущего выбранного актера на клетку (newPositionX, newPositionY)
+	// выбор хода текущим выбранным актером на клетку (newPositionX, newPositionY)
 	chooseCellToMoveActor(newPositionX, newPositionY) {
 		debugger;
-
 		this.resetAllElements();
 
 		const currentPosition = {
@@ -528,22 +500,20 @@ export default class Grid extends Component {
 	// (изменение положения актера в массиве actorsDataContainer и последующий вызов перерисовки)
 	doTurn(currentPosition, newPosition) {
 		debugger;
-
 		// подготовка данных для передачи в Display
 		let currentActorData = this.state.actorsDataContainer[currentPosition.x][currentPosition.y];
 
 		let actor = {
-			isUserColor: currentActorData.isUserColor,
+			isuserActorsColor: currentActorData.isuserActorsColor,
 			type: currentActorData.type,
 		};
 
 		let newActorData = this.state.actorsDataContainer[newPosition.x][newPosition.y];
 
 		let eatenActor = null;
-		if (newActorData) {
-			
+		if (newActorData) {			
 			eatenActor = {
-				isUserColor: newActorData.isUserColor,
+				isuserActorsColor: newActorData.isuserActorsColor,
 				type: newActorData.type,
 			};
 
@@ -554,6 +524,9 @@ export default class Grid extends Component {
 				this.blackActorsCount--;
 			}
 		}
+		// отправка в Display количества актеров
+		this.changeActorsCount();
+
 		//TODO!!!
 		let turnedToDam = false;
 
@@ -564,10 +537,9 @@ export default class Grid extends Component {
 		// сбрасываем данные о текущем актере
 		this.state.activeActorPosition = null;
 
-		// сообщить Display о том, что ход был отрисован
+		// сообщить Display о том, что был сделан ход
 		// вызываем соответствующий метод в Display (перерисовка вызывается оттуда)
-		this.props.turn(currentPosition, newPosition, actor, eatenActor, turnedToDam, this.whiteActorsCount, this.blackActorsCount);	
-	
+		this.props.turn(currentPosition, newPosition, actor, eatenActor, turnedToDam);	
 	}
 
 	// заполнение начальных данных перед первым рендерингом
@@ -578,24 +550,22 @@ export default class Grid extends Component {
 
 	// и заполнение начальных данных после смены настроек
 	componentWillUpdate(nextProps) {
-
-		// если изменились настройки или после завершения игры - обновление данных по умолчанию
+		debugger;
+		// если изменились настройки или после завершения игры - обновление данных
 		if (nextProps.boardSize !== this.props.boardSize || 
 			nextProps.mode !== this.props.mode || 
-			nextProps.userColor !== this.props.userColor ||
+			nextProps.userActorsColor !== this.props.userActorsColor ||
 			(!nextProps.endOfGame && this.props.endOfGame)) {
-				this.fillGridData(nextProps.boardSize, nextProps.mode, nextProps.userColor, nextProps.isUserTurn);
+				this.fillGridData(nextProps.boardSize, nextProps.mode, nextProps.userActorsColor, nextProps.isUserTurn);
 				this.changeActorsCount();
 		}
 		
 		debugger;
 		// если игра идет и сейчас будет ход юзера, то делаем активными всех его актеров
 		if (nextProps.startOfGame && nextProps.isUserTurn && !this.props.isUserTurn) {
-
 			for (let y = 0; y < this.props.boardSize; y++) {
-				for (let x = 0; x < this.props.boardSize; x++) {
-	
-					if (this.state.actorsDataContainer[x][y] && this.state.actorsDataContainer[x][y].isUserColor) {
+				for (let x = 0; x < this.props.boardSize; x++) {	
+					if (this.state.actorsDataContainer[x][y] && this.state.actorsDataContainer[x][y].isuserActorsColor) {
 						this.state.actorsDataContainer[x][y].passive = false;
 					}
 				}
@@ -609,7 +579,6 @@ export default class Grid extends Component {
 
 			//TODO!
 			setTimeout(function() {
-				console.log('AI turn!');
 				this.doTurn(nextProps.currentAITurn.currentPosition, nextProps.currentAITurn.newPosition);
 			}.bind(this), 2000);
 		}
@@ -621,16 +590,14 @@ export default class Grid extends Component {
 	}
 
     render() {
-		console.log('------------------render board--------------------');
+		//console.log('------------------render board--------------------');
 		const grid = this.drawGrid();
 
-        return (
-	
+        return (	
 			<table className = "grid">
 				<tbody>
 					{grid}
-				</tbody>
-				
+				</tbody>				
 			</table>
         )
     }

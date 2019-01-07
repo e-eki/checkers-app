@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-const Promise = require('bluebird');
+import Promise from 'bluebird';
 import Header from './header';
 import Footer from './footer';
 import Toolbar from './toolbar';
@@ -13,6 +13,7 @@ import MessageForm from '../../forms/messageForm';
 import * as authActions from '../../actions/authActions';
 import * as utilsActions from '../../actions/utilsActions';
 import * as gameActions from '../../actions/gameActions';
+import gameConst from '../../../constants/gameConst';
 
 // главная страница - страница игры
 export default class GamePage extends Component {
@@ -20,47 +21,41 @@ export default class GamePage extends Component {
     constructor(props) {
         super(props);
 
-        // символы для разметки шахматной доски
-        this.marksSymbols = {
-			horizontal : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'],
-			vertical: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'],
-        };
-
         this.defaultSettings = {
             quotesSwitchedOff: false,   // флаг, показывать ли панель с цитатами
-            userColor: 'white',    // цвет фигур юзера
-            boardSize: 8,          // размер доски
-            level: 'easy',         // уровень сложности игры
-            mode: 'classic',       // режим игры
+            userActorsColor: gameConst.userActorsColor.white,    // цвет фигур юзера
+            boardSize: gameConst.boardSize.default,          // размер доски
+            level: gameConst.level.easy,         // уровень сложности игры
+            mode: gameConst.mode.classic,       // режим игры
             currentActionDefinition: '',       // описание текущего хода - нужно для вывода в инфобаре
 
-            // есть три состояния игры: игра в режиме ожидания и настройки (startOfGame = false && endOfGame = false),
+            // есть три состояния игры:
             // игра началась (startOfGame = true && endOfGame = false),
             // игра завершилась (startOfGame = false && endOfGame = true)
             // игра в режиме ожидания и настройки (startOfGame = false && endOfGame = false)
             startOfGame: false,    // флаг начала игры
-            endOfGame: false,      // флга завершения игры
+            endOfGame: false,      // флаг завершения игры
 
             isUserTurn: null,       // флаг, что сейчас ход пользователя
             currentUserTurn: null,  // данные о текущем ходе пользователя
-            currentAITurn: null,   // данные о текущем ходе ИИ
+            currentAITurn: null,    // данные о текущем ходе ИИ
 
-            movesCount: 0,      // количество ходов за игру - нужно для вывода в инфобаре
+            movesCount: 0,           // количество ходов за игру - нужно для вывода в инфобаре
             whiteActorsCount: 0,     // количество белых фигур на доске - нужно для вывода в инфобаре
             blackActorsCount: 0,     // количество черных фигур на доске - нужно для вывода в инфобаре
-            totalOfGame: 'ничья',   // результат игры - по умолчанию ничья
+            totalOfGame: gameConst.totalOfGame.standoff,    // результат игры - по умолчанию ничья
 
             messageIsShown: false,     // показывать сообщение об ошибке
             lkFormIsShown: false,     // показывать лк
-            messageLink: '/',
-            messageLinkName: 'На главную',
-            message: '',
-            lkLogin: '',
-            lkEmail: '',
-            lkIsEmailConfirmed: '',
-            lkRole: '',
-            lkGames: [],
-            lkLogout: false,
+            messageLink: '/',          // ссылка в сообщении об ошибке
+            messageLinkName: 'На главную',  // текст ссылки сообщении об ошибке
+            message: '',               // текст сообщения об ошибке
+            lkLogin: '',               // логин юзера в лк
+            lkEmail: '',               // имейл юзера в лк
+            lkIsEmailConfirmed: '',    // статус подтверждения почты юзера в лк
+            lkRole: '',                // роль юзера в лк
+            lkGames: [],               // игры юзера в лк
+            lkLogout: false,           // флаг, что юзер разлогинился   //??
         }
 
         this.state = {
@@ -70,7 +65,7 @@ export default class GamePage extends Component {
                 vertical: [],
             },
             quotesSwitchedOff: this.defaultSettings.quotesSwitchedOff,
-            userColor: this.defaultSettings.userColor,
+            userActorsColor: this.defaultSettings.userActorsColor,
             boardSize: this.defaultSettings.boardSize,
             level: this.defaultSettings.level,
             mode: this.defaultSettings.mode,
@@ -116,7 +111,6 @@ export default class GamePage extends Component {
 
     // отрисовка разметки шахматной доски
     drawMarks(boardSize = this.state.boardSize) {
-
 		this.state.marks.horizontal = [];
 		this.state.marks.vertical = [];
         
@@ -124,20 +118,18 @@ export default class GamePage extends Component {
         let markKey = 0;
         
 		for (var i = 0; i < boardSize; i++) {
-
-			this.state.marks.horizontal.push(<span key={markKey} >{this.marksSymbols.horizontal[i]}</span>);
-            this.state.marks.vertical.push(<span key={markKey} >{this.marksSymbols.vertical[i]}</span>);
+			this.state.marks.horizontal.push(<span key={markKey} >{gameConst.marksSymbols.horizontal[i]}</span>);
+            this.state.marks.vertical.push(<span key={markKey} >{gameConst.marksSymbols.vertical[i]}</span>);
             
             markKey++;
 		}
 	}
 
-    // обновление настроек по событиям из тулбара
+    // обновление настроек при кликах по кнопкам в тулбаре
     updateData(data, value) {
-
+        debugger;
         this.state[`${data}`] = value;
 
-        //TODO ??
         // если меняется размер доски, перерисовываем разметку
         if (data == 'boardSize') {
             this.drawMarks();
@@ -146,7 +138,7 @@ export default class GamePage extends Component {
         this.setState({});
     }
 
-    // переключение начала/завершения игры - вызывается кнопкой в тулбаре/лк логаутом или когда число белых или черных фигур = 0
+    // переключение начала/завершения игры - вызывается кнопкой в тулбаре, лк логаутом, или когда число белых или черных фигур = 0
     switchStartGame(event) {
 
         // начать игру
@@ -154,7 +146,7 @@ export default class GamePage extends Component {
             this.setState({
                 startOfGame: true,
                 endOfGame: false,
-                isUserTurn: (this.state.userColor == 'white') ? true : false,
+                isUserTurn: (this.state.userActorsColor == 'white') ? true : false,
             });
 
         }
@@ -169,8 +161,8 @@ export default class GamePage extends Component {
             // если передано событие event, то метод был вызван кнопкой в тулбаре, и значит, юзер сам завершил игру - ничья
             if (!event) {
                 // если на доске не осталось фигур цвета юзера, то победил ИИ
-                if ((this.state.userColor == 'white' && this.state.whiteActorsCount == 0) ||
-                    (this.state.userColor == 'black' && this.state.blackActorsCount == 0)) {
+                if ((this.state.userActorsColor == 'white' && this.state.whiteActorsCount == 0) ||
+                    (this.state.userActorsColor == 'black' && this.state.blackActorsCount == 0)) {
                         this.state.totalOfGame = 'AI';
                     }
                 else {
@@ -182,53 +174,47 @@ export default class GamePage extends Component {
         debugger;
 		return Promise.resolve(true)
 			.then(() => {
-
 				return authActions.getActualAccessToken();
 			})
 			.then((accessToken) => {
-
                 //TODO!
-                this.state.isUserTurn = (this.state.userColor == 'white') ? true : false;
+                this.state.isUserTurn = (this.state.userActorsColor == gameConst.userActorsColor.white) ? true : false;
 
                 let tasks = [];
         
                 // начать игру
                 if (this.state.startOfGame === false) {
+                    tasks.push(gameActions.startGameAction(accessToken, this.state.userActorsColor.name, this.state.boardSize.name, this.state.level.name, this.state.mode.name));
 
-                    tasks.push(gameActions.startGameAction(accessToken, this.state.userColor, this.state.boardSize, this.state.level, this.state.mode));
-
-                    if (!this.state.isUserTurn) tasks.push(gameActions.getAIturn(accessToken));
+                    if (!this.state.isUserTurn) 
+                        tasks.push(gameActions.getAIturn(accessToken));
                 }
                 // завершить игру
                 else {
-
                     // по завершении игры подводим итог - кто выиграл
                     // если передано событие event, то метод был вызван кнопкой в тулбаре, и значит, юзер сам завершил игру - ничья
                     if (!event) {
                         // если на доске не осталось фигур цвета юзера, то победил ИИ
-                        if ((this.state.userColor == 'white' && this.state.whiteActorsCount == 0) ||
-                            (this.state.userColor == 'black' && this.state.blackActorsCount == 0)) {
-                                this.state.totalOfGame = 'AI';
+                        if ((this.state.userActorsColor == gameConst.userActorsColor.white && this.state.whiteActorsCount == 0) ||
+                            (this.state.userActorsColor == gameConst.userActorsColor.black && this.state.blackActorsCount == 0)) {
+                                this.state.totalOfGame = gameConst.totalOfGame.AI;
                             }
                         else {
-                            this.state.totalOfGame = 'user';
+                            this.state.totalOfGame = gameConst.totalOfGame.user;
                         }   
                     }
 
-                    tasks.push(gameActions.finishGameAction(accessToken, this.state.movesCount, this.state.totalOfGame));
+                    tasks.push(gameActions.finishGameAction(accessToken, this.state.movesCount, this.state.totalOfGame.name));
                 }
 
                 return Promise.all(tasks);
             })
             .spread((switchGameResponse, AIturnResponse) => {
                 debugger;
-
                 // начать игру
                 if (this.state.startOfGame == false) {
-
                     //TODO!
                     if (!this.state.isUserTurn && AIturnResponse) {
-
                         this.state.currentAITurn = {
                             currentPosition: AIturnResponse.data.currentPosition,
                             newPosition: AIturnResponse.data.targetPosition,
@@ -237,9 +223,8 @@ export default class GamePage extends Component {
                     this.setState({
                         startOfGame: true,
                         endOfGame: false,
-                        //isUserTurn: (this.state.userColor == 'white') ? true : false,
+                        //isUserTurn: (this.state.userActorsColor == 'white') ? true : false,
                     });
-
                 }
                 //завершить игру
                 else {
@@ -251,8 +236,7 @@ export default class GamePage extends Component {
 
                 return switchGameResponse;
             })
-			.catch((error) => {
-               
+			.catch((error) => {              
                 this.state.messageLink = '/login';
                 this.state.messageLinkName = 'Войти на сайт';
                 //error.response.message = 'Вы не авторизованы для данного действия';
@@ -262,18 +246,11 @@ export default class GamePage extends Component {
     }
 
     // обработчик хода
-    turn(currentPosition, newPosition, actor, eatenActor, turnedToDam, whiteActorsCount, blackActorsCount) {
+    turn(currentPosition, newPosition, actor, eatenActor, turnedToDam) {
         debugger;
-
         return Promise.resolve(true)
 			.then(() => {
-
-                //TODO?
-                // из Board на каждом ходе передается количество черных и белых фигур в данный момент на доске ??для синхронизации??
-                this.state.whiteActorsCount = whiteActorsCount;
-                this.state.blackActorsCount = blackActorsCount;
                 this.state.movesCount++;
-
                 this.state.currentActionDefinition = this.createTurnDefinition(currentPosition, newPosition, actor, eatenActor, turnedToDam);
 
                 // если количество черных или белых фигур = 0, то завершение игры.
@@ -285,13 +262,11 @@ export default class GamePage extends Component {
 				return authActions.getActualAccessToken();
 			})
 			.then((accessToken) => {
-
                 if (accessToken === false) return false;
 
                 let tasks = [];
 
                 if (this.state.isUserTurn) {
-
                     this.state.currentUserTurn = {
                         currentPosition: currentPosition,
                         targetPosition: newPosition,
@@ -300,17 +275,14 @@ export default class GamePage extends Component {
                     tasks.push(gameActions.setUserTurn(accessToken, this.state.currentUserTurn));
                     tasks.push(gameActions.getAIturn(accessToken));
                 }
-                else {
-        
+                else {       
                     this.state.currentAITurn = this.defaultSettings.currentAITurn;  
                 }
 
                 return Promise.all(tasks);
             })
             .spread((setUserTurnResponse, AIturnResponse) => {
-
                 if (AIturnResponse) {
-
                     this.state.currentAITurn = {
                         currentPosition: AIturnResponse.data.currentPosition,
                         newPosition: AIturnResponse.data.targetPosition,
@@ -320,24 +292,20 @@ export default class GamePage extends Component {
                 this.state.isUserTurn = !this.state.isUserTurn;
                 this.setState({});
             })
-            .catch((error) => {
-               
+            .catch((error) => {              
                 this.state.messageLink = '/login';
                 this.state.messageLinkName = 'Войти на сайт';
                 //error.response.message = 'Вы не авторизованы для данного действия';
                 
                 this.responseHandle(error);
 			})
-
     }
 
     // вернуть все визуальные настройки игры по умолчанию (кнопкой из тулбара)
     resetDefaultSettings() {
-        console.log('resetSettings');
-
         this.setState({
             quotesSwitchedOff: this.defaultSettings.quotesSwitchedOff,
-            userColor: this.defaultSettings.userColor,
+            userActorsColor: this.defaultSettings.userActorsColor,
             boardSize: this.defaultSettings.boardSize,
             level: this.defaultSettings.level,
             mode: this.defaultSettings.mode,
@@ -347,7 +315,6 @@ export default class GamePage extends Component {
     // при завершении игры показывается табло с результатами,
     // по клику или нажатию любой клавиши табло исчезает и происходит reset
     resetAll(event) {
-
         this.page.removeEventListener('click', this.resetAll);
         this.page.removeEventListener('keydown', this.resetAll);
 
@@ -382,34 +349,33 @@ export default class GamePage extends Component {
     // получить описание текущего хода - нужно для вывода в инфобаре
     createTurnDefinition(currentPosition, newPosition, actor, eatenActor, turnedToDam) {
         debugger;
-
         // метки на доске, соответствующие координатам хода
         const currentPositionMarks = {
-			markX: this.marksSymbols.horizontal[currentPosition.x],
-			markY: this.marksSymbols.vertical[currentPosition.y]
+			markX: gameConst.marksSymbols.horizontal[currentPosition.x],
+			markY: gameConst.marksSymbols.vertical[currentPosition.y]
 		};
 
 		const newPositionMarks = {
-			markX: this.marksSymbols.horizontal[newPosition.x],
-			markY: this.marksSymbols.vertical[newPosition.y]
+			markX: gameConst.marksSymbols.horizontal[newPosition.x],
+			markY: gameConst.marksSymbols.vertical[newPosition.y]
 		};
 
         let definition = '';
 
         definition += this.state.movesCount + ') ';
-        definition += ' ' + (actor.isUserColor ? 'Ваша' : 'Противника');
+        definition += ' ' + (actor.isuserActorsColor ? 'Ваша' : 'Противника');
         definition += ' ' + (actor.type == "grid__actor_checker" ? 'шашка' : 'дамка');
         definition += ' перемещена с клетки ' + currentPositionMarks.markX + currentPositionMarks.markY + 
                         ' на клетку ' + newPositionMarks.markX + newPositionMarks.markY + '.';
 
         if (eatenActor) {
-            definition += ' ' + (eatenActor.isUserColor ? 'Ваша' : 'Противника');
+            definition += ' ' + (eatenActor.isuserActorsColor ? 'Ваша' : 'Противника');
             definition += ' ' + (eatenActor.type == 'grid__actor_checker' ? 'шашка' : 'дамка');
             definition += ' съедена.';
         }
 
         if (turnedToDam) {
-            definition += ' ' + (actor.isUserColor ? 'Ваша шашка' : 'Противника шашка');
+            definition += ' ' + (actor.isuserActorsColor ? 'Ваша шашка' : 'Противника шашка');
             definition += ' превратилась в дамку.';
         }
 
@@ -421,16 +387,13 @@ export default class GamePage extends Component {
 
 		return Promise.resolve(true)
 			.then(() => {
-
 				return authActions.getActualAccessToken();
 			})
-			.then((accessToken) => {
-		
+			.then((accessToken) => {		
 				return authActions.getLkDataAction(accessToken);
 			})
 			.then((response) => {
                 debugger;
-
                 if (!response.data) throw new Error('no lk data for user'); 
 
 				this.showLkForm(response.data);
@@ -461,11 +424,8 @@ export default class GamePage extends Component {
         role: user.role,
     }*/
     showLkForm(data) {
-
         this.setState({
-
             lkFormIsShown: true,
-
             lkLogin: data.login,
             lkEmail: data.email,
             lkIsEmailConfirmed: data.isEmailConfirmed,
@@ -476,9 +436,7 @@ export default class GamePage extends Component {
     
     // TODO
     /*showMessage(message, messageLink = this.defaultSettings.messageLink, messageLinkName = this.defaultSettings.messageLinkName) {
-
         this.setState({
-
             message: message,
             messageIsShown: true,
             messageLink: messageLink,
@@ -488,7 +446,6 @@ export default class GamePage extends Component {
 
     responseHandle(response) {
 		debugger;
-
         if (response.response) response = response.response;  // если это ошибка
 
 		let message = utilsActions.getResponseMessage(response);
@@ -504,53 +461,44 @@ export default class GamePage extends Component {
 
 		return Promise.resolve(true)
 			.then(() => {
-
                 let tasks = [];
 
-                if (this.state.startOfGame === true) {
+                tasks.push(authActions.logoutAction());
 
+                if (this.state.startOfGame === true) {
                     tasks.push(this.switchStartGame(event));
                 }
-
-                debugger;
-                tasks.push(authActions.logoutAction());
                 
                 return Promise.all(tasks);
 			})
-			.then((responses) => {
+			.spread((logoutResponse, switchStartGameResponse) => {
                 debugger;
 
-                let response = responses[1] ? responses[1] : responses[0];
+                let response = switchStartGameResponse ? switchStartGameResponse : logoutResponse;
 				 // TODO!! сделать, чтобы сначала выводилось сообщение о выходе, а потом табло с завершением игры
 				 this.state.lkLogout = true;
 
 				response.message = 'Выход из аккаунта осуществлен успешно.';
-				this.responseHandle(response);
-				
+				this.responseHandle(response);				
 			})
 			.catch((error) => {
-
 				this.responseHandle(error);  
 			})
 	}
 
     /*switchLkLogout(logout) {
         debugger;
-
         this.state.lkLogout = logout;
-
         //if (this.state.startOfGame) this.switchStartGame();
     }*/
 
     // когда скрывается сообщение, скрывается и лк (если был показан)
     resetPage(event) {
         debugger;
-
         this.page.removeEventListener('click', this.resetPage);
         this.page.removeEventListener('keydown', this.resetPage);
 
         this.setState({
-
             messageIsShown: this.defaultSettings.messageIsShown,
             messageLink: this.defaultSettings.messageLink,
             messageLinkName: this.defaultSettings.messageLinkName,
@@ -579,8 +527,7 @@ export default class GamePage extends Component {
 
     componentDidUpdate(prevState) {   
         debugger;
-
-        // если игра завершена, то появляется табло, и по клику или нажатию любой клавиши табло пропадает и сбрасываются настройки
+        // если игра завершена, то появляется табло, и по клику/нажатию любой клавиши табло пропадает и сбрасываются настройки
         if (!prevState.endOfGame && this.state.endOfGame) {
             this.page.addEventListener('click', this.resetAll);
             this.page.addEventListener('keydown', this.resetAll);
@@ -588,7 +535,6 @@ export default class GamePage extends Component {
         // если было показано сообщение об ошибке, по клику/нажатию сообщение пропадает, ничего не сбрасывается
         else if ((!prevState.messageIsShown && this.state.messageIsShown) ||
                 (!prevState.lkFormIsShown && this.state.lkFormIsShown)) {
-
             this.page.addEventListener('click', this.resetPage);
             this.page.addEventListener('keydown', this.resetPage);
         }
@@ -600,7 +546,7 @@ export default class GamePage extends Component {
     }
 
     render() {
-        console.log('render display');
+        //console.log('render display');
 
         const contentClass = 'page__content content' + 
                             ((this.state.endOfGame || this.state.messageIsShown || this.state.lkFormIsShown) ? ' content_transparent' : '');
@@ -622,7 +568,7 @@ export default class GamePage extends Component {
                             switchStartGame = {this.switchStartGame}
                             updateData = {this.updateData} 
                             resetDefaultSettings = {this.resetDefaultSettings}
-                            userColor = {this.state.userColor} 
+                            userActorsColor = {this.state.userActorsColor} 
                             boardSize = {this.state.boardSize} 
                             level = {this.state.level} 
                             mode = {this.state.mode}
@@ -654,7 +600,7 @@ export default class GamePage extends Component {
                                 currentAITurn = {this.state.currentAITurn}
                                 turn = {this.turn} 
                                 boardSize = {this.state.boardSize} 
-                                userColor = {this.state.userColor} 
+                                userActorsColor = {this.state.userActorsColor} 
                                 mode = {this.state.mode}
                                 updateData = {this.updateData} 
                             />
@@ -680,7 +626,7 @@ export default class GamePage extends Component {
                     whiteActorsCount = {this.state.whiteActorsCount}
                     blackActorsCount = {this.state.blackActorsCount}
                     totalOfGame = {this.state.totalOfGame}
-                    userColor = {this.props.userColor}
+                    userActorsColor = {this.props.userActorsColor}
                 />
 
                 <LkForm 
