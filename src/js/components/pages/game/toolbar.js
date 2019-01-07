@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as authActions from '../../actions/authActions';
+import gameConst from '../../../constants/gameConst';
 
 // панель настроек
 export default class Toolbar extends Component {
@@ -11,8 +12,7 @@ export default class Toolbar extends Component {
 		super(props);
 
 		this.state = {
-
-			userLoggedIn: false,
+			userLoggedIn: false,   // авторизован ли юзер на сайте
 		}
 		   
 		this.switchStartHandle = this.switchStartHandle.bind(this);
@@ -31,14 +31,16 @@ export default class Toolbar extends Component {
 	
 	// событие изменения настроек
 	changeData(event) {
-
-		console.log(event.target.name, event.target.value);
+		debugger;
 		// вызывает событие в родителе - дисплее
 		if (event.target.name == 'quotesSwitchedOff') {
-			this.props.updateData(event.target.name, !this.props.quotesSwitchedOff);	
+			this.props.updateData(event.target.name, !this.props.quotesSwitchedOff);   //??	
+		}
+		else if (event.target.name == 'boardSize') {
+			this.props.updateData(event.target.name, event.target.value);
 		}
 		else {
-			this.props.updateData(event.target.name, event.target.value);
+			this.props.updateData(event.target.name, gameConst[event.target.name][event.target.value]);
 		}			
 	}
 
@@ -51,10 +53,9 @@ export default class Toolbar extends Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
 		debugger;
-		
 		return (
 				nextProps.quotesSwitchedOff !== this.props.quotesSwitchedOff ||
-				nextProps.userColor !== this.props.userColor || 
+				nextProps.userActorsColor !== this.props.userActorsColor || 
 				nextProps.boardSize !== this.props.boardSize ||
 				nextProps.level !== this.props.level || 
 				nextProps.mode !== this.props.mode ||
@@ -65,7 +66,6 @@ export default class Toolbar extends Component {
 	}
 	
 	getAuthContent() {
-
 		let authContent;
 
 		const loginContent = (
@@ -105,15 +105,14 @@ export default class Toolbar extends Component {
 	}
 
 	render() {
-		console.log('render toolbar');
-
+		debugger;
+		//console.log('render toolbar');
 		let authContent = this.getAuthContent();
 
 		let itemIsDisabled;
 		let itemClass;
 		let startBtnText;
 		let startBtnClass;  //TODO!
-
 		let startBtnIsDisabled;
 		let startBtnTitle;
 
@@ -143,14 +142,12 @@ export default class Toolbar extends Component {
 		}*/
 
 		if (!this.state.userLoggedIn) {
-
 			startBtnIsDisabled = true;
 			startBtnTitle = 'Чтобы начать игру, вам надо авторизоваться на сайте';
 			startBtnClass = 'button_disabled bar_help-item';
 			startBtnText = 'Начать игру';
 		}
 		else {
-
 			startBtnIsDisabled = false;
 			startBtnClass = 'bar_enabled-item';
 
@@ -170,9 +167,6 @@ export default class Toolbar extends Component {
 			}
 		}
 		
-
-
-
 		return (
 			<div className = "bar bar_tools">
 
@@ -184,9 +178,9 @@ export default class Toolbar extends Component {
 				</div>
 				<div>
 					Выберите цвет ваших фигур: 
-					<select name="userColor" className = {itemClass} disabled = {itemIsDisabled} onChange = {this.changeData} value = {this.props.userColor}>
-						<option value="white">белые</option>
-						<option value="black">черные</option>
+					<select name="userActorsColor" className = {itemClass} disabled = {itemIsDisabled} onChange = {this.changeData} value = {this.props.userActorsColor.name}>
+						<option value={gameConst.userActorsColor.white.name}>{gameConst.userActorsColor.white.value}</option>
+						<option value={gameConst.userActorsColor.black.name}>{gameConst.userActorsColor.black.value}</option>
 					</select>
 				</div>
 				<div>
@@ -194,30 +188,29 @@ export default class Toolbar extends Component {
 					<input 
 						name = "boardSize" 
 						type = "range" 
-						min = "4" 
-						max = "14" 
-						step = "2" 
+						min = {gameConst.boardSize.min} 
+						max = {gameConst.boardSize.max} 
+						step = {gameConst.boardSize.step}  
 						value = {this.props.boardSize} 
 						className = {itemClass}
 						disabled = {itemIsDisabled} 
 						onChange = {this.changeData}
-					/>
-					
+					/>				
 				</div>
 				<div>
 					Выберите уровень сложности: 
-					<select name="level" className = {itemClass} disabled = {itemIsDisabled} onChange = {this.changeData} value = {this.props.level}>
-						<option value="easy">легкий</option>
-						<option value="medium">средний</option>
-						<option value="hard">сложный</option>
-						<option value="randomize">randomize</option>
+					<select name="level" className = {itemClass} disabled = {itemIsDisabled} onChange = {this.changeData} value = {this.props.level.name}>
+						<option value={gameConst.level.easy.name}>{gameConst.level.easy.value}</option>
+						<option value={gameConst.level.medium.name}>{gameConst.level.medium.value}</option>
+						<option value={gameConst.level.hard.name}>{gameConst.level.hard.value}</option>
+						<option value={gameConst.level.randomize.name}>{gameConst.level.randomize.value}</option>
 					</select>
 				</div>
 				<div>
 					Выберите режим игры: 
-					<select name="mode" className = {itemClass} disabled = {itemIsDisabled} onChange = {this.changeData} value = {this.props.mode}>>
-						<option value="classic">классический</option>
-						<option value="dam">играть только дамками</option>
+					<select name="mode" className = {itemClass} disabled = {itemIsDisabled} onChange = {this.changeData} value = {this.props.mode.name}>>
+						<option value={gameConst.mode.classic.name}>{gameConst.mode.classic.value}</option>
+						<option value={gameConst.mode.dam.name}>{gameConst.mode.dam.value}</option>
 					</select>
 				</div>
 				<button 

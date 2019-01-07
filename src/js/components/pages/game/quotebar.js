@@ -123,7 +123,6 @@ export default class Quotebar extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-
 		if (this.props.quotesSwitchedOff && !prevProps.quotesSwitchedOff) {
 			clearInterval(this.changeQuoteTimer);
 		}
@@ -133,7 +132,6 @@ export default class Quotebar extends Component {
 	}
 
 	componentWillUnmount() {
-
 		clearInterval(this.changeQuoteTimer);
 	}
 

@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-const Promise = require('bluebird');
+import Promise from 'bluebird';
 import MessageForm from './messageForm';
 import * as authActions from '../actions/authActions';
 import * as utilsActions from '../actions/utilsActions';
@@ -586,7 +586,7 @@ export default class AuthUtilsForm extends Component {
 
 	render() {
 
-		console.log('--------render authUtilsPage--------------');
+		//console.log('--------render authUtilsPage--------------');
 
 		const contentClass = 'page__content content' + (this.state.messageIsShown ? ' content_transparent' : '');
 		const messageFormClass = 'page__message-form ' + (this.state.messageIsShown ? 'message-form_shown' : 'message-form_hidden');

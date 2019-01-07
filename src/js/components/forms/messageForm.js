@@ -15,7 +15,7 @@ export default class MessageForm extends Component {
 	}	
 
 	render() {
-		console.log('--------render messageForm--------------');
+		//console.log('--------render messageForm--------------');
 		const messageFormClass = 'message-form ' + (this.props.className ? this.props.className : '');
 
 		return (

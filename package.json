@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "front": "webpack-dev-server --mode development --hot",
+    "start-front-prod": "webpack-dev-server --mode production --hot",
     "build-css": "lessc ./src/less/template.less ./public/template.css",
-    "dev": "webpack --mode development",
-    "build": "webpack --mode production",
-    "dev-server": "webpack-dev-server --mode development --hot",
-    "build-server": "webpack-dev-server --mode production --hot",
+    "build-front-dev": "webpack --mode development",
+    "build-front-prod": "webpack --mode production",
     "size": "size-limit"
   },
   "repository": {

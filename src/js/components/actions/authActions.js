@@ -1,8 +1,8 @@
 'use strict';
 
 import axios from 'axios';
-const Promise = require('bluebird');
-import apiConst from '../apiConst';
+import Promise from 'bluebird';
+import apiConst from '../../constants/apiConst';
 
 export function loginAction(email, password) {
 	debugger;
@@ -63,7 +63,6 @@ export function socialLoginAction(service) {
 
 export function getActualAccessToken() {
 	debugger;
-
 	const accessToken = getAccessToken();
 	const refreshToken = getRefreshToken();
 	const accessTokenExpired = isAccessTokenExpired();
@@ -86,7 +85,6 @@ export function getActualAccessToken() {
 			})
 		})
 		.then((response) => {
-
 			if (response === true) return accessToken;
 			const tokensData = response.data;
 
@@ -100,11 +98,9 @@ export function logoutAction() {
 
 	return Promise.resolve(true)
 		.then(() => {
-
 			return getActualAccessToken();
 		})
-		.then((accessToken) =>{
-
+		.then((accessToken) => {
 			const options = {
 				method: 'DELETE',
 				headers: { 'Authorization': `Token ${accessToken}` },
@@ -114,7 +110,6 @@ export function logoutAction() {
 			return axios(options);
 		})
 		.then((response) => {
-
 			_removeAuthData();
 
 			return response;
@@ -139,7 +134,6 @@ export function emailConfirmAction(email) {
 
 export function changePasswordAction(accessToken, password) {
 	debugger;
-
 	const params = {
 		password: password,
 	};
@@ -156,7 +150,6 @@ export function changePasswordAction(accessToken, password) {
 
 export function getLkDataAction(accessToken) {
 	debugger;
-
 	const options = {
 		method: 'GET',
 		headers: { 'Authorization': `Token ${accessToken}` },
@@ -166,29 +159,24 @@ export function getLkDataAction(accessToken) {
 	return axios(options);
 };
 
-
-// ----------------------------------------------------
-
 export function getAccessToken() {
-
 	return localStorage.getItem('accessToken');
 };
 
 export function getRefreshToken() {
-
 	return localStorage.getItem('refreshToken');
 };
 
 export function isAccessTokenExpired() {
-
 	const accessTokenExpTime = localStorage.getItem('expires_in');
 	const nowTime = new Date().getTime();
 
 	return accessTokenExpTime <= nowTime;
 };
 
-function _setAuthData(tokensData) {
+// ----------------------------------------------------
 
+function _setAuthData(tokensData) {
 	if (!tokensData.refreshToken || !tokensData.accessToken || !tokensData.expires_in) {
 		throw new Error('invalid tokens data');
 	}
@@ -199,7 +187,6 @@ function _setAuthData(tokensData) {
 };
     
 function _removeAuthData() {
-
 	localStorage.removeItem("refreshToken");
 	localStorage.removeItem("accessToken");
 	localStorage.removeItem("expires_in");

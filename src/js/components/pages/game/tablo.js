@@ -1,20 +1,21 @@
 'use strict';
 
 import React, { Component } from 'react';
+import gameConst from '../../../constants/gameConst';
 
 // табло с результатами игры
 export default class Tablo extends Component {
 
-	shouldComponentUpdate(nextProps, nextState) {
+	shouldComponentUpdate(nextProps) {
 		// отрисовка нужна, только если сменился стиль - табло стало видимым
 		return (nextProps.className !== this.props.className);
 	}
 
     render() {
-		console.log('render tablo');
+		//console.log('render tablo');
 		const tabloClass = 'tablo ' + (this.props.className ? this.props.className : '');
-		const whoWins = (this.props.totalOfGame == 'standoff') ? 'Ничья!' : ((this.props.totalOfGame ==  'user') ? 'Вы выиграли!' : 'Вы проиграли!');
-		const score = (this.props.userColor == 'white') ? (this.props.blackActorsCount + ' : ' + this.props.whiteActorsCount)
+		const whoWins = 'Кто выиграл: ' + this.props.totalOfGame.value;
+		const score = (this.props.userActorsColor == gameConst.userActorsColor.white) ? (this.props.blackActorsCount + ' : ' + this.props.whiteActorsCount)
 														: (this.props.whiteActorsCount + ' : ' + this.props.blackActorsCount);
 
         return (
