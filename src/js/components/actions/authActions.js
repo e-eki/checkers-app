@@ -134,18 +134,26 @@ export function emailConfirmAction(email) {
 
 export function changePasswordAction(accessToken, password) {
 	debugger;
-	const params = {
-		password: password,
-	};
+	return Promise.resolve(true)
+		.then(() => {
+			const params = {
+				password: password,
+			};
+		
+			const options = {
+				method: 'PUT',
+				headers: { 'Authorization': `Token ${accessToken}` },
+				data: params,
+				url: `${apiConst.changePasswordApi}`
+			};
+			
+			return axios(options);
+		})
+		.then((response) => {
+			_removeAuthData();
 
-	const options = {
-		method: 'PUT',
-		headers: { 'Authorization': `Token ${accessToken}` },
-		data: params,
-		url: `${apiConst.changePasswordApi}`
-	};
-	
-	return axios(options);
+			return response;
+		})
 };
 
 export function getLkDataAction(accessToken) {

@@ -90,10 +90,17 @@ export default class AuthUtilsForm extends Component {
 	//check user data
 	//TODO: переписать 
 	checkData(emailData, loginData, passwordData, duplicatePasswordData) {
+
+		function validateEmail(email) {
+			var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			return emailRegex.test(String(email).toLowerCase());
+		}
+		debugger;
+		let r = validateEmail(emailData);
 		
 		if ( emailData !== undefined && (
 			emailData == this.defaultData.emailData || emailData == this.warningData.emailData 
-			|| emailData == '')) {
+			|| emailData == '' || !validateEmail(emailData))) {
 			this.setState({
 				emailData: this.warningData.emailData
 			});
@@ -183,7 +190,7 @@ export default class AuthUtilsForm extends Component {
 	}
 
 	clickSocialLoginButton(event) {
-
+		debugger;
 		const service = event.target.name;
 
 		// TODO!!! vkontakte api не отвечает localhost (нет 'Access-Control-Allow-Origin' в заголовке)

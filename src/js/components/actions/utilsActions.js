@@ -1,9 +1,5 @@
 'use strict';
 
-import axios from 'axios';
-import Promise from 'bluebird';
-import apiConst from '../../constants/apiConst';
-
 export function getResponseMessage(response) {
 	debugger;
 	let message;
