@@ -2,8 +2,6 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Promise from 'bluebird';
-import * as authActions from '../actions/authActions';
 
 // форма для личного кабинета
 export default class LkForm extends Component {
@@ -20,7 +18,6 @@ export default class LkForm extends Component {
 	//TODO: сделать предупреждение о завершении игры
 	clickLogoutButton(event) {
 		debugger;
-
 		this.props.clickLogoutButton(event);
 	}
 
@@ -38,7 +35,6 @@ export default class LkForm extends Component {
 		debugger;
 
 		if (!this.props.games || !this.props.games.length) return (
-
 			<p>
 				{this.defaultGamesInfo}
 			</p>
@@ -48,7 +44,6 @@ export default class LkForm extends Component {
 		let gameKey = 0;
 
 		this.props.games.forEach((game) => {
-
 			const gameState = game.isFinished ? 'завершена' : 'не завершена';
 			const gameResult = game.isFinished ? game.totalOfGame : 'пока никто';
 			const gameInfo = `${gameKey}) Игра ${gameState}, количество ходов: ${game.movesCount}, длительность игры: ${game.gameTime}, кто победил: ${gameResult}`;
@@ -65,8 +60,7 @@ export default class LkForm extends Component {
 		return games;
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		
+	shouldComponentUpdate(nextProps, nextState) {		
 		return (nextProps.className !== this.props.className /*|| nextProps.lkLogout !== this.props.lkLogout*/);
 	}
 	

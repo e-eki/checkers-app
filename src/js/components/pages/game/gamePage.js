@@ -104,6 +104,7 @@ export default class GamePage extends Component {
         this.resetPage = this.resetPage.bind(this);
         //this.showMessage = this.showMessage.bind(this);
         this.responseHandle = this.responseHandle.bind(this);
+        this.errorResponseHandle = this.errorResponseHandle.bind(this);  //??
         this.clickLkButton = this.clickLkButton.bind(this);
         this.showLkForm = this.showLkForm.bind(this);
         this.clickLogoutButton = this.clickLogoutButton.bind(this);
@@ -239,9 +240,8 @@ export default class GamePage extends Component {
 			.catch((error) => {              
                 this.state.messageLink = '/login';
                 this.state.messageLinkName = 'Войти на сайт';
-                //error.response.message = 'Вы не авторизованы для данного действия';
                 
-                this.responseHandle(error);
+                this.errorResponseHandle(error);
 			})
     }
 
@@ -295,9 +295,8 @@ export default class GamePage extends Component {
             .catch((error) => {              
                 this.state.messageLink = '/login';
                 this.state.messageLinkName = 'Войти на сайт';
-                //error.response.message = 'Вы не авторизованы для данного действия';
                 
-                this.responseHandle(error);
+                this.errorResponseHandle(error);
 			})
     }
 
@@ -444,17 +443,22 @@ export default class GamePage extends Component {
         })
     }*/
 
-    responseHandle(response) {
-		debugger;
-        if (response.response) response = response.response;  // если это ошибка
+    responseHandle(response) {	
+		this.setState({
+			messageIsShown: true,
+			message: (response.data ? response.data : ''),  //??
+		});
+    }
 
-		let message = utilsActions.getResponseMessage(response);
+    errorResponseHandle(error) {
+		debugger;		
+		let message = utilsActions.getErrorResponseMessage(error);
 
 		this.setState({
 			messageIsShown: true,
 			message: message,
 		});
-    }
+	}
     
     clickLogoutButton(event) {
 		debugger;
@@ -482,7 +486,7 @@ export default class GamePage extends Component {
 				this.responseHandle(response);				
 			})
 			.catch((error) => {
-				this.responseHandle(error);  
+				this.errorResponseHandle(error);  
 			})
 	}
 
@@ -636,7 +640,6 @@ export default class GamePage extends Component {
                     isEmailConfirmed = {this.state.lkIsEmailConfirmed}
                     role = {this.state.lkRole}
                     games = {this.state.lkGames}
-                    responseHandle = {this.responseHandle}
                     clickLogoutButton = {this.clickLogoutButton}
                     lkLogout = {this.state.lkLogout}
                 />

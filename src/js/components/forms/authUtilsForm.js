@@ -61,6 +61,7 @@ export default class AuthUtilsForm extends Component {
 		this.clickSocialLoginButton = this.clickSocialLoginButton.bind(this);
 		this.resetPage = this.resetPage.bind(this);
 		this.responseHandle = this.responseHandle.bind(this);
+		this.errorResponseHandle = this.errorResponseHandle.bind(this);
 		this.clickRecoveryPasswordButton = this.clickRecoveryPasswordButton.bind(this);
 		this.checkData = this.checkData.bind(this);
 		this.clickEmailConfirmButton = this.clickEmailConfirmButton.bind(this);
@@ -96,11 +97,11 @@ export default class AuthUtilsForm extends Component {
 			return emailRegex.test(String(email).toLowerCase());
 		}
 		debugger;
-		let r = validateEmail(emailData);
 		
 		if ( emailData !== undefined && (
 			emailData == this.defaultData.emailData || emailData == this.warningData.emailData 
-			|| emailData == '' || !validateEmail(emailData))) {
+			//|| emailData == '' || !validateEmail(emailData))) {  todo
+			|| emailData == '')) {
 			this.setState({
 				emailData: this.warningData.emailData
 			});
@@ -159,11 +160,7 @@ export default class AuthUtilsForm extends Component {
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-				//error.response.data
-				//error.response.status
-				//error.response.statusText
-
-				this.responseHandle(error);
+				this.errorResponseHandle(error);
 			})
 	}
 
@@ -184,8 +181,7 @@ export default class AuthUtilsForm extends Component {
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-
-				this.responseHandle(error);
+				this.errorResponseHandle(error);
 			})
 	}
 
@@ -204,8 +200,7 @@ export default class AuthUtilsForm extends Component {
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-
-				this.responseHandle(error);
+				this.errorResponseHandle(error);
 			})
 	}
 
@@ -226,8 +221,7 @@ export default class AuthUtilsForm extends Component {
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-
-				this.responseHandle(error);
+				this.errorResponseHandle(error);
 			})
 	}
 
@@ -252,8 +246,7 @@ export default class AuthUtilsForm extends Component {
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-
-				this.responseHandle(error);
+				this.errorResponseHandle(error);
 			})
 	}
 
@@ -285,16 +278,21 @@ export default class AuthUtilsForm extends Component {
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-				this.responseHandle(error);
+				this.errorResponseHandle(error);
 			})
 	}
 
 	responseHandle(response) {
 		debugger;
+		this.setState({
+			messageIsShown: true,
+			message: (response.data ? response.data : ''),  //??
+		});
+	}
 
-		if (response.response) response = response.response;  // если это ошибка
-
-		let message = utilsActions.getResponseMessage(response);
+	errorResponseHandle(error) {
+		debugger;		
+		let message = utilsActions.getErrorResponseMessage(error);
 
 		this.setState({
 			messageIsShown: true,
