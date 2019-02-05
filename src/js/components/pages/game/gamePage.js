@@ -185,7 +185,7 @@ export default class GamePage extends Component {
         
                 // начать игру
                 if (this.state.startOfGame === false) {
-                    tasks.push(gameActions.startGameAction(accessToken, this.state.userActorsColor.name, this.state.boardSize.name, this.state.level.name, this.state.mode.name));
+                    tasks.push(gameActions.startGameAction(accessToken, this.state.userActorsColor.name, this.state.boardSize, this.state.level.name, this.state.mode.name));
 
                     if (!this.state.isUserTurn) 
                         tasks.push(gameActions.getAIturn(accessToken));
@@ -255,7 +255,7 @@ export default class GamePage extends Component {
 
                 // если количество черных или белых фигур = 0, то завершение игры.
                 if (whiteActorsCount == 0 || blackActorsCount == 0) {
-                    this.switchStartGame();
+                    this.switchStartGame();  //todo!
                     return false;
                 }
 
@@ -481,20 +481,14 @@ export default class GamePage extends Component {
 				 // TODO!! сделать, чтобы сначала выводилось сообщение о выходе, а потом табло с завершением игры
 				 this.state.lkLogout = true;
 
-				response.message = 'Выход из аккаунта осуществлен успешно.';
+				response.data = 'Выход из аккаунта осуществлен успешно.';
 				this.responseHandle(response);				
 			})
 			.catch((error) => {
 				this.errorResponseHandle(error);  
 			})
-	}
-
-    /*switchLkLogout(logout) {
-        debugger;
-        this.state.lkLogout = logout;
-        //if (this.state.startOfGame) this.switchStartGame();
-    }*/
-
+    }
+    
     // когда скрывается сообщение, скрывается и лк (если был показан)
     resetPage(event) {
         debugger;
