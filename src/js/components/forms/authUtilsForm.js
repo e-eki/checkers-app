@@ -149,10 +149,6 @@ export default class AuthUtilsForm extends Component {
 
 		return authActions.loginAction(this.state.emailData, this.state.passwordData)
 			.then((response) => {
-				//response.data
-				//response.status
-				//response.statusText
-
 				this.state.messageLink = '/';
 				this.state.messageLinkName = 'На главную';
 				
@@ -160,6 +156,12 @@ export default class AuthUtilsForm extends Component {
 				this.responseHandle(response);
 			})
 			.catch((error) => {
+				if (error.response && error.response.status && error.response.status === 401) {
+					this.state.messageLink = '/registration';  //todo: ??
+					this.state.messageLinkName = 'Зарегистрироваться';
+
+					error.response.data.message = 'Пользователь с указанным имейлом не найден.';
+				}
 				this.errorResponseHandle(error);
 			})
 	}
@@ -173,14 +175,18 @@ export default class AuthUtilsForm extends Component {
 
 		return authActions.registrationAction(this.state.emailData, this.state.loginData, this.state.passwordData)
 			.then((response) => {
-
-				//this.state.messageLink = this.defaultData.messageLink;
-				//this.state.messageLinkName = this.defaultData.messageLinkName;
-				
 				response.data = 'Вы успешно зарегистрировались на сайте. Нажмите ссылку для перехода.';
 				this.responseHandle(response);
 			})
 			.catch((error) => {
+				debugger;
+				if (error.response && error.response.status && error.response.status === 401) {
+					this.state.messageLink = '/emailConfirm';  //todo: ??переходит на страницу входа
+					this.state.messageLinkName = 'Подтвердить имейл';
+
+					error.response.data.message = 'Данный имейл не подтвержден';
+				}
+
 				this.errorResponseHandle(error);
 			})
 	}
@@ -192,7 +198,6 @@ export default class AuthUtilsForm extends Component {
 		// TODO!!! vkontakte api не отвечает localhost (нет 'Access-Control-Allow-Origin' в заголовке)
 		return authActions.socialLoginAction(service)
 			.then((response) => {
-
 				this.state.messageLink = '/';
 				this.state.messageLinkName = 'На главную';
 
@@ -212,11 +217,7 @@ export default class AuthUtilsForm extends Component {
 		if (!dataIsCorrect) return;
 		
 		return authActions.recoveryPasswordAction(this.state.emailData)
-			.then((response) => {
-				
-				//this.state.messageLink = this.defaultData.messageLink;
-				//this.state.messageLinkName = this.defaultData.messageLinkName;
-				
+			.then((response) => {				
 				response.data = 'Инструкции по восстановлению пароля отправлены на указанный адрес электронной почты.';
 				this.responseHandle(response);
 			})
@@ -234,15 +235,9 @@ export default class AuthUtilsForm extends Component {
 		
 		return authActions.emailConfirmAction(this.state.emailData)
 			.then((response) => {
-
-				//this.state.messageLink = this.defaultData.messageLink;
-				//this.state.messageLinkName = this.defaultData.messageLinkName;
-
 				if (response.data == 'Confirm mail sent again') {
-
 					response.data = 'Письмо с кодом подтверждения отправлено на указанный адрес электронной почты.';
-				}
-						
+				}						
 				this.responseHandle(response);
 			})
 			.catch((error) => {
@@ -272,12 +267,17 @@ export default class AuthUtilsForm extends Component {
 				return authActions.changePasswordAction(accessToken, this.state.passwordData)
 			})
 			.then((response) => {
-				//this.state.messageLink = this.defaultData.messageLink;
-				//this.state.messageLinkName = this.defaultData.messageLinkName;
 				response.data = 'Пароль успешно изменен.';			
 				this.responseHandle(response);
 			})
 			.catch((error) => {
+				if (error.response && error.response.status && error.response.status === 401) {
+					this.state.messageLink = '/emailConfirm';  //todo: ??переходит на страницу входа
+					this.state.messageLinkName = 'Подтвердить имейл';
+
+					error.response.data.message = 'Данный имейл не подтвержден';
+				}
+
 				this.errorResponseHandle(error);
 			})
 	}

@@ -411,8 +411,7 @@ export default class GamePage extends Component {
                     error.message = 'Вы не авторизованы для данного действия';
                 }    
                 
-                this.responseHandle(error);
-				//this.showMessage('Вы не авторизованы для данного действия', '/login', 'Войти на сайт');  
+                this.errorResponseHandle(error);
 			})
     }
 

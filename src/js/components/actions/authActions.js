@@ -6,13 +6,11 @@ import apiConst from '../../constants/apiConst';
 
 export function loginAction(email, password) {
 	debugger;
-
 	return axios.post(`${apiConst.login}`, {
 		email: email,
 		password: password,
 	})
 		.then((response) => {
-
 			_setAuthData(response.data);
 
 			delete response.data;
@@ -32,7 +30,6 @@ export function registrationAction(email, login, password) {
 
 export function socialLoginAction(service) {
 	debugger;
-
 	let socialLink;
 
 	switch (service) {
@@ -46,14 +43,18 @@ export function socialLoginAction(service) {
 			break;
 		default:  //??
 			throw new Error('login error: no service name');
-			break;
 	}
-	debugger;
 
 	// TODO!!! vkontakte api не отвечает localhost (нет 'Access-Control-Allow-Origin' в заголовке)
-	return axios.get(socialLink)
+	const options = {
+		method: 'GET',
+		headers: { 'Access-Control-Allow-Origin': 'http://localhost:8080' },
+		url: socialLink
+	};
+	
+	return axios(options)
+	//return axios.get(socialLink)
 		.then((response) => {
-
 			_setAuthData(response.data);
 
 			delete response.data;
@@ -69,16 +70,7 @@ export function getActualAccessToken() {
 
 	return Promise.resolve(true)
 		.then(() => {
-
 			if (!accessTokenExpired) return true;
-
-			/*if (isAccessTokenExpired && refreshToken) {
-
-				return axios.post(`${apiConst.api_url}/refreshtokens/`, {	
-					refreshToken: refreshToken,
-				})
-			}
-			else throw new Error('no refresh token');*/
 
 			return axios.post(`${apiConst.refreshTokens}`, {	
 				refreshToken: refreshToken,
