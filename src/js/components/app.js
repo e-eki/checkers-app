@@ -11,6 +11,7 @@ export default class App extends Component {
     render() {
 
         //??? должен ли сервер отдавать эти страницы по этим роутам?
+        // todo: не переходит по resetPassword/...
         return (
             <Switch>
                 <Route exact path="/" component={GamePage} />
@@ -18,7 +19,7 @@ export default class App extends Component {
                 <Route path="/registration" component={RegistrationPage} />
                 <Route path="/recoveryPassword" component={RecoveryPasswordPage} />
                 <Route path="/emailConfirm" component={EmailConfirmPage} />
-                <Route path="/resetPassword" component={ResetPasswordPage} />
+                <Route path="/resetPassword/" component={ResetPasswordPage} />   
                 <Route component={NotFoundPage} />              
             </Switch>
         )

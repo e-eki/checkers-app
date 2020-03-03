@@ -61,6 +61,7 @@ export default class AuthUtilsForm extends Component {
 		this.clickSocialLoginButton = this.clickSocialLoginButton.bind(this);
 		this.resetPage = this.resetPage.bind(this);
 		this.responseHandle = this.responseHandle.bind(this);
+		this.errorResponseHandle = this.errorResponseHandle.bind(this);
 		this.clickRecoveryPasswordButton = this.clickRecoveryPasswordButton.bind(this);
 		this.checkData = this.checkData.bind(this);
 		this.clickEmailConfirmButton = this.clickEmailConfirmButton.bind(this);
@@ -90,9 +91,16 @@ export default class AuthUtilsForm extends Component {
 	//check user data
 	//TODO: переписать 
 	checkData(emailData, loginData, passwordData, duplicatePasswordData) {
+
+		function validateEmail(email) {
+			var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			return emailRegex.test(String(email).toLowerCase());
+		}
+		debugger;
 		
 		if ( emailData !== undefined && (
 			emailData == this.defaultData.emailData || emailData == this.warningData.emailData 
+			//|| emailData == '' || !validateEmail(emailData))) {  todo
 			|| emailData == '')) {
 			this.setState({
 				emailData: this.warningData.emailData
@@ -141,10 +149,6 @@ export default class AuthUtilsForm extends Component {
 
 		return authActions.loginAction(this.state.emailData, this.state.passwordData)
 			.then((response) => {
-				//response.data
-				//response.status
-				//response.statusText
-
 				this.state.messageLink = '/';
 				this.state.messageLinkName = 'На главную';
 				
@@ -152,11 +156,13 @@ export default class AuthUtilsForm extends Component {
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-				//error.response.data
-				//error.response.status
-				//error.response.statusText
+				if (error.response && error.response.status && error.response.status === 401) {
+					this.state.messageLink = '/registration';  //todo: ??
+					this.state.messageLinkName = 'Зарегистрироваться';
 
-				this.responseHandle(error);
+					error.response.data.message = 'Пользователь с указанным имейлом не найден.';
+				}
+				this.errorResponseHandle(error);
 			})
 	}
 
@@ -169,27 +175,29 @@ export default class AuthUtilsForm extends Component {
 
 		return authActions.registrationAction(this.state.emailData, this.state.loginData, this.state.passwordData)
 			.then((response) => {
-
-				//this.state.messageLink = this.defaultData.messageLink;
-				//this.state.messageLinkName = this.defaultData.messageLinkName;
-				
 				response.data = 'Вы успешно зарегистрировались на сайте. Нажмите ссылку для перехода.';
 				this.responseHandle(response);
 			})
 			.catch((error) => {
+				debugger;
+				if (error.response && error.response.status && error.response.status === 401) {
+					this.state.messageLink = '/emailConfirm';  //todo: ??переходит на страницу входа
+					this.state.messageLinkName = 'Подтвердить имейл';
 
-				this.responseHandle(error);
+					error.response.data.message = 'Данный имейл не подтвержден';
+				}
+
+				this.errorResponseHandle(error);
 			})
 	}
 
 	clickSocialLoginButton(event) {
-
+		debugger;
 		const service = event.target.name;
 
 		// TODO!!! vkontakte api не отвечает localhost (нет 'Access-Control-Allow-Origin' в заголовке)
 		return authActions.socialLoginAction(service)
 			.then((response) => {
-
 				this.state.messageLink = '/';
 				this.state.messageLinkName = 'На главную';
 
@@ -197,8 +205,7 @@ export default class AuthUtilsForm extends Component {
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-
-				this.responseHandle(error);
+				this.errorResponseHandle(error);
 			})
 	}
 
@@ -210,17 +217,12 @@ export default class AuthUtilsForm extends Component {
 		if (!dataIsCorrect) return;
 		
 		return authActions.recoveryPasswordAction(this.state.emailData)
-			.then((response) => {
-				
-				//this.state.messageLink = this.defaultData.messageLink;
-				//this.state.messageLinkName = this.defaultData.messageLinkName;
-				
+			.then((response) => {				
 				response.data = 'Инструкции по восстановлению пароля отправлены на указанный адрес электронной почты.';
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-
-				this.responseHandle(error);
+				this.errorResponseHandle(error);
 			})
 	}
 
@@ -233,20 +235,13 @@ export default class AuthUtilsForm extends Component {
 		
 		return authActions.emailConfirmAction(this.state.emailData)
 			.then((response) => {
-
-				//this.state.messageLink = this.defaultData.messageLink;
-				//this.state.messageLinkName = this.defaultData.messageLinkName;
-
 				if (response.data == 'Confirm mail sent again') {
-
 					response.data = 'Письмо с кодом подтверждения отправлено на указанный адрес электронной почты.';
-				}
-						
+				}						
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-
-				this.responseHandle(error);
+				this.errorResponseHandle(error);
 			})
 	}
 
@@ -272,22 +267,32 @@ export default class AuthUtilsForm extends Component {
 				return authActions.changePasswordAction(accessToken, this.state.passwordData)
 			})
 			.then((response) => {
-				//this.state.messageLink = this.defaultData.messageLink;
-				//this.state.messageLinkName = this.defaultData.messageLinkName;
 				response.data = 'Пароль успешно изменен.';			
 				this.responseHandle(response);
 			})
 			.catch((error) => {
-				this.responseHandle(error);
+				if (error.response && error.response.status && error.response.status === 401) {
+					this.state.messageLink = '/emailConfirm';  //todo: ??переходит на страницу входа
+					this.state.messageLinkName = 'Подтвердить имейл';
+
+					error.response.data.message = 'Данный имейл не подтвержден';
+				}
+
+				this.errorResponseHandle(error);
 			})
 	}
 
 	responseHandle(response) {
 		debugger;
+		this.setState({
+			messageIsShown: true,
+			message: (response.data ? response.data : ''),  //??
+		});
+	}
 
-		if (response.response) response = response.response;  // если это ошибка
-
-		let message = utilsActions.getResponseMessage(response);
+	errorResponseHandle(error) {
+		debugger;		
+		let message = utilsActions.getErrorResponseMessage(error);
 
 		this.setState({
 			messageIsShown: true,

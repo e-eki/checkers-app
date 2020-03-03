@@ -104,6 +104,7 @@ export default class GamePage extends Component {
         this.resetPage = this.resetPage.bind(this);
         //this.showMessage = this.showMessage.bind(this);
         this.responseHandle = this.responseHandle.bind(this);
+        this.errorResponseHandle = this.errorResponseHandle.bind(this);  //??
         this.clickLkButton = this.clickLkButton.bind(this);
         this.showLkForm = this.showLkForm.bind(this);
         this.clickLogoutButton = this.clickLogoutButton.bind(this);
@@ -184,7 +185,7 @@ export default class GamePage extends Component {
         
                 // начать игру
                 if (this.state.startOfGame === false) {
-                    tasks.push(gameActions.startGameAction(accessToken, this.state.userActorsColor.name, this.state.boardSize.name, this.state.level.name, this.state.mode.name));
+                    tasks.push(gameActions.startGameAction(accessToken, this.state.userActorsColor.name, this.state.boardSize, this.state.level.name, this.state.mode.name));
 
                     if (!this.state.isUserTurn) 
                         tasks.push(gameActions.getAIturn(accessToken));
@@ -239,9 +240,8 @@ export default class GamePage extends Component {
 			.catch((error) => {              
                 this.state.messageLink = '/login';
                 this.state.messageLinkName = 'Войти на сайт';
-                //error.response.message = 'Вы не авторизованы для данного действия';
                 
-                this.responseHandle(error);
+                this.errorResponseHandle(error);
 			})
     }
 
@@ -255,7 +255,7 @@ export default class GamePage extends Component {
 
                 // если количество черных или белых фигур = 0, то завершение игры.
                 if (whiteActorsCount == 0 || blackActorsCount == 0) {
-                    this.switchStartGame();
+                    this.switchStartGame();  //todo!
                     return false;
                 }
 
@@ -295,9 +295,8 @@ export default class GamePage extends Component {
             .catch((error) => {              
                 this.state.messageLink = '/login';
                 this.state.messageLinkName = 'Войти на сайт';
-                //error.response.message = 'Вы не авторизованы для данного действия';
                 
-                this.responseHandle(error);
+                this.errorResponseHandle(error);
 			})
     }
 
@@ -412,8 +411,7 @@ export default class GamePage extends Component {
                     error.message = 'Вы не авторизованы для данного действия';
                 }    
                 
-                this.responseHandle(error);
-				//this.showMessage('Вы не авторизованы для данного действия', '/login', 'Войти на сайт');  
+                this.errorResponseHandle(error);
 			})
     }
 
@@ -444,17 +442,22 @@ export default class GamePage extends Component {
         })
     }*/
 
-    responseHandle(response) {
-		debugger;
-        if (response.response) response = response.response;  // если это ошибка
+    responseHandle(response) {	
+		this.setState({
+			messageIsShown: true,
+			message: (response.data ? response.data : ''),  //??
+		});
+    }
 
-		let message = utilsActions.getResponseMessage(response);
+    errorResponseHandle(error) {
+		debugger;		
+		let message = utilsActions.getErrorResponseMessage(error);
 
 		this.setState({
 			messageIsShown: true,
 			message: message,
 		});
-    }
+	}
     
     clickLogoutButton(event) {
 		debugger;
@@ -478,20 +481,14 @@ export default class GamePage extends Component {
 				 // TODO!! сделать, чтобы сначала выводилось сообщение о выходе, а потом табло с завершением игры
 				 this.state.lkLogout = true;
 
-				response.message = 'Выход из аккаунта осуществлен успешно.';
+				response.data = 'Выход из аккаунта осуществлен успешно.';
 				this.responseHandle(response);				
 			})
 			.catch((error) => {
-				this.responseHandle(error);  
+				this.errorResponseHandle(error);  
 			})
-	}
-
-    /*switchLkLogout(logout) {
-        debugger;
-        this.state.lkLogout = logout;
-        //if (this.state.startOfGame) this.switchStartGame();
-    }*/
-
+    }
+    
     // когда скрывается сообщение, скрывается и лк (если был показан)
     resetPage(event) {
         debugger;
@@ -636,7 +633,6 @@ export default class GamePage extends Component {
                     isEmailConfirmed = {this.state.lkIsEmailConfirmed}
                     role = {this.state.lkRole}
                     games = {this.state.lkGames}
-                    responseHandle = {this.responseHandle}
                     clickLogoutButton = {this.clickLogoutButton}
                     lkLogout = {this.state.lkLogout}
                 />

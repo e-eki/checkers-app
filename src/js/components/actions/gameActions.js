@@ -54,13 +54,12 @@ export function getAIturn(accessToken) {
 
 export function setUserTurn(accessToken, userTurn) {
 	debugger;
-
 	const params = {
 		userTurn: userTurn,
 	};
 
 	const options = {
-		method: 'POST',
+		method: 'PUT',
 		headers: { 'Authorization': `Token ${accessToken}` },
 		data: params,
 		url: `${apiConst.gameTurnApi}`

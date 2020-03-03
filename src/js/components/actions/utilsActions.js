@@ -1,21 +1,23 @@
 'use strict';
 
-import axios from 'axios';
-import Promise from 'bluebird';
-import apiConst from '../../constants/apiConst';
-
-export function getResponseMessage(response) {
+export function getErrorResponseMessage(error) {
 	debugger;
+	if (error.response) error = error.response;
+
+	if (!error.status) {
+		error.status = 500;
+	}
+
 	let message;
 
-	switch (response.status) {
-		case 200:
+	switch (error.status) {
+		/*case 200:
 		case 201:
 		case 204:
-			break;
+			break;*/
 
 		case 400: 
-			message = 'Запрос не может быть обработан: ';
+			message = 'Некорректные данные: ';
 			break;
 
 		case 401: 
@@ -35,11 +37,25 @@ export function getResponseMessage(response) {
 			break;	
 
 		default:
-			message = 'Internal server error: ';  //???
+			message = 'Internal server error: ';  //??
 			break;	
 	};
 
-	message = (message || '') + (response.message || response.data || '');
+	if (error.data && error.data.message) {
+		message += error.data.message;
+	}
+	else if (error.message) {
+		message += error.message;
+	}
+	if (error.data && error.data.data && error.data.data.length) {
+		const errorData = error.data.data;
+		message += ': ';
+		errorData.forEach(element => {
+			if (typeof(element) === 'string') {
+				message += element + ',';
+			}
+		});
+	}
 
 	return message;
 }
